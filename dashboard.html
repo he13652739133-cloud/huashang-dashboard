@@ -723,6 +723,22 @@
       line-height: 1.7;
     }
 
+    .radar-note {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .radar-note span {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      padding: 8px 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     @media (max-width: 1120px) {
       .overview-grid,
       .two-col,
@@ -973,7 +989,6 @@
           <div class="card-header">
             <div>
             <h2 class="card-title">地缘变量散点分析</h2>
-            <p class="card-subtitle">可切换变量，气泡大小代表公开资料华人人口参考值</p>
             </div>
             <div class="toolbar">
               <select id="geo-x" aria-label="地缘X轴变量"></select>
@@ -1001,6 +1016,11 @@
             </div>
           </div>
           <div id="geo-radar" class="chart chart-radar"><div class="chart-loading">数据加载中...</div></div>
+          <div class="radar-note">
+            <span>华商基础：企业数量与重点企业占比</span>
+            <span>制度环境：廉洁、法治和政府效能</span>
+            <span>中国联系：贸易、投资与工程合作</span>
+          </div>
         </div>
 
         <div class="card">
@@ -1023,7 +1043,6 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">商会区域分布</h2>
-              <p class="card-subtitle">来自商会数据.xlsx的组织记录</p>
             </div>
           </div>
           <div id="chamber-region-chart" class="chart"><div class="chart-loading">数据加载中...</div></div>
@@ -1033,7 +1052,6 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">组织类型</h2>
-              <p class="card-subtitle">协会、总商会、联合会等</p>
             </div>
           </div>
           <div id="chamber-type-chart" class="chart"><div class="chart-loading">数据加载中...</div></div>
@@ -1092,7 +1110,6 @@
         <div class="card-header">
           <div>
             <h2 class="card-title">研究结论</h2>
-            <p class="card-subtitle">围绕华商网络、地缘结构与指数结果形成的简要判断</p>
           </div>
           <button id="open-report" class="action-button" type="button">打开研究报告</button>
         </div>
@@ -1209,7 +1226,8 @@
         industry: 'all',
         type: 'all',
         preset: 'all',
-        title: '企业明细'
+        title: '企业明细',
+        mode: 'total'
       },
       chamber: {
         kind: 'chambers',
@@ -1414,7 +1432,40 @@
       return (DATA.enterprise_records || []).filter(row => row);
     }
 
+    function hashString(value) {
+      let hash = 0;
+      const text = String(value || '');
+      for (let i = 0; i < text.length; i += 1) {
+        hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+      }
+      return Math.abs(hash);
+    }
+
+    function enterpriseDisplayRank(row) {
+      const hasName = row.name && String(row.name).trim();
+      const publicName = hasName && String(row.name).trim() !== '未公开';
+      const typeScore = row.type === '重点企业' ? 0 : 1;
+      const countryPriority = ['USA', 'PHL', 'VNM', 'CAN', 'ITA', 'FRA', 'SGP', 'MYS', 'AUS', 'GBR'];
+      const countryScore = countryPriority.includes(row.iso3) ? countryPriority.indexOf(row.iso3) : 20;
+      return [
+        publicName ? 0 : 1,
+        typeScore,
+        countryScore,
+        hashString(row.id || row.name || row.seq) % 997
+      ];
+    }
+
+    function compareEnterpriseRows(a, b) {
+      const ar = enterpriseDisplayRank(a);
+      const br = enterpriseDisplayRank(b);
+      for (let i = 0; i < ar.length; i += 1) {
+        if (ar[i] !== br[i]) return ar[i] - br[i];
+      }
+      return String(a.name || '').localeCompare(String(b.name || ''));
+    }
+
     function openEnterpriseModal(config = {}) {
+      const mode = config.mode || 'total';
       state.drill = {
         ...state.drill,
         page: 1,
@@ -1424,23 +1475,45 @@
         industry: config.industry || 'all',
         type: 'all',
         preset: config.preset || 'all',
-        title: config.title || '华商企业明细'
+        title: config.title || '华商企业明细',
+        mode
       };
       const countries = [...new Set(enterpriseRecords().map(row => row.country).filter(Boolean))]
         .sort((a, b) => a.localeCompare(b));
       const industries = [...new Set(enterpriseRecords().map(row => row.industry_group || row.industry).filter(Boolean))]
         .sort((a, b) => a.localeCompare(b));
-      showModal(state.drill.title, '逐条企业记录来自华商标签数据，支持检索、筛选和翻页。', `
-        <div class="modal-toolbar">
-          <input id="drill-search" type="search" placeholder="检索公司、国家、行业、编号">
-          <select id="drill-country" aria-label="国家筛选">
-            <option value="all">全部国家/地区</option>
-            ${countries.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('')}
-          </select>
+      const industryFilter = mode === 'industry' ? `
           <select id="drill-industry" aria-label="行业筛选">
             <option value="all">全部行业</option>
             ${industries.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('')}
           </select>
+      ` : '<input id="drill-industry" type="hidden" value="all">';
+      const tableHead = mode === 'industry' ? `
+              <tr>
+                <th>序号</th>
+                <th>公司名称</th>
+                <th>国家/地区</th>
+                <th>行业</th>
+                <th>企业类型</th>
+                <th>企业编号</th>
+              </tr>
+      ` : `
+              <tr>
+                <th>序号</th>
+                <th>公司名称</th>
+                <th>国家/地区</th>
+                <th>企业类型</th>
+                <th>企业编号</th>
+              </tr>
+      `;
+      showModal(state.drill.title, '', `
+        <div class="modal-toolbar">
+          <input id="drill-search" type="search" placeholder="${mode === 'industry' ? '检索公司、国家、行业、编号' : '检索公司、国家、编号'}">
+          <select id="drill-country" aria-label="国家筛选">
+            <option value="all">全部国家/地区</option>
+            ${countries.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('')}
+          </select>
+          ${industryFilter}
           <select id="drill-type" aria-label="企业类型">
             <option value="all">全部类型</option>
             <option value="重点企业">重点企业</option>
@@ -1455,16 +1528,7 @@
         <div class="modal-table-wrap">
           <table id="drill-table">
             <thead>
-              <tr>
-                <th>序号</th>
-                <th>公司名称</th>
-                <th>国家/地区</th>
-                <th>行业大类</th>
-                <th>行业</th>
-                <th>资产</th>
-                <th>权益</th>
-                <th>类型</th>
-              </tr>
+              ${tableHead}
             </thead>
             <tbody></tbody>
           </table>
@@ -1515,7 +1579,7 @@
         if (!search) return true;
         return [row.id, row.name, row.country, row.iso3, row.industry_group, row.industry, row.type]
           .some(value => String(value || '').toLowerCase().includes(search));
-      });
+      }).sort(compareEnterpriseRows);
     }
 
     function renderEnterpriseModalTable() {
@@ -1524,18 +1588,30 @@
       state.drill.page = Math.min(state.drill.page, pages);
       const start = (state.drill.page - 1) * state.drill.pageSize;
       const pageRows = rows.slice(start, start + state.drill.pageSize);
-      document.querySelector('#drill-table tbody').innerHTML = pageRows.map(row => `
-        <tr>
-          <td>${fmt(row.seq)}</td>
+      document.querySelector('#drill-table tbody').innerHTML = pageRows.map((row, index) => {
+        const base = `
+          <td>${(start + index + 1).toLocaleString()}</td>
           <td>${escapeHtml(row.name || '未公开')}</td>
           <td>${escapeHtml(row.country)}</td>
-          <td>${escapeHtml(row.industry_group || '')}</td>
-          <td>${escapeHtml(row.industry || '')}</td>
-          <td>${valueText(row.asset)}</td>
-          <td>${valueText(row.equity)}</td>
-          <td>${escapeHtml(row.type || '')}</td>
-        </tr>
-      `).join('');
+        `;
+        if (state.drill.mode === 'industry') {
+          return `
+            <tr>
+              ${base}
+              <td>${escapeHtml(row.industry_group || row.industry || '')}</td>
+              <td>${escapeHtml(row.type || '')}</td>
+              <td>${escapeHtml(row.id || '')}</td>
+            </tr>
+          `;
+        }
+        return `
+          <tr>
+            ${base}
+            <td>${escapeHtml(row.type || '')}</td>
+            <td>${escapeHtml(row.id || '')}</td>
+          </tr>
+        `;
+      }).join('');
       document.getElementById('drill-count').textContent = `表格总条数：${rows.length.toLocaleString()} · 第 ${state.drill.page}/${pages} 页`;
       document.getElementById('drill-prev').disabled = state.drill.page <= 1;
       document.getElementById('drill-next').disabled = state.drill.page >= pages;
@@ -1750,9 +1826,9 @@
         const card = event.target.closest('[data-drill]');
         if (!card) return;
         if (card.dataset.drill === 'industry') {
-          openEnterpriseModal({ title: '重点行业企业明细' });
+          openEnterpriseModal({ title: '重点行业企业明细', mode: 'industry' });
         } else {
-          openEnterpriseModal({ title: '华商总量企业明细' });
+          openEnterpriseModal({ title: '华商总量企业明细', mode: 'total' });
         }
       });
       container.dataset.drillReady = '1';
@@ -1844,7 +1920,7 @@
         chart.off('click');
         chart.on('click', params => {
           if (!params.data || !params.data.raw) return;
-          openEnterpriseModal({ title: `${params.data.raw.name}企业明细`, industry: params.data.raw.name });
+          openEnterpriseModal({ title: `${params.data.raw.name}企业明细`, industry: params.data.raw.name, mode: 'industry' });
         });
       });
     }
@@ -2374,7 +2450,7 @@
       const flag = { US: '🇺🇸', GB: '🇬🇧', CA: '🇨🇦', AU: '🇦🇺', NZ: '🇳🇿', VN: '🇻🇳', PH: '🇵🇭', MY: '🇲🇾', SG: '🇸🇬', KR: '🇰🇷', FR: '🇫🇷' };
       const rows = overseasCountries()
         .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
-        .slice(0, 8);
+        .slice(0, 10);
       document.getElementById('five-eye-cards').innerHTML = rows.map(country => {
         const latest = state.latestByIso.get(country.iso3) || {};
         return `
@@ -2653,7 +2729,7 @@
           radar: {
             radius: '66%',
             indicator: [
-              { name: '华商占比', max: 100 },
+              { name: '华商基础', max: 100 },
               { name: '廉洁指数', max: 100 },
               { name: '政府效能', max: 100 },
               { name: '法治水平', max: 100 },
@@ -2695,74 +2771,84 @@
             .filter(row => (num(row.huashang_count) || 0) > 0)
             .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
           const total = sum(valid, 'huashang_count') || 1;
-          const top3 = valid.slice(0, 3);
-          const top3Share = sum(top3, 'huashang_count') / total * 100;
+          const top = valid.slice(0, 3);
+          const topValues = top.map(row => ({
+            name: countryName(row),
+            value: (num(row.huashang_count) || 0) / total * 100,
+            count: num(row.huashang_count) || 0
+          }));
+          while (topValues.length < 3) topValues.push({ name: '暂无', value: 0, count: 0 });
+          const other = Math.max(0, 100 - topValues.reduce((acc, row) => acc + row.value, 0));
           return {
             name,
             color,
             total,
             countries: valid.length,
-            top3Share,
-            top: top3.map(countryName).join('、')
+            topValues,
+            other,
+            top: top.map(countryName).join('、')
           };
         };
         const groups = [
           build('五眼联盟', FIVE_EYES_COLOR, overseasCountries().filter(row => Number(row.is_five_eyes) === 1)),
           build('一带一路', BRI_COLOR, overseasCountries().filter(row => Number(row.is_bri) === 1))
         ];
+        const segments = [
+          { name: '第一国家', key: 0, color: '#2563eb' },
+          { name: '第二国家', key: 1, color: '#06b6d4' },
+          { name: '第三国家', key: 2, color: '#7c3aed' },
+          { name: '其他国家', key: 'other', color: '#cbd5e1' }
+        ];
         return {
-          grid: { left: 54, right: 28, top: 42, bottom: 44, containLabel: true },
+          grid: { left: 72, right: 34, top: 54, bottom: 50, containLabel: true },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
             formatter: params => {
-              const row = params[0].data.raw;
-              return `${row.name}<br>华商总量：${fmt(row.total)}<br>覆盖国家：${fmt(row.countries)}<br>Top3占比：${pctPoint(row.top3Share)}<br>Top3：${row.top}`;
+              const row = groups[params[0].dataIndex];
+              const lines = [
+                row.name,
+                `华商总量：${fmt(row.total)}`,
+                `覆盖国家：${fmt(row.countries)}`,
+                `Top3：${row.top || '暂无'}`
+              ];
+              row.topValues.forEach((item, index) => {
+                if (item.count > 0) lines.push(`第${index + 1}：${item.name} ${pctPoint(item.value)}（${fmt(item.count)}）`);
+              });
+              lines.push(`其他国家：${pctPoint(row.other)}`);
+              return lines.join('<br>');
             }
           },
-          legend: { top: 0, right: 0 },
+          legend: { top: 0, right: 0, itemWidth: 10, itemHeight: 10 },
           xAxis: {
+            type: 'value',
+            max: 100,
+            axisLabel: { formatter: '{value}%' },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
             type: 'category',
             data: groups.map(row => row.name),
-            axisTick: { show: false }
+            axisTick: { show: false },
+            axisLabel: { fontSize: 12, fontWeight: 600 }
           },
-          yAxis: [
-            {
-              type: 'value',
-              name: '华商总量',
-              axisLabel: { formatter: axisShort },
-              splitLine: { lineStyle: { color: '#d7e3f5' } }
-            },
-            {
-              type: 'value',
-              name: 'Top3占比',
-              min: 0,
-              max: 100,
-              axisLabel: { formatter: '{value}%' },
-              splitLine: { show: false }
-            }
-          ],
-          series: [
-            {
-              name: '华商总量',
+          series: segments.map(segment => ({
+              name: segment.name,
               type: 'bar',
-              barWidth: 34,
+              stack: 'share',
+              barWidth: 28,
               data: groups.map(row => ({
-                value: row.total,
+                value: segment.key === 'other' ? row.other : row.topValues[segment.key].value,
                 raw: row,
-                itemStyle: { color: row.color, borderRadius: [8, 8, 0, 0] }
-              }))
-            },
-            {
-              name: 'Top3占比',
-              type: 'line',
-              yAxisIndex: 1,
-              symbolSize: 9,
-              data: groups.map(row => ({ value: row.top3Share, raw: row })),
-              itemStyle: { color: '#7c3aed' },
-              lineStyle: { width: 2 }
-            }
-          ]
+                itemStyle: { color: segment.color }
+              })),
+              label: {
+                show: true,
+                formatter: params => params.value >= 9 ? pctPoint(params.value, 0) : '',
+                color: segment.key === 'other' ? '#334155' : '#fff',
+                fontWeight: 600
+              }
+          }))
         };
       });
     }
@@ -2815,19 +2901,39 @@
 
     function renderChamberTypeChart() {
       renderChart('chamber-type-chart', 'chamber_data.summary.org_type_counts', () => {
-        const rows = (((DATA.chamber_data || {}).summary || {}).org_type_counts || []);
+        const rows = [ ...(((DATA.chamber_data || {}).summary || {}).org_type_counts || []) ]
+          .sort((a, b) => (a.count || 0) - (b.count || 0));
         return {
+          grid: { left: 86, right: 42, top: 16, bottom: 28, containLabel: true },
           tooltip: {
-            trigger: 'item',
-            formatter: params => `${params.name}<br>商会数：${fmt(params.value)}<br>占比：${pct(params.percent / 100)}`
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => {
+              const row = rows[params[0].dataIndex];
+              return `${row.name}<br>商会数：${fmt(row.count)}<br>占比：${pct(row.share)}`;
+            }
           },
-          legend: { orient: 'vertical', right: 0, top: 'middle', itemWidth: 10, itemHeight: 10 },
+          xAxis: {
+            type: 'value',
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
+            type: 'category',
+            data: rows.map(row => row.name),
+            axisTick: { show: false }
+          },
           series: [{
-            type: 'pie',
-            radius: ['42%', '68%'],
-            center: ['36%', '50%'],
-            label: { formatter: '{b}' },
-            data: rows.map(row => ({ name: row.name, value: row.count }))
+            type: 'bar',
+            barWidth: 18,
+            data: rows.map((row, index) => ({
+              value: row.count,
+              itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [0, 8, 8, 0] }
+            })),
+            label: {
+              show: true,
+              position: 'right',
+              formatter: params => `${fmt(params.value)}`
+            }
           }]
         };
       });
