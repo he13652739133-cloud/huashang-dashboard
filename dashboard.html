@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -146,6 +146,24 @@
       background: linear-gradient(90deg, #2563eb, #06b6d4, #7c3aed);
     }
 
+    .kpi-grid .card[data-drill] {
+      cursor: pointer;
+      transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+    }
+
+    .kpi-grid .card[data-drill]:hover {
+      transform: translateY(-2px);
+      border-color: #8fc5ff;
+      box-shadow: 0 20px 48px rgba(37, 99, 235, .18);
+    }
+
+    .kpi-action {
+      margin-top: 12px;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
     .card-header {
       display: flex;
       align-items: flex-start;
@@ -228,6 +246,69 @@
 
     .chart-research {
       height: 420px;
+    }
+
+    .overview-index-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(240px, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .overview-index-layout .chart {
+      min-height: 390px;
+    }
+
+    .index-explainer,
+    .insight-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: linear-gradient(180deg, #ffffff, #f4f8ff);
+      padding: 16px;
+    }
+
+    .index-explainer h3,
+    .insight-box h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .index-explainer p,
+    .insight-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .index-list {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 0;
+      list-style: none;
+      color: var(--text);
+    }
+
+    .index-list li {
+      padding-left: 12px;
+      border-left: 3px solid #bfdbfe;
+    }
+
+    .action-button {
+      height: 34px;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      background: #e8f2ff;
+      color: var(--primary);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      padding: 0 12px;
+    }
+
+    .action-button:hover {
+      background: #dbeafe;
     }
 
     .chart-loading,
@@ -416,6 +497,31 @@
       background: #f3f7ff;
     }
 
+    .data-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .data-tabs button {
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      padding: 0 12px;
+    }
+
+    .data-tabs button.active {
+      background: #e8f2ff;
+      border-color: #bfdbfe;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
     .segmented {
       display: inline-flex;
       overflow: hidden;
@@ -516,9 +622,111 @@
       padding: 14px 16px;
     }
 
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(7, 27, 51, .48);
+    }
+
+    .modal[hidden] {
+      display: none;
+    }
+
+    .modal-panel {
+      width: min(1180px, 100%);
+      max-height: min(820px, calc(100vh - 48px));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(191, 219, 254, .9);
+      border-radius: 12px;
+      background: #f8fbff;
+      box-shadow: 0 28px 80px rgba(15, 23, 42, .28);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .modal-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .modal-body {
+      overflow: auto;
+      padding: 18px 20px 20px;
+    }
+
+    .modal-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .modal-table-wrap {
+      max-height: 510px;
+      overflow: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .modal-table-wrap table {
+      min-width: 980px;
+    }
+
+    .report-content {
+      display: grid;
+      gap: 14px;
+      color: var(--text);
+    }
+
+    .report-content h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .report-content p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
     @media (max-width: 1120px) {
       .overview-grid,
       .two-col,
+      .overview-index-layout,
       .research-controls,
       .method-grid {
         grid-template-columns: 1fr;
@@ -632,7 +840,21 @@
             <p class="card-subtitle">由华商基础、制度环境、中国联系、华人网络、市场条件构建综合指数</p>
           </div>
         </div>
-        <div id="overview-heatmap" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
+        <div class="overview-index-layout">
+          <div id="overview-heatmap" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
+          <aside class="index-explainer">
+            <h3>指标说明</h3>
+            <p>综合指数用于衡量各国家/地区华商基础、制度环境与中国联系的综合表现，分值越高表示华商网络和外部条件越集中。</p>
+            <ul class="index-list">
+              <li>华商基础：企业数量、资产规模与重点企业占比。</li>
+              <li>制度环境：廉洁、法治、政府效能和监管质量。</li>
+              <li>中国联系：对华贸易、中国投资与工程合作。</li>
+              <li>华人网络：华人人口参考值、移民存量与商会数量。</li>
+              <li>市场条件：人均GDP、人口规模、FDI和企业活跃度。</li>
+            </ul>
+            <button class="action-button" id="index-intro-link" type="button">查看指数分析</button>
+          </aside>
+        </div>
       </section>
     </div>
 
@@ -770,14 +992,26 @@
         </div>
       </section>
 
-      <section class="section card">
-        <div class="card-header">
-          <div>
-            <h2 class="card-title">五眼 vs 一带一路对比</h2>
-            <p class="card-subtitle">制度、市场、投资与华商指标雷达图</p>
+      <section class="section two-col">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">五眼 vs 一带一路对比</h2>
+              <p class="card-subtitle">制度、市场、投资与华商指标雷达图</p>
+            </div>
           </div>
+          <div id="geo-radar" class="chart chart-radar"><div class="chart-loading">数据加载中...</div></div>
         </div>
-        <div id="geo-radar" class="chart chart-radar"><div class="chart-loading">数据加载中...</div></div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">组内集中度</h2>
+              <p class="card-subtitle">对比重点经济圈内部华商分布集中程度</p>
+            </div>
+          </div>
+          <div id="geo-concentration" class="chart chart-radar"><div class="chart-loading">数据加载中...</div></div>
+        </div>
       </section>
     </div>
 
@@ -810,24 +1044,34 @@
         <div class="card-header">
           <div>
             <h2 class="card-title">重点商会与人物企业</h2>
-            <p class="card-subtitle">商会、人物职务、关联企业为独立来源，不并入ORBIS企业比例</p>
+            <p class="card-subtitle">商会组织、人物职务、关联企业三类记录可检索翻页</p>
           </div>
+        </div>
+        <div class="data-tabs" id="chamber-data-tabs">
+          <button type="button" class="active" data-kind="chambers">商会组织</button>
+          <button type="button" data-kind="people">人物职务</button>
+          <button type="button" data-kind="enterprises">关联企业</button>
+        </div>
+        <div class="toolbar" style="margin-bottom:14px">
+          <input id="chamber-search" type="search" placeholder="检索名称、国家、商会、人物、企业">
+          <select id="chamber-page-size" aria-label="商会表每页条数">
+            <option value="20">每页20条</option>
+            <option value="40">每页40条</option>
+            <option value="80">每页80条</option>
+          </select>
         </div>
         <div class="table-wrap">
           <table id="chamber-table">
-            <thead>
-              <tr>
-                <th>商会/组织</th>
-                <th>国家/地区</th>
-                <th>区域</th>
-                <th>类型</th>
-                <th>活跃度</th>
-                <th>状态</th>
-                <th>官网</th>
-              </tr>
-            </thead>
+            <thead></thead>
             <tbody></tbody>
           </table>
+        </div>
+        <div class="table-footer">
+          <div id="chamber-table-count">表格总条数：0</div>
+          <div class="pager">
+            <button id="chamber-prev" type="button">上一页</button>
+            <button id="chamber-next" type="button">下一页</button>
+          </div>
         </div>
       </section>
     </div>
@@ -842,6 +1086,20 @@
         </div>
         <div id="index-method-grid" class="method-grid"></div>
         <p id="index-method-note" class="note"></p>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">研究结论</h2>
+            <p class="card-subtitle">围绕华商网络、地缘结构与指数结果形成的简要判断</p>
+          </div>
+          <button id="open-report" class="action-button" type="button">打开研究报告</button>
+        </div>
+        <div class="insight-box">
+          <h3>总体判断</h3>
+          <p>当前华商企业主要集中在美国、菲律宾、越南、加拿大、意大利、法国等市场，亚洲与北美洲共同构成主体。五眼国家制度与市场条件更稳，一带一路国家在贸易投资联系和华人网络承载上更突出，东南亚呈现“商会网络活跃、企业数量集中、产业类型更分散”的特征。</p>
+        </div>
       </section>
 
       <section class="section card">
@@ -897,6 +1155,19 @@
     </div>
   </main>
 
+  <div id="data-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <h2 id="modal-title" class="modal-title">数据明细</h2>
+          <div id="modal-meta" class="modal-meta"></div>
+        </div>
+        <button id="modal-close" class="modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
   <script>
     const PALETTE = ['#2563eb', '#06b6d4', '#7c3aed', '#f59e0b', '#dc2626', '#0891b2', '#4f46e5', '#db2777', '#64748b', '#1d4ed8'];
     const FIVE_EYES_COLOR = '#f59e0b';
@@ -929,6 +1200,22 @@
         pageSize: 20,
         sortKey: 'huashang_count',
         sortDir: 'desc'
+      },
+      drill: {
+        page: 1,
+        pageSize: 20,
+        search: '',
+        country: 'all',
+        industry: 'all',
+        type: 'all',
+        preset: 'all',
+        title: '企业明细'
+      },
+      chamber: {
+        kind: 'chambers',
+        page: 1,
+        pageSize: 20,
+        search: ''
       }
     };
 
@@ -1105,6 +1392,178 @@
       return `<a class="table-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">打开</a>`;
     }
 
+    function valueText(value) {
+      if (value == null || value === '' || value === '未公开') return '未公开';
+      if (typeof value === 'number') return fmt(value);
+      return escapeHtml(value);
+    }
+
+    function showModal(title, meta, html) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-meta').textContent = meta || '';
+      document.getElementById('modal-body').innerHTML = html || '';
+      document.getElementById('data-modal').hidden = false;
+    }
+
+    function closeModal() {
+      document.getElementById('data-modal').hidden = true;
+      document.getElementById('modal-body').innerHTML = '';
+    }
+
+    function enterpriseRecords() {
+      return (DATA.enterprise_records || []).filter(row => row && row.name);
+    }
+
+    function openEnterpriseModal(config = {}) {
+      state.drill = {
+        ...state.drill,
+        page: 1,
+        pageSize: 20,
+        search: '',
+        country: 'all',
+        industry: config.industry || 'all',
+        type: 'all',
+        preset: config.preset || 'all',
+        title: config.title || '华商企业明细'
+      };
+      const countries = [...new Set(enterpriseRecords().map(row => row.country).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
+      const industries = [...new Set(enterpriseRecords().map(row => row.industry_group || row.industry).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b));
+      showModal(state.drill.title, '逐条企业记录来自华商标签数据，支持检索、筛选和翻页。', `
+        <div class="modal-toolbar">
+          <input id="drill-search" type="search" placeholder="检索公司、国家、行业、编号">
+          <select id="drill-country" aria-label="国家筛选">
+            <option value="all">全部国家/地区</option>
+            ${countries.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('')}
+          </select>
+          <select id="drill-industry" aria-label="行业筛选">
+            <option value="all">全部行业</option>
+            ${industries.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('')}
+          </select>
+          <select id="drill-type" aria-label="企业类型">
+            <option value="all">全部类型</option>
+            <option value="重点企业">重点企业</option>
+            <option value="一般企业">一般企业</option>
+          </select>
+          <select id="drill-page-size" aria-label="每页条数">
+            <option value="20">每页20条</option>
+            <option value="50">每页50条</option>
+            <option value="100">每页100条</option>
+          </select>
+        </div>
+        <div class="modal-table-wrap">
+          <table id="drill-table">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>公司名称</th>
+                <th>国家/地区</th>
+                <th>行业大类</th>
+                <th>行业</th>
+                <th>资产</th>
+                <th>权益</th>
+                <th>类型</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <div id="drill-count">表格总条数：0</div>
+          <div class="pager">
+            <button id="drill-prev" type="button">上一页</button>
+            <button id="drill-next" type="button">下一页</button>
+          </div>
+        </div>
+      `);
+      if (config.industry) document.getElementById('drill-industry').value = config.industry;
+      bindEnterpriseModalControls();
+      renderEnterpriseModalTable();
+    }
+
+    function bindEnterpriseModalControls() {
+      ['drill-search', 'drill-country', 'drill-industry', 'drill-type', 'drill-page-size'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener(id === 'drill-search' ? 'input' : 'change', () => {
+          state.drill.page = 1;
+          state.drill.search = document.getElementById('drill-search').value.trim().toLowerCase();
+          state.drill.country = document.getElementById('drill-country').value;
+          state.drill.industry = document.getElementById('drill-industry').value;
+          state.drill.type = document.getElementById('drill-type').value;
+          state.drill.pageSize = Number(document.getElementById('drill-page-size').value);
+          renderEnterpriseModalTable();
+        });
+      });
+      document.getElementById('drill-prev').addEventListener('click', () => {
+        state.drill.page = Math.max(1, state.drill.page - 1);
+        renderEnterpriseModalTable();
+      });
+      document.getElementById('drill-next').addEventListener('click', () => {
+        state.drill.page += 1;
+        renderEnterpriseModalTable();
+      });
+    }
+
+    function filteredEnterpriseRecords() {
+      const search = state.drill.search;
+      return enterpriseRecords().filter(row => {
+        const industryGroup = row.industry_group || row.industry || '';
+        if (state.drill.country !== 'all' && row.country !== state.drill.country) return false;
+        if (state.drill.industry !== 'all' && industryGroup !== state.drill.industry) return false;
+        if (state.drill.type !== 'all' && row.type !== state.drill.type) return false;
+        if (!search) return true;
+        return [row.id, row.name, row.country, row.iso3, row.industry_group, row.industry, row.type]
+          .some(value => String(value || '').toLowerCase().includes(search));
+      });
+    }
+
+    function renderEnterpriseModalTable() {
+      const rows = filteredEnterpriseRecords();
+      const pages = Math.max(1, Math.ceil(rows.length / state.drill.pageSize));
+      state.drill.page = Math.min(state.drill.page, pages);
+      const start = (state.drill.page - 1) * state.drill.pageSize;
+      const pageRows = rows.slice(start, start + state.drill.pageSize);
+      document.querySelector('#drill-table tbody').innerHTML = pageRows.map(row => `
+        <tr>
+          <td>${fmt(row.seq)}</td>
+          <td>${escapeHtml(row.name)}</td>
+          <td>${escapeHtml(row.country)}</td>
+          <td>${escapeHtml(row.industry_group || '')}</td>
+          <td>${escapeHtml(row.industry || '')}</td>
+          <td>${valueText(row.asset)}</td>
+          <td>${valueText(row.equity)}</td>
+          <td>${escapeHtml(row.type || '')}</td>
+        </tr>
+      `).join('');
+      document.getElementById('drill-count').textContent = `表格总条数：${rows.length.toLocaleString()} · 第 ${state.drill.page}/${pages} 页`;
+      document.getElementById('drill-prev').disabled = state.drill.page <= 1;
+      document.getElementById('drill-next').disabled = state.drill.page >= pages;
+    }
+
+    function openResearchReport() {
+      showModal('华商发展指数研究报告', '指标、现状、趋势分析与决策建议', `
+        <div class="report-content">
+          <section>
+            <h3>一、指标体系</h3>
+            <p>综合指数由华商基础、制度环境、中国联系、华人网络、市场条件五个维度构成。规模类指标采用log(1+x)压缩极端值后标准化，制度类指标采用0-100分值，最终按25%、20%、20%、20%、15%的权重合成。</p>
+          </section>
+          <section>
+            <h3>二、现状判断</h3>
+            <p>美国、菲律宾、越南、加拿大等市场构成当前华商企业数量的核心板块；亚洲体现企业密度和商会网络优势，北美洲体现制度环境与市场容量优势，欧洲样本更分散，非洲和大洋洲更多体现补充性节点价值。</p>
+          </section>
+          <section>
+            <h3>三、趋势分析</h3>
+            <p>一带一路国家在中国投资、工程合作和贸易联系上具备持续扩展空间，东南亚区域的华商网络更活跃；五眼国家整体制度环境较稳，适合观察资本服务、技术服务和高附加值产业网络。</p>
+          </section>
+          <section>
+            <h3>四、决策建议</h3>
+            <p>后续可优先围绕东南亚与北美两个主轴开展跟踪：东南亚侧重商会网络和制造、批发零售、商业服务联动；北美侧重金融、技术服务和高端商业服务。对样本较少的区域，应以重点节点国家和商会组织作为补充观察对象。</p>
+          </section>
+        </div>
+      `);
+    }
+
     function normalizeName(name) {
       return String(name || '')
         .normalize('NFD')
@@ -1249,14 +1708,18 @@
         {
           value: fmt(s.cn_loose_pos),
           label: '华商总量',
-          sub: '覆盖主要海外市场'
+          sub: '覆盖主要海外市场',
+          drill: 'all',
+          action: '查看企业明细'
         },
         {
           value: fmt(new Set((DATA.industry_rollup || [])
             .filter(row => (row.huashang_count || row.cn_loose_pos || 0) > 0)
             .map(row => row.industry_group_zh || industryName(row))).size),
           label: '重点行业',
-          sub: '覆盖金融、制造、服务等领域'
+          sub: '覆盖金融、制造、服务等领域',
+          drill: 'industry',
+          action: '查看行业企业'
         },
         {
           value: fmt(s.valid_huashang_iso3_countries),
@@ -1270,12 +1733,29 @@
         }
       ];
       document.getElementById(containerId).innerHTML = cards.map(card => `
-        <div class="card">
+        <div class="card" ${card.drill ? `data-drill="${card.drill}"` : ''}>
           <p class="kpi-value">${card.value}</p>
           <div class="kpi-label">${card.label}</div>
           <div class="kpi-sub">${card.sub}</div>
+          ${card.action ? `<div class="kpi-action">${card.action}</div>` : ''}
         </div>
       `).join('');
+      setupKpiDrill(containerId);
+    }
+
+    function setupKpiDrill(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container || container.dataset.drillReady) return;
+      container.addEventListener('click', event => {
+        const card = event.target.closest('[data-drill]');
+        if (!card) return;
+        if (card.dataset.drill === 'industry') {
+          openEnterpriseModal({ title: '重点行业企业明细' });
+        } else {
+          openEnterpriseModal({ title: '华商总量企业明细' });
+        }
+      });
+      container.dataset.drillReady = '1';
     }
 
     function commonGrid() {
@@ -1301,6 +1781,11 @@
       return parts.join('\n');
     }
 
+    function industryBlockLabel(name, count) {
+      const label = wrapCnLabel(name, 5, 2);
+      return `${label}\n（${fmt(count)}）`;
+    }
+
     function initOverview() {
       renderKpis('overview-kpis');
       initOverviewIndustryDonut();
@@ -1319,7 +1804,7 @@
           value: row.huashang_count || row.cn_loose_pos || 0,
           raw: row,
           itemStyle: { color: PALETTE[index % PALETTE.length] },
-          label: { show: ((row.huashang_count || row.cn_loose_pos || 0) / total) >= .03 }
+          label: { show: ((row.huashang_count || row.cn_loose_pos || 0) / total) >= .025 }
         }));
         return {
           tooltip: {
@@ -1341,10 +1826,10 @@
               show: true,
               color: '#fff',
               fontWeight: 600,
-              fontSize: 12,
-              lineHeight: 16,
+              fontSize: 11,
+              lineHeight: 15,
               overflow: 'break',
-              formatter: params => wrapCnLabel(params.name, 4, 3)
+              formatter: params => industryBlockLabel(params.name, params.value)
             },
             upperLabel: { show: false },
             itemStyle: {
@@ -1355,6 +1840,12 @@
             data
           }]
         };
+      }, chart => {
+        chart.off('click');
+        chart.on('click', params => {
+          if (!params.data || !params.data.raw) return;
+          openEnterpriseModal({ title: `${params.data.raw.name}企业明细`, industry: params.data.raw.name });
+        });
       });
     }
 
@@ -1446,7 +1937,7 @@
     }
 
     function mapTooltip(country) {
-      if (!country) return '暂无匹配数据';
+      if (!country) return '';
       return [
         countryName(country),
         '海外华商数：' + fmt(country.huashang_count || country.cn_loose_pos),
@@ -1463,6 +1954,8 @@
       const data = [];
       (DATA.country_map || []).forEach(country => {
         if (!isDisplayCountry(country)) return;
+        const count = num(country.huashang_count) || num(country.cn_loose_pos) || 0;
+        if (count <= 0) return;
         const name = resolveMapName(country);
         if (!name) return;
         countryByGeoName.set(name, country);
@@ -1478,14 +1971,14 @@
         let value = null;
         if (mode === 'bri') {
           if (isBri) {
-            value = num(country.huashang_count) || num(country.cn_loose_pos) || 0;
+            value = count;
           } else {
             itemStyle.areaColor = '#dbe6f3';
             itemStyle.borderColor = '#cbd5e1';
             itemStyle.borderWidth = .4;
           }
         } else if (hasData) {
-          value = num(country.huashang_count) || num(country.cn_loose_pos) || 0;
+          value = count;
         } else {
           itemStyle.areaColor = '#dbe6f3';
           itemStyle.borderColor = '#cbd5e1';
@@ -1648,7 +2141,7 @@
           xAxis: {
             type: 'category',
             data: labels,
-            axisLabel: { rotate: 38, interval: 0, fontSize: 11 }
+            axisLabel: { rotate: 28, interval: 0, fontSize: 11, formatter: value => wrapCnLabel(value, 5, 2) }
           },
           yAxis: {
             type: 'value',
@@ -1874,6 +2367,7 @@
       setupGeoControls();
       initBriScatter();
       initGeoRadar();
+      initGeoConcentration();
     }
 
     function renderFiveEyeCards() {
@@ -2137,7 +2631,8 @@
           .map(row => ({
             ...row,
             current_huashang_count: num((state.countryByIso.get(row.iso3) || {}).huashang_count) || 0
-          }));
+          }))
+          .filter(row => row.current_huashang_count > 0);
         const gdpValues = rows.map(row => num(row.gdp_per_capita_current_usd)).filter(v => v != null && v > 0);
         const investmentValues = rows.map(row => num(row.aei_total_millions_usd)).filter(v => v != null && v > 0);
         const five = rows.filter(row => Number(row.is_five_eyes) === 1);
@@ -2193,10 +2688,90 @@
       });
     }
 
+    function initGeoConcentration() {
+      renderChart('geo-concentration', 'country_map group concentration', () => {
+        const build = (name, color, rows) => {
+          const valid = rows
+            .filter(row => (num(row.huashang_count) || 0) > 0)
+            .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
+          const total = sum(valid, 'huashang_count') || 1;
+          const top3 = valid.slice(0, 3);
+          const top3Share = sum(top3, 'huashang_count') / total * 100;
+          return {
+            name,
+            color,
+            total,
+            countries: valid.length,
+            top3Share,
+            top: top3.map(countryName).join('、')
+          };
+        };
+        const groups = [
+          build('五眼联盟', FIVE_EYES_COLOR, overseasCountries().filter(row => Number(row.is_five_eyes) === 1)),
+          build('一带一路', BRI_COLOR, overseasCountries().filter(row => Number(row.is_bri) === 1))
+        ];
+        return {
+          grid: { left: 54, right: 28, top: 42, bottom: 44, containLabel: true },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => {
+              const row = params[0].data.raw;
+              return `${row.name}<br>华商总量：${fmt(row.total)}<br>覆盖国家：${fmt(row.countries)}<br>Top3占比：${pctPoint(row.top3Share)}<br>Top3：${row.top}`;
+            }
+          },
+          legend: { top: 0, right: 0 },
+          xAxis: {
+            type: 'category',
+            data: groups.map(row => row.name),
+            axisTick: { show: false }
+          },
+          yAxis: [
+            {
+              type: 'value',
+              name: '华商总量',
+              axisLabel: { formatter: axisShort },
+              splitLine: { lineStyle: { color: '#d7e3f5' } }
+            },
+            {
+              type: 'value',
+              name: 'Top3占比',
+              min: 0,
+              max: 100,
+              axisLabel: { formatter: '{value}%' },
+              splitLine: { show: false }
+            }
+          ],
+          series: [
+            {
+              name: '华商总量',
+              type: 'bar',
+              barWidth: 34,
+              data: groups.map(row => ({
+                value: row.total,
+                raw: row,
+                itemStyle: { color: row.color, borderRadius: [8, 8, 0, 0] }
+              }))
+            },
+            {
+              name: 'Top3占比',
+              type: 'line',
+              yAxisIndex: 1,
+              symbolSize: 9,
+              data: groups.map(row => ({ value: row.top3Share, raw: row })),
+              itemStyle: { color: '#7c3aed' },
+              lineStyle: { width: 2 }
+            }
+          ]
+        };
+      });
+    }
+
     function initChamber() {
       renderChamberKpis();
       renderChamberRegionChart();
       renderChamberTypeChart();
+      setupChamberTable();
       renderChamberTable();
     }
 
@@ -2258,19 +2833,101 @@
       });
     }
 
+    function setupChamberTable() {
+      const tabs = document.getElementById('chamber-data-tabs');
+      if (!tabs || tabs.dataset.ready) return;
+      tabs.addEventListener('click', event => {
+        const button = event.target.closest('button[data-kind]');
+        if (!button) return;
+        state.chamber.kind = button.dataset.kind;
+        state.chamber.page = 1;
+        tabs.querySelectorAll('button').forEach(btn => btn.classList.toggle('active', btn === button));
+        renderChamberTable();
+      });
+      document.getElementById('chamber-search').addEventListener('input', event => {
+        state.chamber.search = event.target.value.trim().toLowerCase();
+        state.chamber.page = 1;
+        renderChamberTable();
+      });
+      document.getElementById('chamber-page-size').addEventListener('change', event => {
+        state.chamber.pageSize = Number(event.target.value);
+        state.chamber.page = 1;
+        renderChamberTable();
+      });
+      document.getElementById('chamber-prev').addEventListener('click', () => {
+        state.chamber.page = Math.max(1, state.chamber.page - 1);
+        renderChamberTable();
+      });
+      document.getElementById('chamber-next').addEventListener('click', () => {
+        state.chamber.page += 1;
+        renderChamberTable();
+      });
+      tabs.dataset.ready = '1';
+    }
+
+    function chamberColumns(kind) {
+      if (kind === 'people') {
+        return [
+          ['姓名', '姓名'],
+          ['职务', '职务'],
+          ['关联企业', '关联企业'],
+          ['所属商会', '所属商会'],
+          ['国家/地区', '国家/地区'],
+          ['来源链接', '来源']
+        ];
+      }
+      if (kind === 'enterprises') {
+        return [
+          ['企业名称', '企业名称'],
+          ['关联人物', '关联人物'],
+          ['所属商会', '所属商会'],
+          ['来源链接', '来源']
+        ];
+      }
+      return [
+        ['组织名称', '商会/组织'],
+        ['国家/地区', '国家/地区'],
+        ['所属区域', '区域'],
+        ['组织类型', '类型'],
+        ['成立年份', '成立年份'],
+        ['活跃度', '活跃度'],
+        ['运行状态', '状态'],
+        ['官网链接', '官网']
+      ];
+    }
+
+    function chamberRows() {
+      const chamber = DATA.chamber_data || {};
+      const kind = state.chamber.kind;
+      const rows = chamber[kind] || [];
+      const search = state.chamber.search;
+      if (!search) return rows;
+      return rows.filter(row => Object.values(row).some(value => String(value || '').toLowerCase().includes(search)));
+    }
+
     function renderChamberTable() {
-      const rows = ((DATA.chamber_data || {}).chambers || []).slice(0, 80);
-      document.querySelector('#chamber-table tbody').innerHTML = rows.map(row => `
+      const columns = chamberColumns(state.chamber.kind);
+      const rows = chamberRows();
+      const pages = Math.max(1, Math.ceil(rows.length / state.chamber.pageSize));
+      state.chamber.page = Math.min(state.chamber.page, pages);
+      const start = (state.chamber.page - 1) * state.chamber.pageSize;
+      const pageRows = rows.slice(start, start + state.chamber.pageSize);
+
+      document.querySelector('#chamber-table thead').innerHTML = `
+        <tr>${columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr>
+      `;
+      document.querySelector('#chamber-table tbody').innerHTML = pageRows.map(row => `
         <tr>
-          <td>${row['组织名称'] || ''}</td>
-          <td>${row['国家/地区'] || ''}</td>
-          <td>${row['所属区域'] || ''}</td>
-          <td>${row['组织类型'] || ''}</td>
-          <td>${row['活跃度'] || ''}</td>
-          <td>${row['运行状态'] || ''}</td>
-          <td>${linkCell(row['官网链接'])}</td>
+          ${columns.map(([key]) => {
+            const value = row[key];
+            const isLink = key.includes('链接');
+            return `<td>${isLink ? linkCell(value) : escapeHtml(value || '')}</td>`;
+          }).join('')}
         </tr>
       `).join('');
+      document.getElementById('chamber-table-count').textContent = `表格总条数：${fmt(rows.length)} · 第 ${state.chamber.page}/${pages} 页`;
+      document.getElementById('chamber-prev').disabled = state.chamber.page <= 1;
+      document.getElementById('chamber-next').disabled = state.chamber.page >= pages;
     }
 
     function initResearch() {
@@ -2353,6 +3010,7 @@
           y: (num(row.huashang_count) || num(row.cn_loose_pos) || 0) / (DATA.summary.cn_loose_pos || 1) * 100,
           firms: num(row.huashang_count) || num(row.cn_loose_pos) || 0
         }))
+        .filter(row => row.firms > 0)
         .filter(row => row.x != null && row.y != null);
     }
 
@@ -2522,6 +3180,18 @@
       });
     }
 
+    function setupGlobalActions() {
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      document.getElementById('data-modal').addEventListener('click', event => {
+        if (event.target.id === 'data-modal') closeModal();
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && !document.getElementById('data-modal').hidden) closeModal();
+      });
+      document.getElementById('index-intro-link').addEventListener('click', () => switchTab('research'));
+      document.getElementById('open-report').addEventListener('click', openResearchReport);
+    }
+
     function resizeCharts() {
       Object.values(charts).forEach(chart => {
         if (chart && typeof chart.resize === 'function') chart.resize();
@@ -2535,6 +3205,7 @@
 
     async function bootstrap() {
       setupTabs();
+      setupGlobalActions();
       if (!window.echarts) {
         showAppError('ECharts CDN加载失败，请检查网络连接。');
         return;
@@ -2546,8 +3217,8 @@
       });
 
       try {
-        const raw = await fetch('huashang-data-6f8c2e91.json').then(response => {
-          if (!response.ok) throw new Error('huashang-data-6f8c2e91.json HTTP ' + response.status);
+        const raw = await fetch('huashang-data-ff389cbe.json').then(response => {
+          if (!response.ok) throw new Error('huashang-data-ff389cbe.json HTTP ' + response.status);
           return response.json();
         });
         prepareData(raw);
@@ -2574,3 +3245,4 @@
   </script>
 </body>
 </html>
+
