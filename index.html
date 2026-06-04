@@ -1411,7 +1411,7 @@
     }
 
     function enterpriseRecords() {
-      return (DATA.enterprise_records || []).filter(row => row && row.name);
+      return (DATA.enterprise_records || []).filter(row => row);
     }
 
     function openEnterpriseModal(config = {}) {
@@ -1527,7 +1527,7 @@
       document.querySelector('#drill-table tbody').innerHTML = pageRows.map(row => `
         <tr>
           <td>${fmt(row.seq)}</td>
-          <td>${escapeHtml(row.name)}</td>
+          <td>${escapeHtml(row.name || '未公开')}</td>
           <td>${escapeHtml(row.country)}</td>
           <td>${escapeHtml(row.industry_group || '')}</td>
           <td>${escapeHtml(row.industry || '')}</td>
