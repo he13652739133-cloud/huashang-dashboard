@@ -723,22 +723,6 @@
       line-height: 1.7;
     }
 
-    .radar-note {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .radar-note span {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #fff;
-      padding: 8px 10px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
     @media (max-width: 1120px) {
       .overview-grid,
       .two-col,
@@ -860,13 +844,11 @@
           <div id="overview-heatmap" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
           <aside class="index-explainer">
             <h3>指标说明</h3>
-            <p>综合指数用于衡量各国家/地区华商基础、制度环境与中国联系的综合表现，分值越高表示华商网络和外部条件越集中。</p>
+            <p>华商发展指数从华商基础、制度环境、中国联系、华人网络和市场条件五个维度，衡量各国家和地区的综合表现。该指数不只是企业数量排名，而是用于比较不同市场的华商发展基础、外部环境和拓展潜力。</p>
             <ul class="index-list">
-              <li>华商基础：企业数量、资产规模与重点企业占比。</li>
-              <li>制度环境：廉洁、法治、政府效能和监管质量。</li>
-              <li>中国联系：对华贸易、中国投资与工程合作。</li>
-              <li>华人网络：华人人口参考值、移民存量与商会数量。</li>
-              <li>市场条件：人均GDP、人口规模、FDI和企业活跃度。</li>
+              <li>筛选重点国家</li>
+              <li>比较区域差异</li>
+              <li>识别潜在市场</li>
             </ul>
             <button class="action-button" id="index-intro-link" type="button">查看指数分析</button>
           </aside>
@@ -1016,11 +998,6 @@
             </div>
           </div>
           <div id="geo-radar" class="chart chart-radar"><div class="chart-loading">数据加载中...</div></div>
-          <div class="radar-note">
-            <span>华商基础：企业数量与重点企业占比</span>
-            <span>制度环境：廉洁、法治和政府效能</span>
-            <span>中国联系：贸易、投资与工程合作</span>
-          </div>
         </div>
 
         <div class="card">
@@ -1115,7 +1092,10 @@
         </div>
         <div class="insight-box">
           <h3>总体判断</h3>
-          <p>当前华商企业主要集中在美国、菲律宾、越南、加拿大、意大利、法国等市场，亚洲与北美洲共同构成主体。五眼国家制度与市场条件更稳，一带一路国家在贸易投资联系和华人网络承载上更突出，东南亚呈现“商会网络活跃、企业数量集中、产业类型更分散”的特征。</p>
+          <p>从当前数据看，海外华商企业分布呈现“亚洲与北美洲双核心、欧洲补充、其他区域节点化”的总体格局。美国、菲律宾、越南、加拿大、意大利、法国等国家是企业数量较为集中的主要市场。</p>
+          <p>亚洲市场在企业数量、商会网络和华人社群基础方面更突出，尤其东南亚区域兼具产业承接和社群连接优势。北美洲市场则在制度环境、市场容量和高附加值行业承载方面更具优势。欧洲市场整体规模相对分散，但在部分国家形成了具有代表性的节点型市场。</p>
+          <p>从地缘板块看，五眼国家和一带一路国家体现出不同类型的优势。五眼国家更适合观察金融、技术服务、专业服务和成熟市场中的华商网络；一带一路国家则更适合观察跨境贸易、制造、批发零售、工程合作和区域产业联动。</p>
+          <p>商会网络是理解海外华商分布的重要补充。企业数据反映经营主体分布，商会数据则补充呈现组织连接、代表人物和潜在合作入口，有助于更全面地观察海外华商网络。</p>
         </div>
       </section>
 
@@ -1455,9 +1435,23 @@
       ];
     }
 
+    function industryDisplayRank(row) {
+      const hasName = row.name && String(row.name).trim();
+      const publicName = hasName && String(row.name).trim() !== '未公开';
+      const industryPriority = ['金融', '商业服务', '制造', '技术服务', '批发零售', '建筑与地产', '交通运输', '公共与居民服务', '采矿', '农业', '其他'];
+      const industry = row.industry_group || row.industry || '';
+      const industryScore = industryPriority.includes(industry) ? industryPriority.indexOf(industry) : 20;
+      return [
+        publicName ? 0 : 1,
+        hashString(`${industry}|${row.id || row.name || row.seq}|industry-view`) % 503,
+        industryScore,
+        row.type === '重点企业' ? 0 : 1
+      ];
+    }
+
     function compareEnterpriseRows(a, b) {
-      const ar = enterpriseDisplayRank(a);
-      const br = enterpriseDisplayRank(b);
+      const ar = state.drill.mode === 'industry' ? industryDisplayRank(a) : enterpriseDisplayRank(a);
+      const br = state.drill.mode === 'industry' ? industryDisplayRank(b) : enterpriseDisplayRank(b);
       for (let i = 0; i < ar.length; i += 1) {
         if (ar[i] !== br[i]) return ar[i] - br[i];
       }
@@ -1621,20 +1615,28 @@
       showModal('华商发展指数研究报告', '指标、现状、趋势分析与决策建议', `
         <div class="report-content">
           <section>
-            <h3>一、指标体系</h3>
-            <p>综合指数由华商基础、制度环境、中国联系、华人网络、市场条件五个维度构成。规模类指标采用log(1+x)压缩极端值后标准化，制度类指标采用0-100分值，最终按25%、20%、20%、20%、15%的权重合成。</p>
+            <h3>一、总览页：指标说明</h3>
+            <p>华商发展指数用于综合观察不同国家和地区的华商发展基础与外部环境。指数从华商基础、制度环境、中国联系、华人网络和市场条件五个维度出发，不只是比较企业数量，也同时关注当地营商制度、对华经贸联系、华人社群网络和市场发展空间。通过这一指数，可以初步判断哪些国家已经形成较强华商企业基础，哪些区域具备较好的制度和市场条件，哪些市场在中国联系、华人网络和产业合作方面仍有进一步拓展潜力。</p>
           </section>
           <section>
-            <h3>二、现状判断</h3>
-            <p>美国、菲律宾、越南、加拿大等市场构成当前华商企业数量的核心板块；亚洲体现企业密度和商会网络优势，北美洲体现制度环境与市场容量优势，欧洲样本更分散，非洲和大洋洲更多体现补充性节点价值。</p>
+            <h3>二、指数构建变量说明</h3>
+            <p>华商基础指数主要衡量当地华商企业的数量规模、重点企业分布和资产信息可见度。分值较高，通常说明当地华商企业基础较强，或已经形成一定企业集聚。</p>
+            <p>制度环境指数主要衡量当地商业运行环境的稳定性和可预期性，重点关注廉洁水平、法治水平、政府效能和监管质量等因素。分值较高，说明当地制度环境相对稳定，更适合长期经营和高端服务业发展。</p>
+            <p>中国联系指数主要衡量当地与中国之间的贸易、投资和工程合作强度。分值较高，说明该市场与中国经贸联系更紧密，华商企业可能在双边贸易、产业协作和投资合作中发挥更大作用。</p>
+            <p>华人网络指数主要衡量当地华人人口、移民存量和商会组织形成的社会网络基础。分值较高，通常说明当地社群组织能力、商业互助基础和信息传播网络较强。</p>
+            <p>市场条件指数主要衡量当地经济容量和市场发展空间，重点考虑人均 GDP、人口规模、外商直接投资流入和新企业密度等因素。分值较高，说明当地市场承载力和企业活跃度较强。</p>
           </section>
           <section>
-            <h3>三、趋势分析</h3>
-            <p>一带一路国家在中国投资、工程合作和贸易联系上具备持续扩展空间，东南亚区域的华商网络更活跃；五眼国家整体制度环境较稳，适合观察资本服务、技术服务和高附加值产业网络。</p>
+            <h3>三、指数分析页：总体判断</h3>
+            <p>从当前数据看，海外华商企业分布呈现“亚洲与北美洲双核心、欧洲补充、其他区域节点化”的总体格局。美国、菲律宾、越南、加拿大、意大利、法国等国家是企业数量较为集中的主要市场。</p>
+            <p>亚洲市场在企业数量、商会网络和华人社群基础方面更突出，尤其东南亚区域兼具产业承接和社群连接优势。北美洲市场则在制度环境、市场容量和高附加值行业承载方面更具优势。欧洲市场整体规模相对分散，但在部分国家形成了具有代表性的节点型市场。</p>
+            <p>从地缘板块看，五眼国家和一带一路国家体现出不同类型的优势。五眼国家更适合观察金融、技术服务、专业服务和成熟市场中的华商网络；一带一路国家则更适合观察跨境贸易、制造、批发零售、工程合作和区域产业联动。</p>
+            <p>商会网络是理解海外华商分布的重要补充。企业数据反映经营主体分布，商会数据则补充呈现组织连接、代表人物和潜在合作入口，有助于更全面地观察海外华商网络。</p>
           </section>
           <section>
-            <h3>四、决策建议</h3>
-            <p>后续可优先围绕东南亚与北美两个主轴开展跟踪：东南亚侧重商会网络和制造、批发零售、商业服务联动；北美侧重金融、技术服务和高端商业服务。对样本较少的区域，应以重点节点国家和商会组织作为补充观察对象。</p>
+            <h3>四、指数用途</h3>
+            <p>本指数适合用于筛选重点国家、比较区域差异和识别潜在市场。企业数量反映华商基础，制度环境反映长期经营条件，中国联系和华人网络则有助于观察跨境合作和社群连接能力。</p>
+            <p>商会网络是企业数据的重要补充。企业数据反映经营主体分布，商会数据则反映组织连接、代表人物和潜在合作入口，有助于更全面理解海外华商网络。</p>
           </section>
         </div>
       `);
@@ -3046,18 +3048,25 @@
     function renderIndexMethod() {
       const method = DATA.analysis_index_method || {};
       const components = method.components || [];
+      const descriptions = {
+        '华商基础指数': '主要衡量当地华商企业的数量规模、重点企业分布和资产信息可见度。分值较高，通常说明当地华商企业基础较强，或已经形成一定企业集聚。',
+        '制度环境指数': '主要衡量当地商业运行环境的稳定性和可预期性，重点关注廉洁水平、法治水平、政府效能和监管质量等因素。',
+        '中国联系指数': '主要衡量当地与中国之间的贸易、投资和工程合作强度，反映华商企业在双边贸易、产业协作和投资合作中的潜在作用。',
+        '华人网络指数': '主要衡量当地华人人口、移民存量和商会组织形成的社会网络基础，反映社群组织能力和商业互助基础。',
+        '市场条件指数': '主要衡量当地经济容量和市场发展空间，重点考虑人均GDP、人口规模、外商直接投资流入和新企业密度等因素。'
+      };
       const grid = document.getElementById('index-method-grid');
       if (!grid) return;
       grid.innerHTML = components.map(item => `
         <div class="method-item">
           <div class="method-title">${escapeHtml(item.name)}</div>
           <div class="method-weight">权重 ${pct(item.weight, 0)}</div>
-          <div class="method-fields">${escapeHtml((item.fields || []).join('、'))}</div>
+          <div class="method-fields">${escapeHtml(descriptions[item.name] || (item.fields || []).join('、'))}</div>
         </div>
       `).join('');
       const note = document.getElementById('index-method-note');
       if (note) {
-        note.textContent = '构建方法：各分项先统一转换为0-100分；数量、资产、贸易、投资、人口等规模变量先取log(1+x)压缩极端值，再标准化；综合指数=25%华商基础+20%制度环境+20%中国联系+20%华人网络+15%市场条件。';
+        note.textContent = '本指数适合用于筛选重点国家、比较区域差异和识别潜在市场。企业数量反映华商基础，制度环境反映长期经营条件，中国联系和华人网络则有助于观察跨境合作和社群连接能力。';
       }
     }
 
