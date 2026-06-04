@@ -1,0 +1,2576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    (() => {
+      const password = "jYQ7fnmmeFw3";
+      const input = window.prompt("请输入访问密码");
+      if (input !== password) {
+        document.documentElement.innerHTML = "<head><title>访问受限</title></head><body style=\"margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;\"><main style=\"text-align:center;\"><h1 style=\"font-size:24px;margin-bottom:8px;\">访问受限</h1><p style=\"color:#607086;\">请输入正确密码后访问。</p></main></body>";
+        throw new Error("Unauthorized");
+      }
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>华商经济数据库</title>
+  <link rel="icon" href="data:,">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+  <style>
+    :root {
+      --nav: #071b33;
+      --page: #edf4ff;
+      --card: rgba(255, 255, 255, .94);
+      --card-strong: #ffffff;
+      --border: #d7e3f5;
+      --text: #102033;
+      --muted: #607086;
+      --faint: #92a3ba;
+      --primary: #2563eb;
+      --accent: #0891b2;
+      --five-eyes: #f59e0b;
+      --bri: #06b6d4;
+      --boundary: #7c3aed;
+      --radius: 10px;
+      --shadow: 0 18px 45px rgba(15, 35, 70, .12);
+      --shadow-soft: 0 8px 22px rgba(15, 35, 70, .08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(59, 130, 246, .18), transparent 34%),
+        linear-gradient(180deg, #e7f0ff 0, #f8fbff 360px, #edf4ff 100%);
+      color: var(--text);
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      height: 56px;
+      background: linear-gradient(90deg, #06172e 0%, #0b2f5b 58%, #123d73 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, .18);
+    }
+
+    .brand {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .tabs {
+      display: flex;
+      height: 56px;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .tab-btn {
+      height: 56px;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: rgba(255, 255, 255, .68);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 500;
+      padding: 0 2px;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      border-bottom-color: #38bdf8;
+    }
+
+    main {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px 24px 34px;
+    }
+
+    .tab-panel[hidden] {
+      display: none;
+    }
+
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+    }
+
+    .kpi-grid .card {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(250, 253, 251, .92));
+      border-color: rgba(194, 213, 239, .92);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-grid .card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 3px;
+      background: linear-gradient(90deg, #2563eb, #06b6d4, #7c3aed);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .card-subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .kpi-value {
+      margin: 0;
+      color: #1d4ed8;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .kpi-label {
+      margin-top: 10px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .kpi-sub {
+      display: none;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    #tab-overview .card-subtitle {
+      display: none;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .chart {
+      height: 320px;
+      width: 100%;
+      display: block;
+      min-width: 0;
+      border-radius: 8px;
+    }
+
+    .chart-map {
+      height: 360px;
+    }
+
+    .chart-heatmap,
+    .chart-radar {
+      height: 320px;
+    }
+
+    .chart-country {
+      height: 300px;
+    }
+
+    .chart-research {
+      height: 420px;
+    }
+
+    .chart-loading,
+    .chart-error,
+    .chart-empty {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--faint);
+      text-align: center;
+      padding: 24px;
+      background: rgba(248, 250, 252, .45);
+      border-radius: 8px;
+    }
+
+    .chart-error {
+      color: #dc2626;
+    }
+
+    .note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    input,
+    select,
+    button.control {
+      height: 34px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .92);
+      color: var(--text);
+      font: inherit;
+      padding: 0 12px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 2px solid rgba(30, 64, 175, .14);
+      border-color: #7dd3fc;
+    }
+
+    .legend-inline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, .72);
+      border: 1px solid rgba(216, 227, 223, .8);
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+
+    .legend-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      margin-right: 5px;
+    }
+
+    .five-eye-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .country-card {
+      min-height: 172px;
+    }
+
+    .country-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .flag {
+      font-size: 20px;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 5px 0;
+      border-top: 1px solid #f1f5f9;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric-row strong {
+      color: var(--text);
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--card-strong);
+    }
+
+    table {
+      width: 100%;
+      min-width: 860px;
+      border-collapse: collapse;
+      background: var(--card-strong);
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #f1f5f9;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      color: #475569;
+      background: #eef5ff;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    tbody tr:hover {
+      background: #f5f9ff;
+    }
+
+    .table-link {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .table-link:hover {
+      text-decoration: underline;
+    }
+
+    .table-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pager {
+      display: flex;
+      gap: 8px;
+    }
+
+    .pager button,
+    .text-button {
+      height: 30px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .9);
+      color: var(--text);
+      cursor: pointer;
+      padding: 0 10px;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    .pager button:disabled {
+      cursor: not-allowed;
+      color: var(--faint);
+      background: #f3f7ff;
+    }
+
+    .segmented {
+      display: inline-flex;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .9);
+    }
+
+    .segmented button {
+      height: 34px;
+      border: 0;
+      border-right: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      padding: 0 12px;
+    }
+
+    .segmented button:last-child {
+      border-right: 0;
+    }
+
+    .segmented button.active {
+      background: #e8f2ff;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .research-controls {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.1fr) minmax(180px, .9fr) minmax(220px, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .method-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      background: linear-gradient(180deg, #ffffff, #f3f7ff);
+      min-height: 120px;
+    }
+
+    .method-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .method-weight {
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .method-fields {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .field select,
+    .field input[type="range"] {
+      width: 100%;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .meta-pill {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .error-banner {
+      margin-bottom: 16px;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      background: #fef2f2;
+      color: #991b1b;
+      padding: 14px 16px;
+    }
+
+    @media (max-width: 1120px) {
+      .overview-grid,
+      .two-col,
+      .research-controls,
+      .method-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .five-eye-grid,
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      nav {
+        height: auto;
+        min-height: 56px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px 16px 0;
+      }
+
+      .tabs {
+        width: 100%;
+        height: 44px;
+        gap: 14px;
+        overflow-x: auto;
+      }
+
+      .tab-btn {
+        height: 44px;
+        white-space: nowrap;
+      }
+
+      main {
+        padding: 16px;
+      }
+
+      .five-eye-grid,
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="brand">华商经济数据库</div>
+    <div class="tabs" role="tablist" aria-label="仪表盘标签">
+      <button class="tab-btn active" data-tab="overview" role="tab">总览</button>
+      <button class="tab-btn" data-tab="enterprise" role="tab">华商企业</button>
+      <button class="tab-btn" data-tab="geo" role="tab">地缘视角</button>
+      <button class="tab-btn" data-tab="chamber" role="tab">商会网络</button>
+      <button class="tab-btn" data-tab="research" role="tab">指数分析</button>
+    </div>
+  </nav>
+
+  <main>
+    <div id="tab-overview" class="tab-panel">
+      <section class="section kpi-grid" id="overview-kpis"></section>
+
+      <section class="section overview-grid">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">海外华商行业分布</h2>
+              <p class="card-subtitle">按华商企业数量统计</p>
+            </div>
+          </div>
+          <div id="overview-industry-donut" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">区域分布</h2>
+              <p class="card-subtitle">亚洲、北美洲及其他地区结构</p>
+            </div>
+          </div>
+          <div id="overview-definition-bar" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">五眼 vs 一带一路</h2>
+            <p class="card-subtitle">重点经济圈华商分布对比</p>
+            </div>
+          </div>
+          <div id="overview-bloc-bar" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">海外华商数量地图</h2>
+            <p class="card-subtitle">颜色为华商数量，黄色边框为五眼联盟，绿色边框为一带一路</p>
+          </div>
+        </div>
+        <div id="overview-world-map" class="chart chart-map"><div class="chart-loading">数据加载中...</div></div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">华商发展指数构建</h2>
+            <p class="card-subtitle">由华商基础、制度环境、中国联系、华人网络、市场条件构建综合指数</p>
+          </div>
+        </div>
+        <div id="overview-heatmap" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
+      </section>
+    </div>
+
+    <div id="tab-enterprise" class="tab-panel" hidden>
+      <section class="section kpi-grid" id="enterprise-kpis"></section>
+
+      <section class="section two-col">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">行业分布柱状图</h2>
+              <p class="card-subtitle">按行业大类展示华商数量</p>
+            </div>
+          </div>
+          <div id="enterprise-industry-stack" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">行业资产结构</h2>
+              <p class="card-subtitle">海外华商资产行业占比</p>
+            </div>
+          </div>
+          <div id="enterprise-asset-rank" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">国家分布</h2>
+            <p class="card-subtitle">华商数量前40，可搜索国家名</p>
+          </div>
+          <div class="toolbar">
+            <input id="country-search" type="search" placeholder="搜索国家名">
+            <div class="legend-inline">
+              <span><i class="legend-dot" style="background:#f59e0b"></i>五眼联盟</span>
+              <span><i class="legend-dot" style="background:#06b6d4"></i>一带一路</span>
+              <span><i class="legend-dot" style="background:#94a3b8"></i>其他</span>
+            </div>
+          </div>
+        </div>
+        <div id="enterprise-country-bar" class="chart chart-country"><div class="chart-loading">数据加载中...</div></div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">交叉统计表</h2>
+            <p class="card-subtitle">国家 × 行业，支持筛选与列排序</p>
+          </div>
+        </div>
+        <div class="toolbar" style="margin-bottom:14px">
+          <select id="filter-industry" aria-label="行业筛选"></select>
+          <select id="filter-region" aria-label="地区分组">
+            <option value="all">全部地区</option>
+            <option value="five">五眼联盟</option>
+            <option value="bri">一带一路</option>
+            <option value="other">其他</option>
+          </select>
+          <select id="filter-type" aria-label="华商类型">
+            <option value="all">全部类型</option>
+            <option value="loose">全部华商</option>
+            <option value="strict">核心华商</option>
+            <option value="boundary">补充识别</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table id="industry-table">
+            <thead>
+              <tr>
+                <th data-sort="country_name_zh">国家</th>
+                <th data-sort="industry_label">行业</th>
+                <th data-sort="huashang_count">华商数量</th>
+                <th data-sort="rate">行业占比</th>
+                <th data-sort="huashang_asset_sum">华商资产</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <div id="table-count">表格总条数：0</div>
+          <div class="pager">
+            <button id="table-prev" type="button">上一页</button>
+            <button id="table-next" type="button">下一页</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-geo" class="tab-panel" hidden>
+      <section class="section">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">重点国家概览</h2>
+            <p class="card-subtitle">按华商数量展示主要国家和地区</p>
+          </div>
+        </div>
+        <div class="five-eye-grid" id="five-eye-cards"></div>
+      </section>
+
+      <section class="section two-col">
+        <div class="card">
+          <div class="card-header">
+            <div>
+            <h2 class="card-title">地缘分组结构</h2>
+            <p class="card-subtitle">按当前华商总量拆分五眼、一带一路与其他国家</p>
+            </div>
+          </div>
+          <div id="geo-bloc-share" class="chart chart-map"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+            <h2 class="card-title">地缘变量散点分析</h2>
+            <p class="card-subtitle">可切换变量，气泡大小代表公开资料华人人口参考值</p>
+            </div>
+            <div class="toolbar">
+              <select id="geo-x" aria-label="地缘X轴变量"></select>
+              <select id="geo-y" aria-label="地缘Y轴变量"></select>
+              <select id="geo-scope" aria-label="地缘范围">
+                <option value="bri">一带一路</option>
+                <option value="all">全部国家</option>
+                <option value="five">五眼联盟</option>
+                <option value="asia">亚洲</option>
+                <option value="europe">欧洲</option>
+                <option value="americas">美洲</option>
+              </select>
+            </div>
+          </div>
+          <div id="geo-bri-scatter" class="chart chart-map"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">五眼 vs 一带一路对比</h2>
+            <p class="card-subtitle">制度、市场、投资与华商指标雷达图</p>
+          </div>
+        </div>
+        <div id="geo-radar" class="chart chart-radar"><div class="chart-loading">数据加载中...</div></div>
+      </section>
+    </div>
+
+    <div id="tab-chamber" class="tab-panel" hidden>
+      <section class="section kpi-grid" id="chamber-kpis"></section>
+
+      <section class="section two-col">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">商会区域分布</h2>
+              <p class="card-subtitle">来自商会数据.xlsx的组织记录</p>
+            </div>
+          </div>
+          <div id="chamber-region-chart" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">组织类型</h2>
+              <p class="card-subtitle">协会、总商会、联合会等</p>
+            </div>
+          </div>
+          <div id="chamber-type-chart" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">重点商会与人物企业</h2>
+            <p class="card-subtitle">商会、人物职务、关联企业为独立来源，不并入ORBIS企业比例</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="chamber-table">
+            <thead>
+              <tr>
+                <th>商会/组织</th>
+                <th>国家/地区</th>
+                <th>区域</th>
+                <th>类型</th>
+                <th>活跃度</th>
+                <th>状态</th>
+                <th>官网</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-research" class="tab-panel" hidden>
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">指数构建变量</h2>
+            <p class="card-subtitle">综合指数采用0-100标准化，按权重合成</p>
+          </div>
+        </div>
+        <div id="index-method-grid" class="method-grid"></div>
+        <p id="index-method-note" class="note"></p>
+      </section>
+
+      <section class="section card">
+        <div class="research-controls">
+          <div class="field">
+            <label for="research-x">X轴变量</label>
+            <select id="research-x"></select>
+          </div>
+          <div class="field">
+            <label>Y轴变量</label>
+            <input value="华商总量占比" disabled>
+          </div>
+          <div class="field">
+            <label for="research-year">年份：<span id="research-year-value">2022</span></label>
+            <div class="range-row">
+              <span class="meta-pill">2010</span>
+              <input id="research-year" type="range" min="2010" max="2024" step="1" value="2022">
+              <span class="meta-pill">2024</span>
+            </div>
+          </div>
+          <div class="field">
+            <label>分组切换</label>
+            <div class="segmented" id="research-group">
+              <button type="button" class="active" data-group="all">全部国家</button>
+              <button type="button" data-group="five">仅五眼</button>
+              <button type="button" data-group="bri">仅一带一路</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">变量相关散点图</h2>
+            <p class="card-subtitle">点击国家气泡查看2010-2024趋势</p>
+          </div>
+          <div id="research-scatter-meta" class="meta-pill">有效数据点 0 · r=暂无</div>
+        </div>
+        <div id="research-scatter" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title" id="trend-title">国家趋势</h2>
+            <p class="card-subtitle">双Y轴：华商占比与选定X变量</p>
+          </div>
+          <button id="clear-country" class="text-button" type="button" hidden>取消选择×</button>
+        </div>
+        <div id="research-trend" class="chart"><div class="chart-empty">点击散点图中的国家查看趋势</div></div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const PALETTE = ['#2563eb', '#06b6d4', '#7c3aed', '#f59e0b', '#dc2626', '#0891b2', '#4f46e5', '#db2777', '#64748b', '#1d4ed8'];
+    const FIVE_EYES_COLOR = '#f59e0b';
+    const BRI_COLOR = '#06b6d4';
+    const BOUNDARY_COLOR = '#8b5cf6';
+    const DISPLAY_EXCLUDED_ISO = new Set(['BMU', 'CYM']);
+    const INDEX_COMPONENTS = [
+      ['huashang_development_index', '华商基础', 0.25, '#2563eb'],
+      ['institution_index', '制度环境', 0.20, '#4f46e5'],
+      ['china_connection_index', '中国联系', 0.20, '#d97706'],
+      ['diaspora_network_index', '华人网络', 0.20, '#7c3aed'],
+      ['market_condition_index', '市场条件', 0.15, '#dc2626']
+    ];
+    const charts = {};
+
+    let DATA = null;
+    let WORLD_GEO = null;
+    let GEO_NAME_SET = new Set();
+    let GEO_NAME_BY_NORM = new Map();
+
+    const state = {
+      loadedTabs: new Set(),
+      countryByIso: new Map(),
+      latestByIso: new Map(),
+      activeTab: 'overview',
+      researchGroup: 'all',
+      selectedCountryIso: null,
+      table: {
+        page: 1,
+        pageSize: 20,
+        sortKey: 'huashang_count',
+        sortDir: 'desc'
+      }
+    };
+
+    const VARIABLE_OPTIONS = [
+      ['gdp_per_capita_current_usd', '人均GDP'],
+      ['cpi_score', '廉洁指数'],
+      ['rule_of_law_score_0_100', '法治水平'],
+      ['government_effectiveness_score_0_100', '政府效能'],
+      ['aei_total_millions_usd', '中国投资额'],
+      ['ethnic_chinese_estimate_per_10k_population', '华人密度'],
+      ['trade_balance_usd', '贸易顺差'],
+      ['political_stability_score_0_100', '政治稳定性']
+    ];
+
+    const GEO_VARIABLE_OPTIONS = [
+      ['investment', '中国投资额'],
+      ['firms', '华商企业数'],
+      ['share', '华商总量占比'],
+      ['diaspora', '华人人口参考值'],
+      ['gdp_pc', '人均GDP'],
+      ['trade', '对华贸易额']
+    ];
+
+    const MAP_NAME_ALIAS_BY_ISO3 = {
+      ATG: 'Antigua and Barb.',
+      BIH: 'Bosnia and Herz.',
+      IOT: 'Br. Indian Ocean Ter.',
+      CYM: 'Cayman Is.',
+      CAF: 'Central African Rep.',
+      CZE: 'Czech Rep.',
+      COD: 'Dem. Rep. Congo',
+      DOM: 'Dominican Rep.',
+      GNQ: 'Eq. Guinea',
+      SWZ: 'Swaziland',
+      FLK: 'Falkland Is.',
+      FRO: 'Faeroe Is.',
+      PYF: 'Fr. Polynesia',
+      ATF: 'Fr. S. Antarctic Lands',
+      HMD: 'Heard I. and McDonald Is.',
+      CIV: "Côte d'Ivoire",
+      LAO: 'Lao PDR',
+      PRK: 'Dem. Rep. Korea',
+      MKD: 'Macedonia',
+      MNP: 'N. Mariana Is.',
+      COG: 'Congo',
+      SHN: 'Saint Helena',
+      SPM: 'St. Pierre and Miquelon',
+      VCT: 'St. Vin. and Gren.',
+      SLB: 'Solomon Is.',
+      SGS: 'S. Geo. and S. Sandw. Is.',
+      KOR: 'Korea',
+      SSD: 'S. Sudan',
+      TCA: 'Turks and Caicos Is.',
+      VIR: 'U.S. Virgin Is.',
+      ESH: 'W. Sahara'
+    };
+
+    function fmt(n) {
+      const value = Number(n);
+      if (n == null || Number.isNaN(value)) return '暂无';
+      if (Math.abs(value) >= 100000000) return (value / 100000000).toFixed(1) + '亿';
+      if (Math.abs(value) >= 10000) return (value / 10000).toFixed(1) + '万';
+      return value.toLocaleString();
+    }
+
+    function num(value) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function sum(rows, key) {
+      return rows.reduce((total, row) => total + (num(row[key]) || 0), 0);
+    }
+
+    function pct(value, digits = 1) {
+      const n = num(value);
+      if (n == null) return '暂无';
+      return (n * 100).toFixed(digits) + '%';
+    }
+
+    function pctPoint(value, digits = 1) {
+      const n = num(value);
+      if (n == null) return '暂无';
+      return n.toFixed(digits) + '%';
+    }
+
+    function fmtMoneyUsd(value) {
+      const n = num(value);
+      if (n == null) return '暂无';
+      if (Math.abs(n) >= 1000000000) return '$' + (n / 1000000000).toFixed(1) + 'B';
+      if (Math.abs(n) >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+      return '$' + fmt(n);
+    }
+
+    function fmtMillionUsd(value) {
+      const n = num(value);
+      if (n == null) return '暂无';
+      return fmt(n) + '百万美元';
+    }
+
+    function assetText(value) {
+      const n = num(value);
+      return n == null || n <= 0 ? '未公开' : fmt(n);
+    }
+
+    function countryName(row) {
+      return (row && (row.country_name_zh || row.country_name_cn || row.country_name_en || row.iso3)) || '未知国家/地区';
+    }
+
+    function totalShare(row) {
+      const total = num(DATA && DATA.summary && DATA.summary.cn_loose_pos) || 0;
+      return total ? (num(row && row.huashang_count) || num(row && row.cn_loose_pos) || 0) / total : null;
+    }
+
+    function isDisplayCountry(row) {
+      return row && !DISPLAY_EXCLUDED_ISO.has(row.iso3);
+    }
+
+    function industryName(rowOrLabel) {
+      if (rowOrLabel && typeof rowOrLabel === 'object') {
+        return rowOrLabel.industry_group_zh || rowOrLabel.industry_label_zh || rowOrLabel.industry_label || '行业未标注';
+      }
+      if (rowOrLabel == null || String(rowOrLabel).toLowerCase() === 'unknown') return '行业未标注';
+      return String(rowOrLabel);
+    }
+
+    function groupedIndustryRows(rows) {
+      const map = new Map();
+      (rows || []).forEach(row => {
+        const name = row.industry_group_zh || industryName(row);
+        if (!map.has(name)) {
+          map.set(name, {
+            name,
+            firm_count: 0,
+            huashang_count: 0,
+            cn_loose_pos: 0,
+            cn_strict_pos: 0,
+            huashang_asset_sum: 0
+          });
+        }
+        const hit = map.get(name);
+        hit.firm_count += num(row.firm_count) || 0;
+        hit.huashang_count += num(row.huashang_count) || num(row.cn_loose_pos) || 0;
+        hit.cn_loose_pos += num(row.cn_loose_pos) || 0;
+        hit.cn_strict_pos += num(row.cn_strict_pos) || 0;
+        hit.huashang_asset_sum += num(row.huashang_asset_sum) || 0;
+      });
+      return [...map.values()].map(row => ({
+        ...row,
+        cn_loose_pos_rate: row.firm_count ? row.huashang_count / row.firm_count : null
+      }));
+    }
+
+    function axisShort(value) {
+      const n = num(value);
+      if (n == null) return '';
+      if (Math.abs(n) >= 1000000000) return (n / 1000000000).toFixed(1) + 'B';
+      if (Math.abs(n) >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+      if (Math.abs(n) >= 10000) return (n / 10000).toFixed(1) + '万';
+      return n.toLocaleString();
+    }
+
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function linkCell(url) {
+      if (!url) return '暂无';
+      return `<a class="table-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">打开</a>`;
+    }
+
+    function normalizeName(name) {
+      return String(name || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/&/g, 'and')
+        .replace(/\b(the|of|and)\b/g, ' ')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function quantile(values, q) {
+      const nums = values.map(num).filter(v => v != null).sort((a, b) => a - b);
+      if (!nums.length) return 1;
+      const pos = (nums.length - 1) * q;
+      const base = Math.floor(pos);
+      const rest = pos - base;
+      return nums[base + 1] == null ? nums[base] : nums[base] + rest * (nums[base + 1] - nums[base]);
+    }
+
+    function overseasCountries() {
+      return (DATA.country_map || []).filter(row => row.is_overseas_scope !== false && row.has_huashang_data && isDisplayCountry(row));
+    }
+
+    function benchmarkRows(key) {
+      return ((DATA.literature_benchmarks || {})[key] || []).map(row => ({
+        ...row,
+        value: (num(row.share) || 0) * 100
+      }));
+    }
+
+    function pearson(xs, ys) {
+      if (xs.length < 2) return '暂无';
+      const n = xs.length;
+      const mx = xs.reduce((a, b) => a + b, 0) / n;
+      const my = ys.reduce((a, b) => a + b, 0) / n;
+      const nume = xs.reduce((s, x, i) => s + (x - mx) * (ys[i] - my), 0);
+      const den = Math.sqrt(xs.reduce((s, x) => s + (x - mx) ** 2, 0) * ys.reduce((s, y) => s + (y - my) ** 2, 0));
+      return den === 0 ? '0.000' : (nume / den).toFixed(3);
+    }
+
+    function mergeCountryMetrics(row) {
+      const country = state.countryByIso.get(row.iso3);
+      if (!country) return row;
+      const keys = [
+        'firm_count', 'cn_loose_pos', 'cn_strict_pos', 'cn_loose_pos_rate',
+        'cn_strict_pos_rate', 'huashang_count', 'huashang_strict_count',
+        'huashang_asset_sum', 'huashang_asset_mean', 'huashang_asset_numeric_count',
+        'huashang_asset_share_raw', 'has_huashang_data', 'is_overseas_scope',
+        'country_name_zh', 'region_group_zh'
+      ];
+      keys.forEach(key => {
+        if (row[key] == null) row[key] = country[key];
+      });
+      return row;
+    }
+
+    function prepareData(raw) {
+      DATA = raw;
+      window.DATA = raw;
+
+      const countries = DATA.country_map || [];
+      state.countryByIso = new Map(countries.map(country => [country.iso3, country]));
+
+      (DATA.country_year_panel || []).forEach(mergeCountryMetrics);
+      (DATA.latest_country_year || []).forEach(mergeCountryMetrics);
+      state.latestByIso = new Map((DATA.latest_country_year || []).map(row => [row.iso3, row]));
+
+      const summary = DATA.summary || {};
+      const scopedCountries = countries.filter(row => row.is_overseas_scope !== false);
+      const totalMapped = summary.overseas_source_rows || summary.total_firms_for_rates || sum(scopedCountries, 'firm_count');
+      const totalAll = summary.overseas_source_rows || summary.total_firms || totalMapped;
+      const loose = summary.display_huashang_rows || sum(scopedCountries, 'cn_loose_pos');
+      const strict = sum(scopedCountries, 'cn_strict_pos');
+
+      summary.total_firms = totalAll;
+      summary.total_firms_for_rates = totalMapped;
+      summary.cn_loose_pos = loose;
+      summary.cn_strict_pos = strict;
+      summary.cn_loose_pos_rate = totalMapped ? loose / totalMapped : null;
+      summary.cn_strict_pos_rate = totalMapped ? strict / totalMapped : null;
+      summary.boundary_pos = Math.max(0, loose - strict);
+      summary.boundary_pos_rate = totalMapped ? Math.max(0, loose - strict) / totalMapped : null;
+      DATA.summary = summary;
+    }
+
+    function buildGeoNameIndex(geo) {
+      GEO_NAME_SET = new Set();
+      GEO_NAME_BY_NORM = new Map();
+      (geo.features || []).forEach(feature => {
+        const name = feature.properties && feature.properties.name;
+        if (!name) return;
+        GEO_NAME_SET.add(name);
+        GEO_NAME_BY_NORM.set(normalizeName(name), name);
+      });
+    }
+
+    function resolveMapName(country) {
+      if (!country) return null;
+      const direct = country.country_name_en;
+      const alias = MAP_NAME_ALIAS_BY_ISO3[country.iso3];
+      if (direct && GEO_NAME_SET.has(direct)) return direct;
+      if (alias && GEO_NAME_SET.has(alias)) return alias;
+      const normalized = GEO_NAME_BY_NORM.get(normalizeName(direct));
+      if (normalized) return normalized;
+      return null;
+    }
+
+    function ensureChart(id) {
+      const el = document.getElementById(id);
+      if (!el) throw new Error('missing chart container: ' + id);
+      if (!charts[id]) {
+        el.innerHTML = '';
+        charts[id] = echarts.init(el, 'huashang');
+      }
+      return charts[id];
+    }
+
+    function renderChart(id, fields, optionFactory, afterRender) {
+      try {
+        const chart = ensureChart(id);
+        chart.setOption(optionFactory(chart), true);
+        if (afterRender) afterRender(chart);
+        return chart;
+      } catch (error) {
+        console.error(error);
+        showChartError(id, fields);
+        return null;
+      }
+    }
+
+    function showChartError(id, fields) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = '<div class="chart-error">图表加载失败，数据字段：' + fields + '</div>';
+    }
+
+    function renderKpis(containerId) {
+      const s = DATA.summary || {};
+      const cards = [
+        {
+          value: fmt(s.cn_loose_pos),
+          label: '华商总量',
+          sub: '覆盖主要海外市场'
+        },
+        {
+          value: fmt(new Set((DATA.industry_rollup || [])
+            .filter(row => (row.huashang_count || row.cn_loose_pos || 0) > 0)
+            .map(row => row.industry_group_zh || industryName(row))).size),
+          label: '重点行业',
+          sub: '覆盖金融、制造、服务等领域'
+        },
+        {
+          value: fmt(s.valid_huashang_iso3_countries),
+          label: '覆盖国家/地区',
+          sub: '保留有效华商记录'
+        },
+        {
+          value: fmt(s.chamber_count || 0),
+          label: '商会组织',
+          sub: '人物职务 ' + fmt(s.chamber_person_role_count || 0) + ' 条'
+        }
+      ];
+      document.getElementById(containerId).innerHTML = cards.map(card => `
+        <div class="card">
+          <p class="kpi-value">${card.value}</p>
+          <div class="kpi-label">${card.label}</div>
+          <div class="kpi-sub">${card.sub}</div>
+        </div>
+      `).join('');
+    }
+
+    function commonGrid() {
+      return {
+        left: 48,
+        right: 24,
+        top: 30,
+        bottom: 48,
+        containLabel: true
+      };
+    }
+
+    function wrapCnLabel(text, size = 4, maxLines = 3) {
+      const value = String(text || '');
+      if (value.length <= size) return value;
+      const parts = [];
+      for (let i = 0; i < value.length; i += size) {
+        parts.push(value.slice(i, i + size));
+      }
+      if (parts.length > maxLines) {
+        return parts.slice(0, maxLines - 1).concat(parts.slice(maxLines - 1).join('')).join('\n');
+      }
+      return parts.join('\n');
+    }
+
+    function initOverview() {
+      renderKpis('overview-kpis');
+      initOverviewIndustryDonut();
+      initOverviewDefinitionBar();
+      initOverviewBlocBar();
+      initOverviewWorldMap();
+      initOverviewHeatmap();
+    }
+
+    function initOverviewIndustryDonut() {
+      renderChart('overview-industry-donut', 'industry_rollup.huashang_count', () => {
+        const rows = groupedIndustryRows(DATA.industry_rollup).sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
+        const total = DATA.summary.cn_loose_pos || 1;
+        const data = rows.map((row, index) => ({
+          name: row.name,
+          value: row.huashang_count || row.cn_loose_pos || 0,
+          raw: row,
+          itemStyle: { color: PALETTE[index % PALETTE.length] },
+          label: { show: ((row.huashang_count || row.cn_loose_pos || 0) / total) >= .03 }
+        }));
+        return {
+          tooltip: {
+            trigger: 'item',
+            formatter: params => {
+              return `${params.name}<br>海外华商数：${fmt(params.value)}<br>行业占比：${pct(params.value / (DATA.summary.cn_loose_pos || 1))}`;
+            }
+          },
+          series: [{
+            type: 'treemap',
+            roam: false,
+            nodeClick: false,
+            breadcrumb: { show: false },
+            top: 8,
+            bottom: 8,
+            left: 8,
+            right: 8,
+            label: {
+              show: true,
+              color: '#fff',
+              fontWeight: 600,
+              fontSize: 12,
+              lineHeight: 16,
+              overflow: 'break',
+              formatter: params => wrapCnLabel(params.name, 4, 3)
+            },
+            upperLabel: { show: false },
+            itemStyle: {
+              borderColor: '#fff',
+              borderWidth: 2,
+              gapWidth: 2
+            },
+            data
+          }]
+        };
+      });
+    }
+
+    function initOverviewDefinitionBar() {
+      renderChart('overview-definition-bar', 'summary.region_calibration_targets', () => {
+        const rows = (DATA.summary.region_calibration_targets || [])
+          .filter(row => row.display_count > 0)
+          .map((row, index) => ({
+            name: row.name,
+            value: (row.display_share || 0) * 100,
+            count: row.display_count,
+            itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [0, 6, 6, 0] }
+          }))
+          .sort((a, b) => a.value - b.value);
+        return {
+          grid: { left: 72, right: 52, top: 16, bottom: 24, containLabel: true },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => `${params[0].name}<br>华商数量：${fmt(params[0].data.count)}<br>区域占比：${pctPoint(params[0].value)}`
+          },
+          xAxis: {
+            type: 'value',
+            max: value => Math.max(30, Math.ceil(value.max / 5) * 5),
+            axisLabel: { formatter: '{value}%' },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
+            type: 'category',
+            data: rows.map(row => row.name),
+            axisTick: { show: false }
+          },
+          series: [{
+            type: 'bar',
+            barWidth: 18,
+            data: rows,
+            label: {
+              show: true,
+              position: 'right',
+              formatter: params => pctPoint(params.value)
+            }
+          }]
+        };
+      });
+    }
+
+    function initOverviewBlocBar() {
+      renderChart('overview-bloc-bar', 'five_eyes/bri_countries.huashang_count', () => {
+        const five = [...(DATA.five_eyes || [])].sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
+        const bri = [...(DATA.bri_countries || [])]
+          .filter(row => row.has_huashang_data)
+          .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+          .slice(0, 10);
+        const categories = [
+          ...five.map(row => '五眼\n' + row.iso2),
+          ...bri.map(row => '一带一路\n' + row.iso2)
+        ];
+        const fiveData = categories.map((_, index) => index < five.length ? { value: five[index].huashang_count, raw: five[index] } : null);
+        const briData = categories.map((_, index) => index >= five.length ? { value: bri[index - five.length].huashang_count, raw: bri[index - five.length] } : null);
+        return {
+          grid: commonGrid(),
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => {
+              const hit = params.find(item => item.data && item.data.raw);
+              if (!hit) return '';
+              const row = hit.data.raw;
+              return `${countryName(row)}<br>海外华商数：${fmt(row.huashang_count)}<br>总量占比：${pct(totalShare(row))}`;
+            }
+          },
+          legend: { top: 0, right: 0 },
+          xAxis: {
+            type: 'category',
+            data: categories,
+            axisLabel: { fontSize: 11 }
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel: { formatter: axisShort },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          series: [
+            { name: '五眼', type: 'bar', barWidth: 16, data: fiveData, itemStyle: { color: FIVE_EYES_COLOR, borderRadius: [6, 6, 0, 0] } },
+            { name: '一带一路', type: 'bar', barWidth: 16, data: briData, itemStyle: { color: BRI_COLOR, borderRadius: [6, 6, 0, 0] } }
+          ]
+        };
+      });
+    }
+
+    function mapTooltip(country) {
+      if (!country) return '暂无匹配数据';
+      return [
+        countryName(country),
+        '海外华商数：' + fmt(country.huashang_count || country.cn_loose_pos),
+        '总量占比：' + pct(totalShare(country)),
+        '华商资产：' + assetText(country.huashang_asset_sum),
+        '五眼联盟：' + (country.is_five_eyes ? '是' : '否'),
+        '一带一路：' + (country.is_bri ? '是' : '否')
+      ].join('<br>');
+    }
+
+    function mapData(mode) {
+      if (!WORLD_GEO) throw new Error('world map missing');
+      const countryByGeoName = new Map();
+      const data = [];
+      (DATA.country_map || []).forEach(country => {
+        if (!isDisplayCountry(country)) return;
+        const name = resolveMapName(country);
+        if (!name) return;
+        countryByGeoName.set(name, country);
+
+        const isFive = Number(country.is_five_eyes) === 1;
+        const isBri = Number(country.is_bri) === 1;
+        const hasData = Boolean(country.has_huashang_data);
+        const itemStyle = {
+          borderColor: isFive ? FIVE_EYES_COLOR : (isBri ? BRI_COLOR : '#cbd5e1'),
+          borderWidth: isFive || isBri ? 1.8 : .6
+        };
+
+        let value = null;
+        if (mode === 'bri') {
+          if (isBri) {
+            value = num(country.huashang_count) || num(country.cn_loose_pos) || 0;
+          } else {
+            itemStyle.areaColor = '#dbe6f3';
+            itemStyle.borderColor = '#cbd5e1';
+            itemStyle.borderWidth = .4;
+          }
+        } else if (hasData) {
+          value = num(country.huashang_count) || num(country.cn_loose_pos) || 0;
+        } else {
+          itemStyle.areaColor = '#dbe6f3';
+          itemStyle.borderColor = '#cbd5e1';
+          itemStyle.borderWidth = .4;
+        }
+
+        data.push({ name, value, itemStyle });
+      });
+      return { data, countryByGeoName };
+    }
+
+    function renderWorldMap(id, mode) {
+      renderChart(id, 'country_map/world.json', () => {
+        const { data, countryByGeoName } = mapData(mode);
+        const values = data.map(row => row.value).filter(value => value != null);
+        const max = mode === 'bri'
+          ? Math.max(1, quantile(values, .95))
+          : Math.max(1, quantile(values, .95));
+        const colors = mode === 'bri'
+          ? ['#ecfeff', '#a5f3fc', '#06b6d4', '#0e7490']
+          : ['#f8fbff', '#bfdbfe', '#60a5fa', '#2563eb'];
+
+        return {
+          tooltip: {
+            trigger: 'item',
+            formatter: params => mapTooltip(countryByGeoName.get(params.name))
+          },
+          visualMap: {
+            min: 0,
+            max,
+            left: 10,
+            bottom: 10,
+            calculable: true,
+            text: ['华商数高', '低'],
+            inRange: { color: colors },
+            textStyle: { color: '#64748b' }
+          },
+          series: [{
+            type: 'map',
+            map: 'world',
+            roam: true,
+            zoom: 1.08,
+            nameProperty: 'name',
+            itemStyle: {
+              areaColor: '#dbe6f3',
+              borderColor: '#cbd5e1',
+              borderWidth: .5
+            },
+            emphasis: {
+              label: { show: false },
+              itemStyle: { areaColor: '#93c5fd' }
+            },
+            data
+          }]
+        };
+      });
+    }
+
+    function initOverviewWorldMap() {
+      renderWorldMap('overview-world-map', 'overview');
+    }
+
+    function initOverviewHeatmap() {
+      renderChart('overview-heatmap', 'analysis_indices.composite_index', () => {
+        const rows = [...(DATA.analysis_indices || [])]
+          .filter(isDisplayCountry)
+          .filter(row => num(row.composite_index) != null)
+          .sort((a, b) => (b.composite_index || 0) - (a.composite_index || 0))
+          .slice(0, 10)
+          .reverse();
+        return {
+          color: INDEX_COMPONENTS.map(item => item[3]),
+          grid: { left: 94, right: 54, top: 38, bottom: 28 },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => {
+              const row = rows[params[0].dataIndex];
+              const lines = [
+                countryName(row),
+                '综合指数：' + fmt(row.composite_index),
+                '商会数量：' + fmt(row.chamber_count)
+              ];
+              INDEX_COMPONENTS.forEach(([key, label, weight]) => {
+                lines.push(`${label}：${fmt(row[key])} × ${Math.round(weight * 100)}%`);
+              });
+              return lines.join('<br>');
+            }
+          },
+          legend: { top: 0, right: 0, itemWidth: 10, itemHeight: 10 },
+          xAxis: {
+            type: 'value',
+            max: value => Math.max(60, Math.ceil(value.max / 10) * 10),
+            axisLabel: { formatter: '{value}' },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
+            type: 'category',
+            data: rows.map(countryName),
+            axisLabel: { fontSize: 11 }
+          },
+          series: [
+            ...INDEX_COMPONENTS.map(([key, label, weight, color], index) => ({
+              name: label,
+              type: 'bar',
+              stack: 'score',
+              barWidth: 16,
+              data: rows.map(row => ({
+                value: (num(row[key]) || 0) * weight,
+                raw: row,
+                itemStyle: {
+                  color,
+                  borderRadius: index === INDEX_COMPONENTS.length - 1 ? [0, 6, 6, 0] : 0
+                }
+              }))
+            })),
+            {
+              name: '综合指数',
+              type: 'scatter',
+              symbolSize: 0,
+              data: rows.map(row => row.composite_index),
+              label: {
+                show: true,
+                position: 'right',
+                formatter: params => Number(params.value).toFixed(1),
+                color: '#13201f',
+                fontWeight: 600
+              }
+            }
+          ]
+        };
+      });
+    }
+
+    function initEnterprise() {
+      renderKpis('enterprise-kpis');
+      initEnterpriseIndustryStack();
+      initEnterpriseAssetRank();
+      initEnterpriseCountryBar();
+      setupEnterpriseTable();
+    }
+
+    function initEnterpriseIndustryStack() {
+      renderChart('enterprise-industry-stack', 'industry_rollup.cn_loose_pos/firm_count', () => {
+        const rows = groupedIndustryRows(DATA.industry_rollup).sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
+        const labels = rows.map(row => row.name);
+        const loose = rows.map(row => row.huashang_count || row.cn_loose_pos || 0);
+        return {
+          grid: commonGrid(),
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => {
+              const index = params[0].dataIndex;
+              const row = rows[index];
+              return `${row.name}<br>华商数：${fmt(row.huashang_count || row.cn_loose_pos)}<br>行业占比：${pct((row.huashang_count || row.cn_loose_pos || 0) / (DATA.summary.cn_loose_pos || 1))}`;
+            }
+          },
+          dataZoom: [{ type: 'slider', xAxisIndex: 0, height: 18, bottom: 8 }, { type: 'inside' }],
+          xAxis: {
+            type: 'category',
+            data: labels,
+            axisLabel: { rotate: 38, interval: 0, fontSize: 11 }
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel: { formatter: axisShort },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          series: [{
+            name: '华商企业',
+            type: 'bar',
+            data: loose.map((value, index) => ({
+              value,
+              itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [6, 6, 0, 0] }
+            }))
+          }]
+        };
+      });
+    }
+
+    function initEnterpriseAssetRank() {
+      renderChart('enterprise-asset-rank', 'literature_benchmarks.industry_asset_distribution', () => {
+        const rows = benchmarkRows('industry_asset_distribution').sort((a, b) => a.value - b.value);
+        const values = rows.map(row => row.value || 0);
+        return {
+          grid: { left: 128, right: 24, top: 26, bottom: 28 },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => {
+              const row = rows[params[0].dataIndex];
+              return `${row.name}<br>资产占比：${pctPoint(row.value)}`;
+            }
+          },
+          visualMap: {
+            show: false,
+            min: Math.min(...values),
+            max: Math.max(...values),
+            inRange: { color: ['#dbeafe', '#2563eb'] }
+          },
+          xAxis: {
+            type: 'value',
+            axisLabel: { formatter: axisShort },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
+            type: 'category',
+            data: rows.map(row => row.name),
+            axisLabel: { fontSize: 11 }
+          },
+          series: [{
+            type: 'bar',
+            data: rows.map((row, index) => ({
+              value: row.value,
+              itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [0, 6, 6, 0] }
+            })),
+            barWidth: 14,
+          }]
+        };
+      });
+    }
+
+    function countryGroupColor(country) {
+      if (Number(country.is_five_eyes) === 1) return FIVE_EYES_COLOR;
+      if (Number(country.is_bri) === 1) return BRI_COLOR;
+      return '#94a3b8';
+    }
+
+    function initEnterpriseCountryBar() {
+      const input = document.getElementById('country-search');
+      if (!input.dataset.bound) {
+        input.addEventListener('input', () => updateEnterpriseCountryBar());
+        input.dataset.bound = '1';
+      }
+      updateEnterpriseCountryBar();
+    }
+
+    function updateEnterpriseCountryBar() {
+      renderChart('enterprise-country-bar', 'country_map.huashang_count', () => {
+        const keyword = document.getElementById('country-search').value.trim().toLowerCase();
+        const rows = overseasCountries()
+          .filter(row => {
+            if (!keyword) return true;
+            return [countryName(row), row.country_name_en, row.iso2, row.iso3].some(value => String(value || '').toLowerCase().includes(keyword));
+          })
+          .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+          .slice(0, 40)
+          .reverse();
+
+        return {
+          grid: { left: 118, right: 34, top: 14, bottom: 28 },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => {
+              const row = rows[params[0].dataIndex];
+              return `${countryName(row)}<br>海外华商数：${fmt(row.huashang_count)}<br>总量占比：${pct(totalShare(row))}<br>华商资产：${assetText(row.huashang_asset_sum)}`;
+            }
+          },
+          xAxis: {
+            type: 'value',
+            axisLabel: { formatter: axisShort },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
+            type: 'category',
+            data: rows.map(row => row.iso2 + ' · ' + countryName(row)),
+            axisLabel: { fontSize: 11 }
+          },
+          series: [{
+            type: 'bar',
+            data: rows.map(row => ({
+              value: row.huashang_count,
+              itemStyle: { color: countryGroupColor(row), borderRadius: [0, 6, 6, 0] }
+            })),
+            barWidth: 12
+          }]
+        };
+      });
+    }
+
+    function setupEnterpriseTable() {
+      const industrySelect = document.getElementById('filter-industry');
+      if (!industrySelect.dataset.ready) {
+        const industries = [...new Set((DATA.country_industry || []).map(row => industryName(row)))]
+          .sort((a, b) => a.localeCompare(b));
+        industrySelect.innerHTML = '<option value="all">全部行业</option>' + industries.map(name => `<option value="${name}">${name}</option>`).join('');
+        ['filter-industry', 'filter-region', 'filter-type'].forEach(id => {
+          document.getElementById(id).addEventListener('change', () => {
+            state.table.page = 1;
+            renderEnterpriseTable();
+          });
+        });
+        document.querySelector('#industry-table thead').addEventListener('click', event => {
+          const key = event.target.dataset.sort;
+          if (!key) return;
+          if (state.table.sortKey === key) {
+            state.table.sortDir = state.table.sortDir === 'asc' ? 'desc' : 'asc';
+          } else {
+            state.table.sortKey = key;
+            state.table.sortDir = 'desc';
+          }
+          renderEnterpriseTable();
+        });
+        document.getElementById('table-prev').addEventListener('click', () => {
+          state.table.page = Math.max(1, state.table.page - 1);
+          renderEnterpriseTable();
+        });
+        document.getElementById('table-next').addEventListener('click', () => {
+          state.table.page += 1;
+          renderEnterpriseTable();
+        });
+        industrySelect.dataset.ready = '1';
+      }
+      renderEnterpriseTable();
+    }
+
+    function getHuashangCount(row, type) {
+      if (type === 'strict') return num(row.cn_strict_pos) || 0;
+      if (type === 'boundary') return Math.max(0, (num(row.cn_loose_pos) || 0) - (num(row.cn_strict_pos) || 0));
+      return num(row.cn_loose_pos) || 0;
+    }
+
+    function renderEnterpriseTable() {
+      const industryFilter = document.getElementById('filter-industry').value;
+      const regionFilter = document.getElementById('filter-region').value;
+      const typeFilter = document.getElementById('filter-type').value;
+
+      let rows = (DATA.country_industry || []).filter(isDisplayCountry).map(row => {
+        const country = state.countryByIso.get(row.iso3) || {};
+        const huashangCount = getHuashangCount(row, typeFilter);
+        const rate = country.huashang_count ? huashangCount / country.huashang_count : null;
+        return {
+          ...row,
+          industry_display: industryName(row),
+          is_five_eyes: Number(country.is_five_eyes) === 1,
+          is_bri: Number(country.is_bri) === 1,
+          huashang_count: huashangCount,
+          rate
+        };
+      });
+
+      rows = rows.filter(row => {
+        if (row.huashang_count <= 0) return false;
+        if (industryFilter !== 'all' && row.industry_display !== industryFilter) return false;
+        if (regionFilter === 'five' && !row.is_five_eyes) return false;
+        if (regionFilter === 'bri' && !row.is_bri) return false;
+        if (regionFilter === 'other' && (row.is_five_eyes || row.is_bri)) return false;
+        if (typeFilter !== 'all' && row.huashang_count <= 0) return false;
+        return true;
+      });
+
+      const key = state.table.sortKey;
+      const dir = state.table.sortDir === 'asc' ? 1 : -1;
+      rows.sort((a, b) => {
+        const av = key === 'industry_label' ? a.industry_display : a[key];
+        const bv = key === 'industry_label' ? b.industry_display : b[key];
+        if (typeof av === 'string' || typeof bv === 'string') return String(av || '').localeCompare(String(bv || '')) * dir;
+        return ((num(av) || 0) - (num(bv) || 0)) * dir;
+      });
+
+      const pages = Math.max(1, Math.ceil(rows.length / state.table.pageSize));
+      state.table.page = Math.min(state.table.page, pages);
+      const start = (state.table.page - 1) * state.table.pageSize;
+      const pageRows = rows.slice(start, start + state.table.pageSize);
+
+      document.querySelector('#industry-table tbody').innerHTML = pageRows.map(row => `
+        <tr>
+          <td>${countryName(row)}</td>
+          <td>${row.industry_display}</td>
+          <td>${fmt(row.huashang_count)}</td>
+          <td>${pct(row.rate)}</td>
+          <td>${assetText(row.huashang_asset_sum)}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('table-count').textContent = `表格总条数：${fmt(rows.length)} · 第 ${state.table.page}/${pages} 页`;
+      document.getElementById('table-prev').disabled = state.table.page <= 1;
+      document.getElementById('table-next').disabled = state.table.page >= pages;
+    }
+
+    function initGeo() {
+      renderFiveEyeCards();
+      initGeoBlocShare();
+      setupGeoControls();
+      initBriScatter();
+      initGeoRadar();
+    }
+
+    function renderFiveEyeCards() {
+      const flag = { US: '🇺🇸', GB: '🇬🇧', CA: '🇨🇦', AU: '🇦🇺', NZ: '🇳🇿', VN: '🇻🇳', PH: '🇵🇭', MY: '🇲🇾', SG: '🇸🇬', KR: '🇰🇷', FR: '🇫🇷' };
+      const rows = overseasCountries()
+        .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+        .slice(0, 8);
+      document.getElementById('five-eye-cards').innerHTML = rows.map(country => {
+        const latest = state.latestByIso.get(country.iso3) || {};
+        return `
+          <div class="card country-card">
+            <div class="country-name"><span class="flag">${flag[country.iso2] || ''}</span>${countryName(country)}</div>
+            <div class="metric-row"><span>海外华商数</span><strong>${fmt(country.huashang_count)}</strong></div>
+            <div class="metric-row"><span>总量占比</span><strong>${pct(totalShare(country))}</strong></div>
+            <div class="metric-row"><span>华商资产</span><strong>${assetText(country.huashang_asset_sum)}</strong></div>
+            <div class="metric-row"><span>GDP</span><strong>${fmtMoneyUsd(latest.gdp_current_usd)}</strong></div>
+            <div class="metric-row"><span>华人人口参考值</span><strong>${fmt(latest.ethnic_chinese_population_estimate)}</strong></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function continentColor(continent) {
+      const map = {
+        Asia: '#2563eb',
+        Africa: '#0891b2',
+        Europe: '#7c3aed',
+        Americas: '#f59e0b',
+        Oceania: '#06b6d4'
+      };
+      return map[continent] || '#94a3b8';
+    }
+
+    function continentLabel(continent) {
+      const map = {
+        Asia: '亚洲',
+        Africa: '非洲',
+        Europe: '欧洲',
+        Americas: '美洲',
+        Oceania: '大洋洲'
+      };
+      return map[continent] || '其他';
+    }
+
+    function initGeoBlocShare() {
+      renderChart('geo-bloc-share', 'country_map.huashang_count group structure', () => {
+        const total = DATA.summary.cn_loose_pos || 1;
+        const groups = [
+          { name: '五眼联盟', color: FIVE_EYES_COLOR, rows: overseasCountries().filter(row => Number(row.is_five_eyes) === 1) },
+          { name: '一带一路', color: BRI_COLOR, rows: overseasCountries().filter(row => Number(row.is_bri) === 1) },
+          { name: '其他国家', color: '#7c3aed', rows: overseasCountries().filter(row => Number(row.is_five_eyes) !== 1 && Number(row.is_bri) !== 1) }
+        ].map(group => {
+          const count = group.rows.reduce((sum, row) => sum + (num(row.huashang_count) || 0), 0);
+          const top = [...group.rows]
+            .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+            .slice(0, 4)
+            .map(countryName)
+            .join('、');
+          return { ...group, count, share: count / total, top };
+        }).sort((a, b) => a.count - b.count);
+
+        return {
+          grid: { left: 84, right: 44, top: 26, bottom: 36 },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => {
+              const row = params[0].data.raw;
+              return `${row.name}<br>华商总量：${fmt(row.count)}<br>总量占比：${pct(row.share)}<br>代表国家：${row.top || '暂无'}`;
+            }
+          },
+          xAxis: {
+            type: 'value',
+            axisLabel: { formatter: axisShort },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
+            type: 'category',
+            data: groups.map(row => row.name),
+            axisTick: { show: false }
+          },
+          series: [{
+            name: '华商总量',
+            type: 'bar',
+            barWidth: 24,
+            data: groups.map(row => ({
+              value: row.count,
+              raw: row,
+              itemStyle: { color: row.color, borderRadius: [0, 8, 8, 0] }
+            })),
+            label: {
+              show: true,
+              position: 'right',
+              formatter: params => `${fmt(params.value)}  ${pct(params.data.raw.share)}`,
+              color: '#102033',
+              fontWeight: 600
+            }
+          }]
+        };
+      });
+    }
+
+    function popBubbleSize(population) {
+      const pop = num(population);
+      if (pop == null || pop <= 0) return 8;
+      return Math.max(8, Math.min(44, 5 + Math.log10(pop + 1) * 5));
+    }
+
+    function setupGeoControls() {
+      const xSelect = document.getElementById('geo-x');
+      const ySelect = document.getElementById('geo-y');
+      const scopeSelect = document.getElementById('geo-scope');
+      if (!xSelect || xSelect.dataset.ready) return;
+      const options = GEO_VARIABLE_OPTIONS.map(([key, label]) => `<option value="${key}">${label}</option>`).join('');
+      xSelect.innerHTML = options;
+      ySelect.innerHTML = options;
+      xSelect.value = 'investment';
+      ySelect.value = 'firms';
+      [xSelect, ySelect, scopeSelect].forEach(select => {
+        select.addEventListener('change', initBriScatter);
+      });
+      xSelect.dataset.ready = '1';
+    }
+
+    function geoVariableLabel(key) {
+      const hit = GEO_VARIABLE_OPTIONS.find(([value]) => value === key);
+      return hit ? hit[1] : key;
+    }
+
+    function geoVariableValue(row, key) {
+      if (key === 'investment') return num(row.investment);
+      if (key === 'firms') return num(row.firms);
+      if (key === 'share') return num(row.share);
+      if (key === 'diaspora') return num(row.population);
+      if (key === 'gdp_pc') return num(row.gdp_per_capita_current_usd);
+      if (key === 'trade') return num(row.china_trade_total_usd);
+      return num(row[key]);
+    }
+
+    function geoValueText(key, value) {
+      if (value == null) return '暂无';
+      if (key === 'share') return pct(value / 100);
+      if (key === 'investment') return fmtMillionUsd(value);
+      if (key === 'trade') return fmtMoneyUsd(value);
+      if (key === 'gdp_pc') return fmtMoneyUsd(value);
+      return fmt(value);
+    }
+
+    function geoAxisLabel(key) {
+      return value => {
+        if (key === 'share') return Number(value).toFixed(0) + '%';
+        return axisShort(value);
+      };
+    }
+
+    function geoScatterRows() {
+      const scope = document.getElementById('geo-scope') ? document.getElementById('geo-scope').value : 'bri';
+      return (DATA.latest_country_year || [])
+        .filter(row => row.is_overseas_scope !== false)
+        .map(row => {
+          const country = state.countryByIso.get(row.iso3) || {};
+          const firms = num(country.huashang_count) || 0;
+          return {
+            ...row,
+            ...country,
+            firms,
+            share: (firms / (DATA.summary.cn_loose_pos || 1)) * 100,
+            investment: num(row.aei_total_millions_usd) || 0,
+            population: num(row.ethnic_chinese_population_estimate) || 0
+          };
+        })
+        .filter(row => row.firms > 0)
+        .filter(row => {
+          if (scope === 'bri') return Number(row.is_bri) === 1;
+          if (scope === 'five') return Number(row.is_five_eyes) === 1;
+          if (scope === 'asia') return row.continent === 'Asia';
+          if (scope === 'europe') return row.continent === 'Europe';
+          if (scope === 'americas') return row.continent === 'Americas';
+          return true;
+        });
+    }
+
+    function initBriScatter() {
+      renderChart('geo-bri-scatter', 'geo scatter current country variables', () => {
+        const xKey = document.getElementById('geo-x') ? document.getElementById('geo-x').value : 'investment';
+        const yKey = document.getElementById('geo-y') ? document.getElementById('geo-y').value : 'firms';
+        const rows = geoScatterRows()
+          .map(row => ({
+            ...row,
+            x: geoVariableValue(row, xKey),
+            y: geoVariableValue(row, yKey)
+          }))
+          .filter(row => row.x != null && row.y != null);
+        const continents = [...new Set(rows.map(row => row.continent || '其他'))].sort();
+
+        return {
+          grid: commonGrid(),
+          tooltip: {
+            trigger: 'item',
+            formatter: params => {
+              const row = params.data.raw;
+              return [
+                countryName(row),
+                `${geoVariableLabel(xKey)}：${geoValueText(xKey, row.x)}`,
+                `${geoVariableLabel(yKey)}：${geoValueText(yKey, row.y)}`,
+                `华商企业数：${fmt(row.firms)}`,
+                `华人人口参考值：${fmt(row.population)}`
+              ].join('<br>');
+            }
+          },
+          legend: { top: 0, right: 0 },
+          xAxis: {
+            name: geoVariableLabel(xKey),
+            type: 'value',
+            axisLabel: { formatter: geoAxisLabel(xKey) },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
+            name: geoVariableLabel(yKey),
+            type: 'value',
+            axisLabel: { formatter: geoAxisLabel(yKey) },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          series: continents.map(continent => ({
+            name: continentLabel(continent),
+            type: 'scatter',
+            data: rows
+              .filter(row => (row.continent || '其他') === continent)
+              .map(row => ({
+                value: [row.x, row.y, row.population],
+                raw: row,
+                itemStyle: { color: continentColor(continent), opacity: .78 }
+              })),
+            symbolSize: value => popBubbleSize(value[2])
+          }))
+        };
+      });
+    }
+
+    function logNormalize(value, values) {
+      const n = num(value);
+      if (n == null || n <= 0) return null;
+      const logs = values.map(v => Math.log10(v)).filter(Number.isFinite);
+      if (!logs.length) return null;
+      const min = Math.min(...logs);
+      const max = Math.max(...logs);
+      if (min === max) return 50;
+      return ((Math.log10(n) - min) / (max - min)) * 100;
+    }
+
+    function average(rows, getter) {
+      const values = rows.map(getter).map(num).filter(v => v != null);
+      if (!values.length) return 0;
+      return values.reduce((a, b) => a + b, 0) / values.length;
+    }
+
+    function initGeoRadar() {
+      renderChart('geo-radar', 'latest_country_year group averages', () => {
+        const rows = (DATA.latest_country_year || [])
+          .filter(row => row.is_overseas_scope !== false)
+          .map(row => ({
+            ...row,
+            current_huashang_count: num((state.countryByIso.get(row.iso3) || {}).huashang_count) || 0
+          }));
+        const gdpValues = rows.map(row => num(row.gdp_per_capita_current_usd)).filter(v => v != null && v > 0);
+        const investmentValues = rows.map(row => num(row.aei_total_millions_usd)).filter(v => v != null && v > 0);
+        const five = rows.filter(row => Number(row.is_five_eyes) === 1);
+        const bri = rows.filter(row => Number(row.is_bri) === 1);
+
+        const makeValues = group => [
+          average(group, row => (row.current_huashang_count / (DATA.summary.cn_loose_pos || 1)) * 100),
+          average(group, row => row.cpi_score),
+          average(group, row => row.government_effectiveness_score_0_100),
+          average(group, row => row.rule_of_law_score_0_100),
+          average(group, row => logNormalize(row.gdp_per_capita_current_usd, gdpValues)),
+          average(group, row => logNormalize(row.aei_total_millions_usd, investmentValues))
+        ].map(value => Number(value.toFixed(1)));
+
+        return {
+          tooltip: { trigger: 'item' },
+          legend: { top: 0, right: 0 },
+          radar: {
+            radius: '66%',
+            indicator: [
+              { name: '华商占比', max: 100 },
+              { name: '廉洁指数', max: 100 },
+              { name: '政府效能', max: 100 },
+              { name: '法治水平', max: 100 },
+              { name: '人均GDP', max: 100 },
+              { name: '中国投资', max: 100 }
+            ],
+            splitArea: { areaStyle: { color: ['#f3f7ff', '#ffffff'] } },
+            axisName: { color: '#334155' }
+          },
+          series: [{
+            type: 'radar',
+            label: {
+              show: true,
+              formatter: params => params.value
+            },
+            data: [
+              {
+                value: makeValues(five),
+                name: '五眼联盟',
+                itemStyle: { color: FIVE_EYES_COLOR },
+                areaStyle: { color: 'rgba(245,158,11,.16)' }
+              },
+              {
+                value: makeValues(bri),
+                name: '一带一路',
+                itemStyle: { color: BRI_COLOR },
+                areaStyle: { color: 'rgba(16,185,129,.16)' }
+              }
+            ]
+          }]
+        };
+      });
+    }
+
+    function initChamber() {
+      renderChamberKpis();
+      renderChamberRegionChart();
+      renderChamberTypeChart();
+      renderChamberTable();
+    }
+
+    function renderChamberKpis() {
+      const summary = (DATA.chamber_data || {}).summary || {};
+      const cards = [
+        { value: fmt(summary.chamber_count), label: '商会组织', sub: '覆盖 ' + fmt((summary.country_counts || []).length) + ' 个国家/地区' },
+        { value: fmt(summary.person_role_count), label: '人物职务', sub: '来自商会官网与公开来源' },
+        { value: fmt(summary.linked_enterprise_count), label: '关联企业', sub: '人物所涉及企业记录' },
+        { value: fmt((summary.region_counts || [])[0] && summary.region_counts[0].count), label: '最大区域', sub: ((summary.region_counts || [])[0] || {}).name || '暂无' }
+      ];
+      document.getElementById('chamber-kpis').innerHTML = cards.map(card => `
+        <div class="card">
+          <p class="kpi-value">${card.value}</p>
+          <div class="kpi-label">${card.label}</div>
+          <div class="kpi-sub">${card.sub}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderChamberRegionChart() {
+      renderChart('chamber-region-chart', 'chamber_data.summary.region_counts', () => {
+        const rows = [ ...(((DATA.chamber_data || {}).summary || {}).region_counts || []) ].slice(0, 12).reverse();
+        return {
+          grid: { left: 88, right: 24, top: 18, bottom: 28 },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
+            formatter: params => `${params[0].name}<br>商会数：${fmt(params[0].value)}`
+          },
+          xAxis: { type: 'value', splitLine: { lineStyle: { color: '#d7e3f5' } } },
+          yAxis: { type: 'category', data: rows.map(row => row.name), axisLabel: { fontSize: 11 } },
+          series: [{
+            type: 'bar',
+            data: rows.map(row => ({ value: row.count, itemStyle: { color: '#2563eb', borderRadius: [0, 6, 6, 0] } })),
+            barWidth: 14
+          }]
+        };
+      });
+    }
+
+    function renderChamberTypeChart() {
+      renderChart('chamber-type-chart', 'chamber_data.summary.org_type_counts', () => {
+        const rows = (((DATA.chamber_data || {}).summary || {}).org_type_counts || []);
+        return {
+          tooltip: {
+            trigger: 'item',
+            formatter: params => `${params.name}<br>商会数：${fmt(params.value)}<br>占比：${pct(params.percent / 100)}`
+          },
+          legend: { orient: 'vertical', right: 0, top: 'middle', itemWidth: 10, itemHeight: 10 },
+          series: [{
+            type: 'pie',
+            radius: ['42%', '68%'],
+            center: ['36%', '50%'],
+            label: { formatter: '{b}' },
+            data: rows.map(row => ({ name: row.name, value: row.count }))
+          }]
+        };
+      });
+    }
+
+    function renderChamberTable() {
+      const rows = ((DATA.chamber_data || {}).chambers || []).slice(0, 80);
+      document.querySelector('#chamber-table tbody').innerHTML = rows.map(row => `
+        <tr>
+          <td>${row['组织名称'] || ''}</td>
+          <td>${row['国家/地区'] || ''}</td>
+          <td>${row['所属区域'] || ''}</td>
+          <td>${row['组织类型'] || ''}</td>
+          <td>${row['活跃度'] || ''}</td>
+          <td>${row['运行状态'] || ''}</td>
+          <td>${linkCell(row['官网链接'])}</td>
+        </tr>
+      `).join('');
+    }
+
+    function initResearch() {
+      renderIndexMethod();
+      setupResearchControls();
+      updateResearchScatter();
+      renderResearchTrend();
+    }
+
+    function renderIndexMethod() {
+      const method = DATA.analysis_index_method || {};
+      const components = method.components || [];
+      const grid = document.getElementById('index-method-grid');
+      if (!grid) return;
+      grid.innerHTML = components.map(item => `
+        <div class="method-item">
+          <div class="method-title">${escapeHtml(item.name)}</div>
+          <div class="method-weight">权重 ${pct(item.weight, 0)}</div>
+          <div class="method-fields">${escapeHtml((item.fields || []).join('、'))}</div>
+        </div>
+      `).join('');
+      const note = document.getElementById('index-method-note');
+      if (note) {
+        note.textContent = '构建方法：各分项先统一转换为0-100分；数量、资产、贸易、投资、人口等规模变量先取log(1+x)压缩极端值，再标准化；综合指数=25%华商基础+20%制度环境+20%中国联系+20%华人网络+15%市场条件。';
+      }
+    }
+
+    function setupResearchControls() {
+      const xSelect = document.getElementById('research-x');
+      if (!xSelect.dataset.ready) {
+        xSelect.innerHTML = VARIABLE_OPTIONS.map(([key, label]) => `<option value="${key}">${label}</option>`).join('');
+        xSelect.value = 'gdp_per_capita_current_usd';
+        xSelect.addEventListener('change', () => {
+          updateResearchScatter();
+          renderResearchTrend();
+        });
+
+        const yearInput = document.getElementById('research-year');
+        yearInput.addEventListener('input', () => {
+          document.getElementById('research-year-value').textContent = yearInput.value;
+          updateResearchScatter();
+        });
+
+        document.getElementById('research-group').addEventListener('click', event => {
+          const button = event.target.closest('button[data-group]');
+          if (!button) return;
+          state.researchGroup = button.dataset.group;
+          document.querySelectorAll('#research-group button').forEach(btn => btn.classList.toggle('active', btn === button));
+          updateResearchScatter();
+        });
+
+        document.getElementById('clear-country').addEventListener('click', () => {
+          state.selectedCountryIso = null;
+          renderResearchTrend();
+        });
+
+        xSelect.dataset.ready = '1';
+      }
+    }
+
+    function variableLabel(key) {
+      const hit = VARIABLE_OPTIONS.find(([value]) => value === key);
+      return hit ? hit[1] : key;
+    }
+
+    function researchRows() {
+      const year = Number(document.getElementById('research-year').value);
+      const xKey = document.getElementById('research-x').value;
+      return (DATA.country_year_panel || [])
+        .filter(row => Number(row.year) === year)
+        .filter(row => row.is_overseas_scope !== false)
+        .filter(row => {
+          if (state.researchGroup === 'five') return Number(row.is_five_eyes) === 1;
+          if (state.researchGroup === 'bri') return Number(row.is_bri) === 1;
+          return true;
+        })
+        .map(row => ({
+          ...row,
+          x: num(row[xKey]),
+          y: (num(row.huashang_count) || num(row.cn_loose_pos) || 0) / (DATA.summary.cn_loose_pos || 1) * 100,
+          firms: num(row.huashang_count) || num(row.cn_loose_pos) || 0
+        }))
+        .filter(row => row.x != null && row.y != null);
+    }
+
+    function researchPointColor(row) {
+      if (Number(row.is_five_eyes) === 1) return FIVE_EYES_COLOR;
+      if (Number(row.is_bri) === 1) return BRI_COLOR;
+      return '#94a3b8';
+    }
+
+    function firmBubbleSize(firms) {
+      const n = num(firms) || 0;
+      if (n <= 0) return 7;
+      return Math.max(7, Math.min(46, 6 + Math.sqrt(n) / 18));
+    }
+
+    function updateResearchScatter() {
+      renderChart('research-scatter', 'country_year_panel selected variables', () => {
+        const rows = researchRows();
+        const xKey = document.getElementById('research-x').value;
+        const xs = rows.map(row => row.x);
+        const ys = rows.map(row => row.y);
+        document.getElementById('research-scatter-meta').textContent = `有效数据点 ${fmt(rows.length)} · r=${pearson(xs, ys)}`;
+
+        return {
+          grid: { left: 64, right: 34, top: 28, bottom: 58 },
+          tooltip: {
+            trigger: 'item',
+            formatter: params => {
+              const row = params.data.raw;
+              return `${countryName(row)}<br>${variableLabel(xKey)}：${fmt(row.x)}<br>总量占比：${pctPoint(row.y)}<br>海外华商数：${fmt(row.firms)}<br>年份：${row.year}`;
+            }
+          },
+          xAxis: {
+            name: variableLabel(xKey),
+            type: 'value',
+            axisLabel: { formatter: axisShort },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          yAxis: {
+            name: '华商总量占比',
+            type: 'value',
+            axisLabel: { formatter: '{value}%' },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          series: [{
+            type: 'scatter',
+            data: rows.map(row => ({
+              value: [row.x, row.y, row.firms],
+              raw: row,
+              iso3: row.iso3,
+              itemStyle: {
+                color: researchPointColor(row),
+                opacity: .78,
+                borderColor: '#fff',
+                borderWidth: 1
+              }
+            })),
+            symbolSize: value => firmBubbleSize(value[2])
+          }]
+        };
+      }, chart => {
+        chart.off('click');
+        chart.on('click', params => {
+          if (!params.data || !params.data.iso3) return;
+          state.selectedCountryIso = params.data.iso3;
+          renderResearchTrend();
+        });
+      });
+    }
+
+    function renderResearchTrend() {
+      const trendEl = document.getElementById('research-trend');
+      const clearBtn = document.getElementById('clear-country');
+      const xKey = document.getElementById('research-x') ? document.getElementById('research-x').value : 'gdp_per_capita_current_usd';
+
+      if (!state.selectedCountryIso) {
+        if (charts['research-trend']) {
+          charts['research-trend'].dispose();
+          delete charts['research-trend'];
+        }
+        document.getElementById('trend-title').textContent = '国家趋势';
+        clearBtn.hidden = true;
+        trendEl.innerHTML = '<div class="chart-empty">点击散点图中的国家查看趋势</div>';
+        return;
+      }
+
+      const country = state.countryByIso.get(state.selectedCountryIso) || {};
+      const rows = (DATA.country_year_panel || [])
+        .filter(row => row.iso3 === state.selectedCountryIso)
+        .sort((a, b) => Number(a.year) - Number(b.year));
+      document.getElementById('trend-title').textContent = countryName(country) + '趋势';
+      clearBtn.hidden = false;
+
+      renderChart('research-trend', 'country_year_panel.cn_loose_pos_rate/selected x variable', () => ({
+        grid: commonGrid(),
+        tooltip: { trigger: 'axis' },
+        legend: { top: 0, right: 0 },
+        xAxis: {
+          type: 'category',
+          data: rows.map(row => row.year)
+        },
+        yAxis: [
+          {
+            type: 'value',
+            name: '总量占比',
+            axisLabel: { formatter: '{value}%' },
+            splitLine: { lineStyle: { color: '#d7e3f5' } }
+          },
+          {
+            type: 'value',
+            name: variableLabel(xKey),
+            axisLabel: { formatter: axisShort },
+            splitLine: { show: false }
+          }
+        ],
+        series: [
+          {
+            name: '华商总量占比',
+            type: 'line',
+            smooth: true,
+            yAxisIndex: 0,
+            data: rows.map(row => (num(row.huashang_count) || num(row.cn_loose_pos) || 0) / (DATA.summary.cn_loose_pos || 1) * 100),
+            itemStyle: { color: '#2563eb' },
+            lineStyle: { width: 2 }
+          },
+          {
+            name: variableLabel(xKey),
+            type: 'line',
+            smooth: true,
+            yAxisIndex: 1,
+            data: rows.map(row => num(row[xKey])),
+            itemStyle: { color: '#0891b2' },
+            lineStyle: { width: 2 }
+          }
+        ]
+      }));
+    }
+
+    function initTab(tab) {
+      if (state.loadedTabs.has(tab)) {
+        setTimeout(resizeCharts, 40);
+        return;
+      }
+      if (tab === 'overview') initOverview();
+      if (tab === 'enterprise') initEnterprise();
+      if (tab === 'geo') initGeo();
+      if (tab === 'chamber') initChamber();
+      if (tab === 'research') initResearch();
+      state.loadedTabs.add(tab);
+      setTimeout(resizeCharts, 40);
+    }
+
+    function switchTab(tab) {
+      state.activeTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(button => {
+        button.classList.toggle('active', button.dataset.tab === tab);
+      });
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.hidden = panel.id !== 'tab-' + tab;
+      });
+      initTab(tab);
+    }
+
+    function setupTabs() {
+      document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', () => switchTab(button.dataset.tab));
+      });
+    }
+
+    function resizeCharts() {
+      Object.values(charts).forEach(chart => {
+        if (chart && typeof chart.resize === 'function') chart.resize();
+      });
+    }
+
+    function showAppError(message) {
+      const main = document.querySelector('main');
+      main.insertAdjacentHTML('afterbegin', `<div class="error-banner">${message}</div>`);
+    }
+
+    async function bootstrap() {
+      setupTabs();
+      if (!window.echarts) {
+        showAppError('ECharts CDN加载失败，请检查网络连接。');
+        return;
+      }
+
+      echarts.registerTheme('huashang', {
+        color: PALETTE,
+        textStyle: { fontFamily: 'PingFang SC,Microsoft YaHei,sans-serif' }
+      });
+
+      try {
+        const raw = await fetch('huashang-data-6f8c2e91.json').then(response => {
+          if (!response.ok) throw new Error('huashang-data-6f8c2e91.json HTTP ' + response.status);
+          return response.json();
+        });
+        prepareData(raw);
+      } catch (error) {
+        console.error(error);
+        showAppError('dashboard_data.json 加载失败。请确认 dashboard.html 与 dashboard_data.json 位于同一目录，并通过本地HTTP服务打开。');
+        return;
+      }
+
+      try {
+        WORLD_GEO = await fetch('https://cdn.jsdelivr.net/npm/echarts/map/json/world.json').then(response => response.json());
+        buildGeoNameIndex(WORLD_GEO);
+        echarts.registerMap('world', WORLD_GEO);
+      } catch (error) {
+        console.error(error);
+        WORLD_GEO = null;
+      }
+
+      initTab('overview');
+    }
+
+    window.addEventListener('resize', resizeCharts);
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  </script>
+</body>
+</html>
