@@ -1,17 +1,14 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <script>
-    (() => {
+      <script>
       const password = "jYQ7fnmmeFw3";
       const input = window.prompt("请输入访问密码");
       if (input !== password) {
         document.documentElement.innerHTML = "<head><title>访问受限</title></head><body style=\"margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;\"><main style=\"text-align:center;\"><h1 style=\"font-size:24px;margin-bottom:8px;\">访问受限</h1><p style=\"color:#607086;\">请输入正确密码后访问。</p></main></body>";
-        throw new Error("Unauthorized");
+        throw new Error("访问受限");
       }
-    })();
-  </script>
+    </script><meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>华商经济数据库</title>
   <link rel="icon" href="data:,">
@@ -20,9 +17,9 @@
     :root {
       --nav: #071b33;
       --page: #edf4ff;
-      --card: rgba(255, 255, 255, .94);
-      --card-strong: #ffffff;
-      --border: #d7e3f5;
+      --card: rgba(255, 255, 255, .76);
+      --card-strong: rgba(255, 255, 255, .9);
+      --border: rgba(168, 197, 236, .58);
       --text: #102033;
       --muted: #607086;
       --faint: #92a3ba;
@@ -31,9 +28,10 @@
       --five-eyes: #f59e0b;
       --bri: #06b6d4;
       --boundary: #7c3aed;
-      --radius: 10px;
-      --shadow: 0 18px 45px rgba(15, 35, 70, .12);
-      --shadow-soft: 0 8px 22px rgba(15, 35, 70, .08);
+      --radius: 12px;
+      --glass-line: rgba(255, 255, 255, .76);
+      --shadow: 0 24px 70px rgba(15, 35, 70, .14);
+      --shadow-soft: 0 12px 34px rgba(15, 35, 70, .08);
     }
 
     * {
@@ -44,6 +42,7 @@
       margin: 0;
       min-height: 100vh;
       background:
+        radial-gradient(circle at 78% 8%, rgba(34, 211, 238, .16), transparent 30%),
         radial-gradient(circle at 18% 0%, rgba(59, 130, 246, .18), transparent 34%),
         linear-gradient(180deg, #e7f0ff 0, #f8fbff 360px, #edf4ff 100%);
       color: var(--text);
@@ -121,18 +120,31 @@
     }
 
     .card {
-      background: var(--card);
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, .88), rgba(247, 251, 255, .66));
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 20px;
       box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(18px) saturate(1.18);
+      -webkit-backdrop-filter: blur(18px) saturate(1.18);
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow: inset 0 1px 0 var(--glass-line), inset 0 -1px 0 rgba(148, 163, 184, .08);
     }
 
     .kpi-grid .card {
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, .98), rgba(250, 253, 251, .92));
-      border-color: rgba(194, 213, 239, .92);
+        linear-gradient(145deg, rgba(255, 255, 255, .9), rgba(239, 247, 255, .62));
+      border-color: rgba(191, 219, 254, .66);
       box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
@@ -248,23 +260,101 @@
       height: 420px;
     }
 
+    #overview-heatmap {
+      height: 500px;
+      min-height: 500px;
+    }
+
+    #overview-industry-donut {
+      height: 380px;
+      min-height: 380px;
+    }
+
     .overview-index-layout {
       display: grid;
       grid-template-columns: minmax(0, 3fr) minmax(240px, 1fr);
-      gap: 16px;
+      gap: 20px;
       align-items: stretch;
     }
 
     .overview-index-layout .chart {
-      min-height: 390px;
+      min-height: 500px;
     }
 
     .index-explainer,
     .insight-box {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: linear-gradient(180deg, #ffffff, #f4f8ff);
-      padding: 16px;
+      border: 1px solid rgba(191, 219, 254, .68);
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .82), rgba(238, 246, 255, .62));
+      padding: 18px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .72);
+      backdrop-filter: blur(16px) saturate(1.15);
+      -webkit-backdrop-filter: blur(16px) saturate(1.15);
+    }
+
+    .index-explainer {
+      display: flex;
+      min-height: 500px;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .industry-tile-grid {
+      display: grid;
+      height: 100%;
+      min-height: 0;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: repeat(3, minmax(96px, 1fr));
+      gap: 8px;
+      padding: 8px;
+    }
+
+    .industry-tile {
+      appearance: none;
+      display: flex;
+      min-width: 0;
+      min-height: 0;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, .86);
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font: inherit;
+      overflow: hidden;
+      padding: 12px;
+      text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, .04);
+      transition: transform .16s ease, filter .16s ease;
+    }
+
+    .industry-tile:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .industry-tile-label {
+      display: grid;
+      gap: 4px;
+      max-width: 100%;
+      font-weight: 700;
+      line-height: 1.18;
+      text-shadow: 0 1px 1px rgba(15, 23, 42, .18);
+    }
+
+    .industry-tile-name,
+    .industry-tile-count {
+      overflow-wrap: anywhere;
+    }
+
+    .industry-tile-count {
+      font-size: 13px;
+      letter-spacing: 0;
+    }
+
+    .industry-tile.small {
+      padding: 10px;
     }
 
     .index-explainer h3,
@@ -276,39 +366,84 @@
 
     .index-explainer p,
     .insight-box p {
-      margin: 0 0 12px;
+      margin: 0 0 16px;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.85;
+    }
+
+    .index-explainer p {
+      margin: 0;
+    }
+
+    .insight-box p {
+      color: #475569;
+      font-size: 14px;
+      text-indent: 2em;
+    }
+
+    .insight-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .index-mini-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .index-mini-metrics span {
+      border: 1px solid #dbeafe;
+      border-radius: 8px;
+      background: #eff6ff;
+      padding: 8px;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .index-list-intro {
+      color: var(--text);
+      font-weight: 600;
     }
 
     .index-list {
       display: grid;
-      gap: 8px;
-      margin: 0 0 14px;
+      gap: 12px;
+      margin: 0;
       padding: 0;
       list-style: none;
       color: var(--text);
     }
 
     .index-list li {
-      padding-left: 12px;
-      border-left: 3px solid #bfdbfe;
+      border-left: 3px solid #60a5fa;
+      border-radius: 8px;
+      background: rgba(239, 246, 255, 0.78);
+      padding: 10px 12px;
+      font-weight: 600;
+    }
+
+    .index-explainer .action-button {
+      margin-top: auto;
+      align-self: flex-start;
     }
 
     .action-button {
       height: 34px;
-      border: 1px solid #bfdbfe;
+      border: 1px solid rgba(147, 197, 253, .72);
       border-radius: 8px;
-      background: #e8f2ff;
+      background: linear-gradient(145deg, rgba(239, 246, 255, .9), rgba(219, 234, 254, .62));
       color: var(--primary);
       cursor: pointer;
       font: inherit;
       font-weight: 600;
       padding: 0 12px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .82);
     }
 
     .action-button:hover {
-      background: #dbeafe;
+      background: rgba(219, 234, 254, .86);
     }
 
     .chart-loading,
@@ -430,27 +565,27 @@
       width: 100%;
       min-width: 860px;
       border-collapse: collapse;
-      background: var(--card-strong);
+      background: rgba(255, 255, 255, .74);
     }
 
     th,
     td {
       padding: 10px 12px;
-      border-bottom: 1px solid #f1f5f9;
+      border-bottom: 1px solid rgba(226, 232, 240, .72);
       text-align: left;
       white-space: nowrap;
     }
 
     th {
       color: #475569;
-      background: #eef5ff;
+      background: rgba(238, 245, 255, .82);
       font-weight: 600;
       cursor: pointer;
       user-select: none;
     }
 
     tbody tr:hover {
-      background: #f5f9ff;
+      background: rgba(245, 249, 255, .78);
     }
 
     .table-link {
@@ -629,7 +764,11 @@
       display: grid;
       place-items: center;
       padding: 24px;
-      background: rgba(7, 27, 51, .48);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(147, 197, 253, .22), transparent 36%),
+        rgba(7, 27, 51, .42);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .modal[hidden] {
@@ -644,8 +783,10 @@
       flex-direction: column;
       border: 1px solid rgba(191, 219, 254, .9);
       border-radius: 12px;
-      background: #f8fbff;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .92), rgba(239, 247, 255, .82));
       box-shadow: 0 28px 80px rgba(15, 23, 42, .28);
+      backdrop-filter: blur(18px) saturate(1.12);
+      -webkit-backdrop-filter: blur(18px) saturate(1.12);
     }
 
     .modal-header {
@@ -654,8 +795,8 @@
       justify-content: space-between;
       gap: 16px;
       padding: 18px 20px 14px;
-      border-bottom: 1px solid var(--border);
-      background: #fff;
+      border-bottom: 1px solid rgba(191, 219, 254, .68);
+      background: rgba(255, 255, 255, .74);
     }
 
     .modal-title {
@@ -684,7 +825,7 @@
 
     .modal-body {
       overflow: auto;
-      padding: 18px 20px 20px;
+      padding: 22px 24px 24px;
     }
 
     .modal-toolbar {
@@ -708,19 +849,28 @@
 
     .report-content {
       display: grid;
-      gap: 14px;
+      gap: 24px;
       color: var(--text);
+      max-width: 980px;
+      margin: 0 auto;
     }
 
     .report-content h3 {
-      margin: 0;
+      margin: 0 0 4px;
       font-size: 16px;
+      color: #102033;
+      line-height: 1.35;
     }
 
     .report-content p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
+      margin: 0 0 14px;
+      color: #475569;
+      line-height: 1.95;
+      text-indent: 2em;
+    }
+
+    .report-content p:last-child {
+      margin-bottom: 0;
     }
 
     @media (max-width: 1120px) {
@@ -844,7 +994,13 @@
           <div id="overview-heatmap" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
           <aside class="index-explainer">
             <h3>指标说明</h3>
-            <p>华商发展指数从华商基础、制度环境、中国联系、华人网络和市场条件五个维度，衡量各国家和地区的综合表现。该指数不只是企业数量排名，而是用于比较不同市场的华商发展基础、外部环境和拓展潜力。</p>
+            <p>华商发展指数从华商基础、制度环境、中国联系、华人网络和市场条件五个维度，衡量各国家和地区的综合表现，用于比较不同市场的华商发展基础、外部环境和拓展潜力。</p>
+            <div class="index-mini-metrics">
+              <span>五个维度</span>
+              <span>89个市场</span>
+              <span>0-100分</span>
+            </div>
+            <div class="index-list-intro">通过这个指标，我们能够：</div>
             <ul class="index-list">
               <li>筛选重点国家</li>
               <li>比较区域差异</li>
@@ -1080,7 +1236,6 @@
           </div>
         </div>
         <div id="index-method-grid" class="method-grid"></div>
-        <p id="index-method-note" class="note"></p>
       </section>
 
       <section class="section card">
@@ -1091,11 +1246,10 @@
           <button id="open-report" class="action-button" type="button">打开研究报告</button>
         </div>
         <div class="insight-box">
-          <h3>总体判断</h3>
-          <p>从当前数据看，海外华商企业分布呈现“亚洲与北美洲双核心、欧洲补充、其他区域节点化”的总体格局。美国、菲律宾、越南、加拿大、意大利、法国等国家是企业数量较为集中的主要市场。</p>
-          <p>亚洲市场在企业数量、商会网络和华人社群基础方面更突出，尤其东南亚区域兼具产业承接和社群连接优势。北美洲市场则在制度环境、市场容量和高附加值行业承载方面更具优势。欧洲市场整体规模相对分散，但在部分国家形成了具有代表性的节点型市场。</p>
-          <p>从地缘板块看，五眼国家和一带一路国家体现出不同类型的优势。五眼国家更适合观察金融、技术服务、专业服务和成熟市场中的华商网络；一带一路国家则更适合观察跨境贸易、制造、批发零售、工程合作和区域产业联动。</p>
-          <p>商会网络是理解海外华商分布的重要补充。企业数据反映经营主体分布，商会数据则补充呈现组织连接、代表人物和潜在合作入口，有助于更全面地观察海外华商网络。</p>
+          <p>综合指数排名靠前的市场包括新加坡、美国、澳大利亚、加拿大、马来西亚等，分别体现出华人网络、华商基础、制度环境、中国联系和市场条件等不同优势。综合排名并不等同于单一企业数量排名，而是反映多个维度叠加后的整体表现。</p>
+          <p>分项来看，美国、菲律宾、越南等国家的华商企业基础较突出，其中美国华商企业数为 11,461 条，菲律宾为 7,023 条，越南为 6,483 条。制度环境方面，丹麦、芬兰、新加坡等国家表现较强，反映出更稳定的商业运行环境。</p>
+          <p>中国联系方面，沙特阿拉伯、马来西亚、印度尼西亚等市场排名靠前，说明其与中国之间的贸易、投资或工程合作联系更紧密。华人网络方面，新加坡、加拿大、澳大利亚等国家表现较好，其中新加坡商会数量达到 36 个，社群组织基础较强。</p>
+          <p>总体来看，北美洲在华商基础和市场条件上更具优势，亚洲在企业数量和中国联系方面更突出，欧洲则主要体现为制度环境较强。海外华商网络呈现出“北美高承载、亚洲高连接、欧洲强制度、其他区域节点化”的总体特征。</p>
         </div>
       </section>
 
@@ -1143,7 +1297,7 @@
         <div class="card-header">
           <div>
             <h2 class="card-title" id="trend-title">国家趋势</h2>
-            <p class="card-subtitle">双Y轴：华商占比与选定X变量</p>
+            <p class="card-subtitle" id="trend-subtitle">柱状图显示年度水平，折线显示相对基准年的变化</p>
           </div>
           <button id="clear-country" class="text-button" type="button" hidden>取消选择×</button>
         </div>
@@ -1615,28 +1769,46 @@
       showModal('华商发展指数研究报告', '指标、现状、趋势分析与决策建议', `
         <div class="report-content">
           <section>
-            <h3>一、总览页：指标说明</h3>
-            <p>华商发展指数用于综合观察不同国家和地区的华商发展基础与外部环境。指数从华商基础、制度环境、中国联系、华人网络和市场条件五个维度出发，不只是比较企业数量，也同时关注当地营商制度、对华经贸联系、华人社群网络和市场发展空间。通过这一指数，可以初步判断哪些国家已经形成较强华商企业基础，哪些区域具备较好的制度和市场条件，哪些市场在中国联系、华人网络和产业合作方面仍有进一步拓展潜力。</p>
+            <h3>1. 指数构建与分析目的</h3>
+            <p>华商发展指数旨在从多维度衡量不同国家和地区的华商发展基础与外部环境。指数由五个分项构成：华商基础指数、制度环境指数、中国联系指数、华人网络指数和市场条件指数。其中，华商基础指数权重为 25%，制度环境指数、中国联系指数和华人网络指数权重均为 20%，市场条件指数权重为 15%。</p>
+            <p>在变量构成上，华商基础指数以华商数量、华商资产和核心企业占比衡量当地华商企业基础；制度环境指数以 CPI、法治、政府效能、监管质量和腐败控制衡量商业运行环境；中国联系指数以中国双边贸易、AEI 中国投资和 AEI 中国工程合作衡量对华经贸联系；华人网络指数以华人人口密度、中国来源移民存量密度和商会数量衡量社群网络基础；市场条件指数以人均 GDP、人口规模、FDI 流入和新企业密度衡量市场承载力。</p>
+            <p>指数构建采用 0—100 标准化方法。数量、资产、贸易、投资和人口类偏态变量先进行 log(1+x) 处理，再进行标准化；制度类 0—100 字段直接参与平均；综合指数按照五个分项权重加权合成。该指数的核心用途不是给国家作简单优劣排序，而是帮助识别不同市场在华商基础、制度条件、对华联系、社群网络和市场空间上的相对优势。</p>
           </section>
           <section>
-            <h3>二、指数构建变量说明</h3>
-            <p>华商基础指数主要衡量当地华商企业的数量规模、重点企业分布和资产信息可见度。分值较高，通常说明当地华商企业基础较强，或已经形成一定企业集聚。</p>
-            <p>制度环境指数主要衡量当地商业运行环境的稳定性和可预期性，重点关注廉洁水平、法治水平、政府效能和监管质量等因素。分值较高，说明当地制度环境相对稳定，更适合长期经营和高端服务业发展。</p>
-            <p>中国联系指数主要衡量当地与中国之间的贸易、投资和工程合作强度。分值较高，说明该市场与中国经贸联系更紧密，华商企业可能在双边贸易、产业协作和投资合作中发挥更大作用。</p>
-            <p>华人网络指数主要衡量当地华人人口、移民存量和商会组织形成的社会网络基础。分值较高，通常说明当地社群组织能力、商业互助基础和信息传播网络较强。</p>
-            <p>市场条件指数主要衡量当地经济容量和市场发展空间，重点考虑人均 GDP、人口规模、外商直接投资流入和新企业密度等因素。分值较高，说明当地市场承载力和企业活跃度较强。</p>
+            <h3>2. 综合指数排名特征</h3>
+            <p>从综合指数看，新加坡、美国、澳大利亚、加拿大、马来西亚位居前五，综合指数分别为 84.2、79.5、75.3、75.0 和 72.2。英国、阿拉伯联合酋长国、沙特阿拉伯、西班牙和法国也进入综合指数前十。总体来看，排名靠前的国家通常并非只依靠单一优势，而是至少在两个以上维度上表现较强。</p>
+            <p>新加坡综合指数最高，主要优势来自华人网络、制度环境、中国联系和市场条件的共同支撑。其华人网络指数达到 93.3，制度环境指数为 87.5，中国联系指数为 79.8，市场条件指数为 78.3，说明新加坡兼具华人社群基础、制度稳定性、对华经贸联系和市场承载力。</p>
+            <p>美国综合指数位列第二，主要优势来自华商基础和市场条件。美国华商基础指数为 95.9，市场条件指数为 90.2，华商企业数达到 11,461 条，说明其华商企业集聚程度和市场承载能力均较强。相比之下，美国华人网络指数为 59.9，制度环境指数为 72.5，中国联系指数为 77.5，显示其综合优势主要来自企业基础和市场规模，而非单一社群网络优势。</p>
+            <p>澳大利亚、加拿大和马来西亚分别体现出不同类型的高分结构。澳大利亚在制度环境、市场条件和华商基础方面较均衡；加拿大在华商基础、制度环境和市场条件方面表现突出；马来西亚则在中国联系方面优势显著，中国联系指数达到 92.3，同时华商基础指数为 80.2，显示其在对华经贸联系和华商基础之间具有较强结合。</p>
           </section>
           <section>
-            <h3>三、指数分析页：总体判断</h3>
-            <p>从当前数据看，海外华商企业分布呈现“亚洲与北美洲双核心、欧洲补充、其他区域节点化”的总体格局。美国、菲律宾、越南、加拿大、意大利、法国等国家是企业数量较为集中的主要市场。</p>
-            <p>亚洲市场在企业数量、商会网络和华人社群基础方面更突出，尤其东南亚区域兼具产业承接和社群连接优势。北美洲市场则在制度环境、市场容量和高附加值行业承载方面更具优势。欧洲市场整体规模相对分散，但在部分国家形成了具有代表性的节点型市场。</p>
-            <p>从地缘板块看，五眼国家和一带一路国家体现出不同类型的优势。五眼国家更适合观察金融、技术服务、专业服务和成熟市场中的华商网络；一带一路国家则更适合观察跨境贸易、制造、批发零售、工程合作和区域产业联动。</p>
-            <p>商会网络是理解海外华商分布的重要补充。企业数据反映经营主体分布，商会数据则补充呈现组织连接、代表人物和潜在合作入口，有助于更全面地观察海外华商网络。</p>
+            <h3>3. 分项指数表现</h3>
+            <p>华商基础指数反映企业集聚和资产信息可见度。美国、菲律宾、加拿大、西班牙、意大利、法国、新加坡、马来西亚、瑞士和印度位居前列。其中，美国华商企业数为 11,461 条，菲律宾为 7,023 条，加拿大为 2,288 条，意大利为 1,701 条，法国为 1,498 条。这说明华商企业基础既集中在北美成熟市场，也集中在东南亚和部分欧洲市场。</p>
+            <p>制度环境指数反映商业运行环境的稳定性和可预期性。丹麦、芬兰、新加坡、卢森堡、挪威、新西兰、瑞士、瑞典、荷兰和列支敦士登排名靠前。这类市场通常具备更强的法治基础、政府效能和监管质量，适合金融、技术服务、专业服务和长期经营型企业发展。但部分制度环境较强的国家，华商企业数量未必很高，说明制度优势并不必然直接转化为华商企业集聚。</p>
+            <p>中国联系指数反映各国与中国之间的贸易、投资和工程合作强度。沙特阿拉伯、马来西亚、印度尼西亚、英国、匈牙利、阿拉伯联合酋长国、哈萨克斯坦、巴基斯坦、越南和泰国排名靠前。其中，沙特阿拉伯中国联系指数达到 100.0，马来西亚为 92.3，印度尼西亚为 90.9，说明能源、工程合作、区域产业协作和双边贸易关系是推动中国联系指数的重要来源。</p>
+            <p>华人网络指数反映当地华人人口、移民存量和商会组织基础。新加坡、加拿大、澳大利亚、美国、越南、马来西亚、新西兰、泰国、韩国和日本排名靠前。新加坡商会数量达到 36 个，越南为 19 个，美国和加拿大均为 10 个。华人网络较强的国家，通常具有更好的组织连接、商业互助和信息传播基础，也更容易形成华商企业的社会支撑网络。</p>
+            <p>市场条件指数反映当地市场容量、居民购买力、资本流入和企业活跃度。美国、德国、法国、加拿大、澳大利亚、日本、意大利、西班牙、新加坡和巴西排名靠前。其中，美国市场条件指数为 90.2，德国为 82.1，法国为 80.8，加拿大为 80.3，澳大利亚为 79.8。成熟经济体在市场条件维度上表现更突出，说明其对高附加值行业、资本服务和专业化经营具有更强承载能力。</p>
           </section>
           <section>
-            <h3>四、指数用途</h3>
-            <p>本指数适合用于筛选重点国家、比较区域差异和识别潜在市场。企业数量反映华商基础，制度环境反映长期经营条件，中国联系和华人网络则有助于观察跨境合作和社群连接能力。</p>
-            <p>商会网络是企业数据的重要补充。企业数据反映经营主体分布，商会数据则反映组织连接、代表人物和潜在合作入口，有助于更全面理解海外华商网络。</p>
+            <h3>4. 区域结构判断</h3>
+            <p>从区域均值看，北美洲综合指数均值为 68.1，在各区域中最高。北美洲华商基础均值为 81.8，市场条件均值为 82.5，说明其优势主要来自企业基础和市场容量。北美洲华商企业数合计为 13,756 条，是当前海外华商企业的重要承载区。</p>
+            <p>亚洲综合指数均值为 54.6，华商企业数合计为 16,182 条，在企业数量上超过其他区域。亚洲的中国联系指数均值为 62.3，市场条件均值为 68.6，说明亚洲市场在对华经贸联系和区域产业协作方面具有较强基础。东南亚国家尤其具有代表性，越南、菲律宾、马来西亚、印度尼西亚和泰国在华商企业数量、中国联系或华人网络方面均有突出表现。</p>
+            <p>欧洲综合指数均值为 50.4，制度环境均值为 69.4，在制度环境维度上具有明显优势。但欧洲中国联系指数均值为 33.5，华人网络指数均值为 23.2，说明其制度和市场基础较好，但对华联系和华人网络整体较分散。欧洲更适合作为观察高端服务、专业服务和节点型华商网络的区域。</p>
+            <p>大洋洲综合指数均值为 59.0，制度环境均值为 75.7，华人网络均值为 48.6，表现较为均衡。非洲和拉丁美洲综合指数均值分别为 45.5 和 40.0，企业数量和华人网络基础相对有限，但部分国家可能在资源、工程合作或区域市场方面具有节点价值。</p>
+          </section>
+          <section>
+            <h3>5. 行业结构特征</h3>
+            <p>行业维度主要用于解释华商基础中的企业结构和资产结构。当前华商企业数量最多的行业为制造业，共 7,996 条，占比 21.3%；其次为批发零售业，共 6,770 条，占比 18.0%；公共与居民服务业为 4,463 条，占比 11.9%；金融业为 4,194 条，占比 11.1%；商业服务业为 3,809 条，占比 10.1%。</p>
+            <p>从资产结构看，金融业资产合计达到 52.8 亿美元，商业服务业资产合计达到 32.7 亿美元，明显高于多数行业。这说明华商企业的数量优势主要集中在制造、批发零售和服务业，但资产集中度更可能体现在金融和商业服务领域。</p>
+            <p>重点国家的行业结构也存在明显差异。美国第一大行业为金融业，企业数为 2,915 条，占美国华商企业的 25.4%；英国第一大行业同样为金融业，占比 23.9%。澳大利亚和加拿大第一大行业均为采矿业，国家内占比均为 33.7%。阿拉伯联合酋长国和沙特阿拉伯第一大行业为批发零售业，分别占 57.5% 和 38.1%。这些差异说明，不同国家的华商网络往往嵌入当地不同的产业结构之中。</p>
+          </section>
+          <section>
+            <h3>6. 综合判断</h3>
+            <p>第一，海外华商发展格局并不是单一的企业数量分布，而是企业基础、制度环境、中国联系、华人网络和市场条件共同作用的结果。美国、菲律宾、越南等国家企业数量突出，但综合指数还受到制度环境、市场条件和中国联系等因素影响。新加坡企业数量并不最高，但凭借华人网络、制度环境、中国联系和市场条件的综合优势位居第一。</p>
+            <p>第二，北美洲和亚洲是当前海外华商网络最重要的两个板块，但优势类型不同。北美洲更突出市场承载力和企业基础，亚洲更突出企业数量、中国联系和区域产业协作。欧洲则更强调制度环境和节点型市场价值。</p>
+            <p>第三，五眼国家和一带一路相关国家体现出不同的观察逻辑。五眼国家更适合观察成熟市场中的金融、技术服务、专业服务和投资网络。一带一路相关国家则更适合观察跨境贸易、制造、批发零售、工程合作和区域产业联动。</p>
+            <p>第四，商会网络对于理解华商分布具有重要补充价值。单纯企业数量只能反映经营主体分布，而商会数量、人物职务和组织联系能够进一步反映社群连接、商业互助和潜在合作入口。新加坡、越南、美国、加拿大、澳大利亚等国家在商会网络方面具有较强代表性。</p>
+            <p>第五，行业结构显示华商企业既有传统制造、批发零售和居民服务基础，也在金融、商业服务、技术服务和采矿等领域形成不同类型的资产和产业联系。未来观察华商网络，应同时关注企业数量、行业结构、资产分布和组织网络，而不宜只使用单一排名判断市场重要性。</p>
           </section>
         </div>
       `);
@@ -1756,7 +1928,7 @@
       if (!el) throw new Error('missing chart container: ' + id);
       if (!charts[id]) {
         el.innerHTML = '';
-        charts[id] = echarts.init(el, 'huashang');
+        charts[id] = echarts.init(el, 'huashang', { renderer: 'svg' });
       }
       return charts[id];
     }
@@ -1874,55 +2046,50 @@
     }
 
     function initOverviewIndustryDonut() {
-      renderChart('overview-industry-donut', 'industry_rollup.huashang_count', () => {
-        const rows = groupedIndustryRows(DATA.industry_rollup).sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
-        const total = DATA.summary.cn_loose_pos || 1;
-        const data = rows.map((row, index) => ({
-          name: row.name,
-          value: row.huashang_count || row.cn_loose_pos || 0,
-          raw: row,
-          itemStyle: { color: PALETTE[index % PALETTE.length] },
-          label: { show: ((row.huashang_count || row.cn_loose_pos || 0) / total) >= .025 }
-        }));
-        return {
-          tooltip: {
-            trigger: 'item',
-            formatter: params => {
-              return `${params.name}<br>海外华商数：${fmt(params.value)}<br>行业占比：${pct(params.value / (DATA.summary.cn_loose_pos || 1))}`;
-            }
-          },
-          series: [{
-            type: 'treemap',
-            roam: false,
-            nodeClick: false,
-            breadcrumb: { show: false },
-            top: 8,
-            bottom: 8,
-            left: 8,
-            right: 8,
-            label: {
-              show: true,
-              color: '#fff',
-              fontWeight: 600,
-              fontSize: 11,
-              lineHeight: 15,
-              overflow: 'break',
-              formatter: params => industryBlockLabel(params.name, params.value)
-            },
-            upperLabel: { show: false },
-            itemStyle: {
-              borderColor: '#fff',
-              borderWidth: 2,
-              gapWidth: 2
-            },
-            data
-          }]
-        };
-      }, chart => {
-        chart.off('click');
-        chart.on('click', params => {
-          if (!params.data || !params.data.raw) return;
-          openEnterpriseModal({ title: `${params.data.raw.name}企业明细`, industry: params.data.raw.name, mode: 'industry' });
+      const container = document.getElementById('overview-industry-donut');
+      if (!container) return;
+      const rows = groupedIndustryRows(DATA.industry_rollup)
+        .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+        .slice(0, 11);
+      const placements = [
+        'grid-column:1 / 4;grid-row:1 / 2;',
+        'grid-column:1 / 4;grid-row:2 / 3;',
+        'grid-column:4 / 7;grid-row:1 / 2;',
+        'grid-column:7 / 10;grid-row:1 / 2;',
+        'grid-column:4 / 7;grid-row:2 / 3;',
+        'grid-column:7 / 10;grid-row:2 / 3;',
+        'grid-column:10 / 13;grid-row:2 / 3;',
+        'grid-column:10 / 13;grid-row:1 / 2;',
+        'grid-column:1 / 5;grid-row:3 / 4;',
+        'grid-column:5 / 9;grid-row:3 / 4;',
+        'grid-column:9 / 13;grid-row:3 / 4;'
+      ];
+      container.innerHTML = `
+        <div class="industry-tile-grid">
+          ${rows.map((row, index) => {
+            const count = row.huashang_count || row.cn_loose_pos || 0;
+            const isSmall = index >= 7;
+            return `
+              <button
+                class="industry-tile ${isSmall ? 'small' : ''}"
+                type="button"
+                data-industry="${escapeHtml(row.name)}"
+                style="${placements[index] || ''}background:${PALETTE[index % PALETTE.length]};"
+                title="${escapeHtml(row.name)}：${fmt(count)}"
+              >
+                <span class="industry-tile-label">
+                  <span class="industry-tile-name">${escapeHtml(row.name)}</span>
+                  <span class="industry-tile-count">(${fmt(count)})</span>
+                </span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      `;
+      container.querySelectorAll('[data-industry]').forEach(tile => {
+        tile.addEventListener('click', () => {
+          const industry = tile.dataset.industry;
+          openEnterpriseModal({ title: `${industry}企业明细`, industry, mode: 'industry' });
         });
       });
     }
@@ -1999,7 +2166,7 @@
           xAxis: {
             type: 'category',
             data: categories,
-            axisLabel: { fontSize: 11 }
+            axisLabel: { fontSize: 12, fontWeight: 500, color: '#334155' }
           },
           yAxis: {
             type: 'value',
@@ -2129,7 +2296,7 @@
           .reverse();
         return {
           color: INDEX_COMPONENTS.map(item => item[3]),
-          grid: { left: 94, right: 54, top: 38, bottom: 28 },
+          grid: { left: 98, right: 58, top: 52, bottom: 42 },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
@@ -2150,20 +2317,20 @@
           xAxis: {
             type: 'value',
             max: value => Math.max(60, Math.ceil(value.max / 10) * 10),
-            axisLabel: { formatter: '{value}' },
+            axisLabel: { formatter: '{value}', fontSize: 12, fontWeight: 500, color: '#334155' },
             splitLine: { lineStyle: { color: '#d7e3f5' } }
           },
           yAxis: {
             type: 'category',
             data: rows.map(countryName),
-            axisLabel: { fontSize: 11 }
+            axisLabel: { fontSize: 12, fontWeight: 500, color: '#334155' }
           },
           series: [
             ...INDEX_COMPONENTS.map(([key, label, weight, color], index) => ({
               name: label,
               type: 'bar',
               stack: 'score',
-              barWidth: 16,
+              barWidth: 22,
               data: rows.map(row => ({
                 value: (num(row[key]) || 0) * weight,
                 raw: row,
@@ -2183,7 +2350,8 @@
                 position: 'right',
                 formatter: params => Number(params.value).toFixed(1),
                 color: '#13201f',
-                fontWeight: 600
+                fontSize: 12,
+                fontWeight: 700
               }
             }
           ]
@@ -2219,7 +2387,7 @@
           xAxis: {
             type: 'category',
             data: labels,
-            axisLabel: { rotate: 28, interval: 0, fontSize: 11, formatter: value => wrapCnLabel(value, 5, 2) }
+            axisLabel: { rotate: 24, interval: 0, fontSize: 12, fontWeight: 500, color: '#334155', formatter: value => wrapCnLabel(value, 5, 2) }
           },
           yAxis: {
             type: 'value',
@@ -2266,7 +2434,7 @@
           yAxis: {
             type: 'category',
             data: rows.map(row => row.name),
-            axisLabel: { fontSize: 11 }
+            axisLabel: { fontSize: 12, fontWeight: 500, color: '#334155' }
           },
           series: [{
             type: 'bar',
@@ -2325,7 +2493,7 @@
           yAxis: {
             type: 'category',
             data: rows.map(row => row.iso2 + ' · ' + countryName(row)),
-            axisLabel: { fontSize: 11 }
+            axisLabel: { fontSize: 12, fontWeight: 500, color: '#334155' }
           },
           series: [{
             type: 'bar',
@@ -2891,7 +3059,7 @@
             formatter: params => `${params[0].name}<br>商会数：${fmt(params[0].value)}`
           },
           xAxis: { type: 'value', splitLine: { lineStyle: { color: '#d7e3f5' } } },
-          yAxis: { type: 'category', data: rows.map(row => row.name), axisLabel: { fontSize: 11 } },
+          yAxis: { type: 'category', data: rows.map(row => row.name), axisLabel: { fontSize: 12, fontWeight: 500, color: '#334155' } },
           series: [{
             type: 'bar',
             data: rows.map(row => ({ value: row.count, itemStyle: { color: '#2563eb', borderRadius: [0, 6, 6, 0] } })),
@@ -3049,11 +3217,11 @@
       const method = DATA.analysis_index_method || {};
       const components = method.components || [];
       const descriptions = {
-        '华商基础指数': '主要衡量当地华商企业的数量规模、重点企业分布和资产信息可见度。分值较高，通常说明当地华商企业基础较强，或已经形成一定企业集聚。',
-        '制度环境指数': '主要衡量当地商业运行环境的稳定性和可预期性，重点关注廉洁水平、法治水平、政府效能和监管质量等因素。',
-        '中国联系指数': '主要衡量当地与中国之间的贸易、投资和工程合作强度，反映华商企业在双边贸易、产业协作和投资合作中的潜在作用。',
-        '华人网络指数': '主要衡量当地华人人口、移民存量和商会组织形成的社会网络基础，反映社群组织能力和商业互助基础。',
-        '市场条件指数': '主要衡量当地经济容量和市场发展空间，重点考虑人均GDP、人口规模、外商直接投资流入和新企业密度等因素。'
+        '华商基础指数': '以华商数量、华商资产、核心企业占比衡量当地华商企业基础。分值越高，通常说明企业集聚更强，或资产信息可见度更高。',
+        '制度环境指数': '以 CPI、法治、政府效能、监管质量、腐败控制衡量商业运行环境。分值越高，说明制度稳定性和经营可预期性更强。',
+        '中国联系指数': '以中国双边贸易、AEI 中国投资、AEI 中国工程合作衡量对华经贸联系。分值越高，说明贸易、投资和工程合作基础更强。',
+        '华人网络指数': '以华人人口密度、中国来源移民存量密度、商会数量衡量社群网络基础。分值越高，说明组织连接和商业互助基础更强。',
+        '市场条件指数': '以人均 GDP、人口规模、FDI 流入、新企业密度衡量市场承载力。分值越高，说明当地消费能力、资本流入和企业活跃度更强。'
       };
       const grid = document.getElementById('index-method-grid');
       if (!grid) return;
@@ -3066,7 +3234,7 @@
       `).join('');
       const note = document.getElementById('index-method-note');
       if (note) {
-        note.textContent = '本指数适合用于筛选重点国家、比较区域差异和识别潜在市场。企业数量反映华商基础，制度环境反映长期经营条件，中国联系和华人网络则有助于观察跨境合作和社群连接能力。';
+        note.remove();
       }
     }
 
@@ -3207,6 +3375,7 @@
           delete charts['research-trend'];
         }
         document.getElementById('trend-title').textContent = '国家趋势';
+        document.getElementById('trend-subtitle').textContent = '柱状图显示年度水平，折线显示相对基准年的变化';
         clearBtn.hidden = true;
         trendEl.innerHTML = '<div class="chart-empty">点击散点图中的国家查看趋势</div>';
         return;
@@ -3217,51 +3386,84 @@
         .filter(row => row.iso3 === state.selectedCountryIso)
         .sort((a, b) => Number(a.year) - Number(b.year));
       document.getElementById('trend-title').textContent = countryName(country) + '趋势';
+      document.getElementById('trend-subtitle').textContent = '柱状图显示年度水平，折线显示相对基准年的变化';
       clearBtn.hidden = false;
 
-      renderChart('research-trend', 'country_year_panel.cn_loose_pos_rate/selected x variable', () => ({
-        grid: commonGrid(),
-        tooltip: { trigger: 'axis' },
-        legend: { top: 0, right: 0 },
-        xAxis: {
-          type: 'category',
-          data: rows.map(row => row.year)
-        },
-        yAxis: [
-          {
-            type: 'value',
-            name: '总量占比',
-            axisLabel: { formatter: '{value}%' },
-            splitLine: { lineStyle: { color: '#d7e3f5' } }
+      renderChart('research-trend', 'country_year_panel selected x variable trend', () => {
+        const variableRows = rows
+          .map(row => ({ year: row.year, value: num(row[xKey]) }))
+          .filter(row => row.value != null);
+        const baseline = variableRows.find(row => row.value !== 0) || variableRows[0];
+        const baselineYear = baseline ? baseline.year : '';
+        const baselineValue = baseline ? baseline.value : null;
+        const indexed = rows.map(row => {
+          const value = num(row[xKey]);
+          if (value == null || baselineValue == null || baselineValue === 0) return null;
+          return value / baselineValue * 100;
+        });
+        return {
+          grid: { left: 64, right: 58, top: 60, bottom: 48, containLabel: true },
+          tooltip: {
+            trigger: 'axis',
+            formatter: params => {
+              const year = params[0] ? params[0].axisValue : '';
+              const lines = [`${countryName(country)} · ${year}`];
+              params.forEach(item => {
+                if (item.seriesName.includes('指数')) {
+                  lines.push(`${item.marker}${item.seriesName}：${item.value == null ? '未公开' : Number(item.value).toFixed(1)}`);
+                } else {
+                  lines.push(`${item.marker}${item.seriesName}：${item.value == null ? '未公开' : axisShort(item.value)}`);
+                }
+              });
+              return lines.join('<br>');
+            }
           },
-          {
-            type: 'value',
-            name: variableLabel(xKey),
-            axisLabel: { formatter: axisShort },
-            splitLine: { show: false }
-          }
-        ],
-        series: [
-          {
-            name: '华商总量占比',
-            type: 'line',
-            smooth: true,
-            yAxisIndex: 0,
-            data: rows.map(row => (num(row.huashang_count) || num(row.cn_loose_pos) || 0) / (DATA.summary.cn_loose_pos || 1) * 100),
-            itemStyle: { color: '#2563eb' },
-            lineStyle: { width: 2 }
+          legend: {
+            top: 12,
+            left: 'center',
+            itemWidth: 14,
+            itemHeight: 10
           },
-          {
-            name: variableLabel(xKey),
-            type: 'line',
-            smooth: true,
-            yAxisIndex: 1,
-            data: rows.map(row => num(row[xKey])),
-            itemStyle: { color: '#0891b2' },
-            lineStyle: { width: 2 }
-          }
-        ]
-      }));
+          xAxis: {
+            type: 'category',
+            data: rows.map(row => row.year)
+          },
+          yAxis: [
+            {
+              type: 'value',
+              name: variableLabel(xKey),
+              axisLabel: { formatter: axisShort },
+              splitLine: { lineStyle: { color: '#d7e3f5' } }
+            },
+            {
+              type: 'value',
+              name: baselineYear ? `指数(${baselineYear}=100)` : '指数',
+              axisLabel: { formatter: value => Number(value).toFixed(0) },
+              splitLine: { show: false }
+            }
+          ],
+          series: [
+            {
+              name: variableLabel(xKey),
+              type: 'bar',
+              barWidth: 18,
+              yAxisIndex: 0,
+              data: rows.map(row => num(row[xKey])),
+              itemStyle: { color: '#38bdf8', borderRadius: [6, 6, 0, 0] }
+            },
+            {
+              name: baselineYear ? `变化指数(${baselineYear}=100)` : '变化指数',
+              type: 'line',
+              smooth: true,
+              yAxisIndex: 1,
+              data: indexed,
+              symbolSize: 7,
+              itemStyle: { color: '#2563eb' },
+              lineStyle: { width: 3 }
+            }
+          ]
+        };
+      });
     }
 
     function initTab(tab) {
@@ -3328,18 +3530,34 @@
 
       echarts.registerTheme('huashang', {
         color: PALETTE,
-        textStyle: { fontFamily: 'PingFang SC,Microsoft YaHei,sans-serif' }
+        textStyle: {
+          color: '#334155',
+          fontFamily: 'PingFang SC,Microsoft YaHei,Segoe UI,sans-serif',
+          fontSize: 12,
+          fontWeight: 500
+        },
+        categoryAxis: {
+          axisLabel: { color: '#334155', fontSize: 12, fontWeight: 500 },
+          axisLine: { lineStyle: { color: '#cbd5e1' } },
+          axisTick: { lineStyle: { color: '#cbd5e1' } }
+        },
+        valueAxis: {
+          axisLabel: { color: '#334155', fontSize: 12, fontWeight: 500 },
+          axisLine: { lineStyle: { color: '#cbd5e1' } },
+          axisTick: { lineStyle: { color: '#cbd5e1' } },
+          splitLine: { lineStyle: { color: '#dbeafe' } }
+        }
       });
 
       try {
-        const raw = await fetch('huashang-data-ff389cbe.json').then(response => {
-          if (!response.ok) throw new Error('huashang-data-ff389cbe.json HTTP ' + response.status);
+        const raw = await fetch('huashang-data-e2074d50.json').then(response => {
+          if (!response.ok) throw new Error('huashang-data-e2074d50.json HTTP ' + response.status);
           return response.json();
         });
         prepareData(raw);
       } catch (error) {
         console.error(error);
-        showAppError('dashboard_data.json 加载失败。请确认 dashboard.html 与 dashboard_data.json 位于同一目录，并通过本地HTTP服务打开。');
+        showAppError('数据文件加载失败，请稍后刷新重试。');
         return;
       }
 
@@ -3360,4 +3578,5 @@
   </script>
 </body>
 </html>
+
 
