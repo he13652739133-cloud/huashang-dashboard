@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
       <script>
       const password = "jYQ7fnmmeFw3";
       const input = window.prompt("请输入访问密码");
       if (input !== password) {
-        document.documentElement.innerHTML = "<head><title>访问受限</title></head><body style=\"margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;\"><main style=\"text-align:center;\"><h1 style=\"font-size:24px;margin-bottom:8px;\">访问受限</h1><p style=\"color:#607086;\">请输入正确密码后访问。</p></main></body>";
+        document.documentElement.innerHTML = "<head><title>访问受限</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;"><main style="text-align:center;"><h1 style="font-size:24px;margin-bottom:8px;">访问受限</h1><p style="color:#607086;">请输入正确密码后访问。</p></main></body>";
         throw new Error("访问受限");
       }
     </script><meta charset="UTF-8">
@@ -523,7 +523,7 @@
     }
 
     .country-card {
-      min-height: 172px;
+      min-height: 154px;
     }
 
     .country-name {
@@ -532,10 +532,52 @@
       gap: 8px;
       margin-bottom: 14px;
       font-weight: 600;
+      min-height: 30px;
     }
 
-    .flag {
-      font-size: 20px;
+    .country-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 24px;
+      border: 1px solid rgba(96, 165, 250, .55);
+      border-radius: 8px;
+      background: rgba(239, 246, 255, .82);
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+      flex: 0 0 38px;
+    }
+
+    .country-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .data-scope-note {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid rgba(147, 197, 253, .48);
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(239, 246, 255, .76), rgba(255, 255, 255, .52));
+      color: var(--muted);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(16px);
+    }
+
+    .data-scope-note strong {
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .data-scope-note span {
+      line-height: 1.7;
     }
 
     .metric-row {
@@ -582,6 +624,13 @@
       font-weight: 600;
       cursor: pointer;
       user-select: none;
+    }
+
+    #industry-table th,
+    #industry-table td,
+    #chamber-table th,
+    #chamber-table td {
+      text-align: center;
     }
 
     tbody tr:hover {
@@ -940,13 +989,17 @@
   <main>
     <div id="tab-overview" class="tab-panel">
       <section class="section kpi-grid" id="overview-kpis"></section>
+      <section class="section data-scope-note">
+        <strong>数据说明</strong>
+        <span>网站数据分为两部分：总数体现在总览卡片、总数地图、区域分布和地缘比较；除这些总数视图外，行业结构、企业检索、交叉表和指数分析主要使用微观企业记录。</span>
+      </section>
 
       <section class="section overview-grid">
         <div class="card">
           <div class="card-header">
             <div>
-              <h2 class="card-title">海外华商行业分布</h2>
-              <p class="card-subtitle">按华商企业数量统计</p>
+              <h2 class="card-title">微观企业行业分布</h2>
+              <p class="card-subtitle">按可检索企业记录统计</p>
             </div>
           </div>
           <div id="overview-industry-donut" class="chart"><div class="chart-loading">数据加载中...</div></div>
@@ -955,7 +1008,7 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h2 class="card-title">区域分布</h2>
+              <h2 class="card-title">总览区域分布</h2>
               <p class="card-subtitle">亚洲、北美洲及其他地区结构</p>
             </div>
           </div>
@@ -966,7 +1019,7 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">五眼 vs 一带一路</h2>
-            <p class="card-subtitle">重点经济圈华商分布对比</p>
+            <p class="card-subtitle">重点经济圈总数对比</p>
             </div>
           </div>
           <div id="overview-bloc-bar" class="chart"><div class="chart-loading">数据加载中...</div></div>
@@ -976,8 +1029,8 @@
       <section class="section card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">海外华商数量地图</h2>
-            <p class="card-subtitle">颜色为华商数量，黄色边框为五眼联盟，绿色边框为一带一路</p>
+            <h2 class="card-title">海外华商总数地图</h2>
+            <p class="card-subtitle">颜色为总数，黄色边框为五眼联盟，绿色边框为一带一路</p>
           </div>
         </div>
         <div id="overview-world-map" class="chart chart-map"><div class="chart-loading">数据加载中...</div></div>
@@ -1020,7 +1073,7 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">行业分布柱状图</h2>
-              <p class="card-subtitle">按行业大类展示华商数量</p>
+              <p class="card-subtitle">按行业大类展示微观企业记录</p>
             </div>
           </div>
           <div id="enterprise-industry-stack" class="chart"><div class="chart-loading">数据加载中...</div></div>
@@ -1041,7 +1094,7 @@
         <div class="card-header">
           <div>
             <h2 class="card-title">国家分布</h2>
-            <p class="card-subtitle">华商数量前40，可搜索国家名</p>
+            <p class="card-subtitle">微观记录前40，可搜索国家名</p>
           </div>
           <div class="toolbar">
             <input id="country-search" type="search" placeholder="搜索国家名">
@@ -1083,7 +1136,7 @@
               <tr>
                 <th data-sort="country_name_zh">国家</th>
                 <th data-sort="industry_label">行业</th>
-                <th data-sort="huashang_count">华商数量</th>
+                <th data-sort="huashang_count">微观记录</th>
                 <th data-sort="rate">行业占比</th>
                 <th data-sort="huashang_asset_sum">华商资产</th>
               </tr>
@@ -1106,7 +1159,7 @@
         <div class="card-header">
           <div>
             <h2 class="card-title">重点国家概览</h2>
-            <p class="card-subtitle">按华商数量展示主要国家和地区</p>
+            <p class="card-subtitle">按总数展示主要国家和地区</p>
           </div>
         </div>
         <div class="five-eye-grid" id="five-eye-cards"></div>
@@ -1117,7 +1170,7 @@
           <div class="card-header">
             <div>
             <h2 class="card-title">地缘分组结构</h2>
-            <p class="card-subtitle">按当前华商总量拆分五眼、一带一路与其他国家</p>
+            <p class="card-subtitle">按总数拆分五眼、一带一路与其他国家</p>
             </div>
           </div>
           <div id="geo-bloc-share" class="chart chart-map"><div class="chart-loading">数据加载中...</div></div>
@@ -1247,7 +1300,7 @@
         </div>
         <div class="insight-box">
           <p>综合指数排名靠前的市场包括新加坡、美国、澳大利亚、加拿大、马来西亚等，分别体现出华人网络、华商基础、制度环境、中国联系和市场条件等不同优势。综合排名并不等同于单一企业数量排名，而是反映多个维度叠加后的整体表现。</p>
-          <p>分项来看，美国、菲律宾、越南等国家的华商企业基础较突出，其中美国华商企业数为 11,461 条，菲律宾为 7,023 条，越南为 6,483 条。制度环境方面，丹麦、芬兰、新加坡等国家表现较强，反映出更稳定的商业运行环境。</p>
+          <p>分项来看，美国、菲律宾、越南等国家的华商企业基础较突出，其中美国微观记录为 11,461 条，菲律宾为 7,023 条，越南为 6,483 条。制度环境方面，丹麦、芬兰、新加坡等国家表现较强，反映出更稳定的商业运行环境。</p>
           <p>中国联系方面，沙特阿拉伯、马来西亚、印度尼西亚等市场排名靠前，说明其与中国之间的贸易、投资或工程合作联系更紧密。华人网络方面，新加坡、加拿大、澳大利亚等国家表现较好，其中新加坡商会数量达到 36 个，社群组织基础较强。</p>
           <p>总体来看，北美洲在华商基础和市场条件上更具优势，亚洲在企业数量和中国联系方面更突出，欧洲则主要体现为制度环境较强。海外华商网络呈现出“北美高承载、亚洲高连接、欧洲强制度、其他区域节点化”的总体特征。</p>
         </div>
@@ -1261,7 +1314,7 @@
           </div>
           <div class="field">
             <label>Y轴变量</label>
-            <input value="华商总量占比" disabled>
+            <input value="微观记录占比" disabled>
           </div>
           <div class="field">
             <label for="research-year">年份：<span id="research-year-value">2022</span></label>
@@ -1384,9 +1437,8 @@
 
     const GEO_VARIABLE_OPTIONS = [
       ['investment', '中国投资额'],
-      ['firms', '华商企业数'],
-      ['share', '华商总量占比'],
-      ['diaspora', '华人人口参考值'],
+      ['firms', '微观企业记录'],
+      ['share', '微观记录占比'],
       ['gdp_pc', '人均GDP'],
       ['trade', '对华贸易额']
     ];
@@ -1477,9 +1529,34 @@
       return (row && (row.country_name_zh || row.country_name_cn || row.country_name_en || row.iso3)) || '未知国家/地区';
     }
 
+    function microCount(row) {
+      return num(row && row.huashang_count) || num(row && row.cn_loose_pos) || 0;
+    }
+
+    function macroCount(row) {
+      if (!row) return 0;
+      const country = row.iso3 && state.countryByIso ? state.countryByIso.get(row.iso3) : null;
+      return num(row.macro_huashang_count) || num(country && country.macro_huashang_count) || microCount(row);
+    }
+
+    function microTotal() {
+      const s = DATA && DATA.summary ? DATA.summary : {};
+      return num(s.micro_enterprise_total) || num(s.display_huashang_rows) || num(s.cn_loose_pos) || 0;
+    }
+
+    function macroTotal() {
+      const s = DATA && DATA.summary ? DATA.summary : {};
+      return num(s.macro_huashang_total) || microTotal();
+    }
+
     function totalShare(row) {
-      const total = num(DATA && DATA.summary && DATA.summary.cn_loose_pos) || 0;
-      return total ? (num(row && row.huashang_count) || num(row && row.cn_loose_pos) || 0) / total : null;
+      const total = microTotal();
+      return total ? microCount(row) / total : null;
+    }
+
+    function macroShare(row) {
+      const total = macroTotal();
+      return total ? macroCount(row) / total : null;
     }
 
     function isDisplayCountry(row) {
@@ -1778,12 +1855,12 @@
             <h3>2. 综合指数排名特征</h3>
             <p>从综合指数看，新加坡、美国、澳大利亚、加拿大、马来西亚位居前五，综合指数分别为 84.2、79.5、75.3、75.0 和 72.2。英国、阿拉伯联合酋长国、沙特阿拉伯、西班牙和法国也进入综合指数前十。总体来看，排名靠前的国家通常并非只依靠单一优势，而是至少在两个以上维度上表现较强。</p>
             <p>新加坡综合指数最高，主要优势来自华人网络、制度环境、中国联系和市场条件的共同支撑。其华人网络指数达到 93.3，制度环境指数为 87.5，中国联系指数为 79.8，市场条件指数为 78.3，说明新加坡兼具华人社群基础、制度稳定性、对华经贸联系和市场承载力。</p>
-            <p>美国综合指数位列第二，主要优势来自华商基础和市场条件。美国华商基础指数为 95.9，市场条件指数为 90.2，华商企业数达到 11,461 条，说明其华商企业集聚程度和市场承载能力均较强。相比之下，美国华人网络指数为 59.9，制度环境指数为 72.5，中国联系指数为 77.5，显示其综合优势主要来自企业基础和市场规模，而非单一社群网络优势。</p>
+            <p>美国综合指数位列第二，主要优势来自华商基础和市场条件。美国华商基础指数为 95.9，市场条件指数为 90.2，微观企业记录达到 11,461 条，说明其华商企业集聚程度和市场承载能力均较强。相比之下，美国华人网络指数为 59.9，制度环境指数为 72.5，中国联系指数为 77.5，显示其综合优势主要来自企业基础和市场规模，而非单一社群网络优势。</p>
             <p>澳大利亚、加拿大和马来西亚分别体现出不同类型的高分结构。澳大利亚在制度环境、市场条件和华商基础方面较均衡；加拿大在华商基础、制度环境和市场条件方面表现突出；马来西亚则在中国联系方面优势显著，中国联系指数达到 92.3，同时华商基础指数为 80.2，显示其在对华经贸联系和华商基础之间具有较强结合。</p>
           </section>
           <section>
             <h3>3. 分项指数表现</h3>
-            <p>华商基础指数反映企业集聚和资产信息可见度。美国、菲律宾、加拿大、西班牙、意大利、法国、新加坡、马来西亚、瑞士和印度位居前列。其中，美国华商企业数为 11,461 条，菲律宾为 7,023 条，加拿大为 2,288 条，意大利为 1,701 条，法国为 1,498 条。这说明华商企业基础既集中在北美成熟市场，也集中在东南亚和部分欧洲市场。</p>
+            <p>华商基础指数反映企业集聚和资产信息可见度。美国、菲律宾、加拿大、西班牙、意大利、法国、新加坡、马来西亚、瑞士和印度位居前列。其中，美国微观记录为 11,461 条，菲律宾为 7,023 条，加拿大为 2,288 条，意大利为 1,701 条，法国为 1,498 条。这说明华商企业基础既集中在北美成熟市场，也集中在东南亚和部分欧洲市场。</p>
             <p>制度环境指数反映商业运行环境的稳定性和可预期性。丹麦、芬兰、新加坡、卢森堡、挪威、新西兰、瑞士、瑞典、荷兰和列支敦士登排名靠前。这类市场通常具备更强的法治基础、政府效能和监管质量，适合金融、技术服务、专业服务和长期经营型企业发展。但部分制度环境较强的国家，华商企业数量未必很高，说明制度优势并不必然直接转化为华商企业集聚。</p>
             <p>中国联系指数反映各国与中国之间的贸易、投资和工程合作强度。沙特阿拉伯、马来西亚、印度尼西亚、英国、匈牙利、阿拉伯联合酋长国、哈萨克斯坦、巴基斯坦、越南和泰国排名靠前。其中，沙特阿拉伯中国联系指数达到 100.0，马来西亚为 92.3，印度尼西亚为 90.9，说明能源、工程合作、区域产业协作和双边贸易关系是推动中国联系指数的重要来源。</p>
             <p>华人网络指数反映当地华人人口、移民存量和商会组织基础。新加坡、加拿大、澳大利亚、美国、越南、马来西亚、新西兰、泰国、韩国和日本排名靠前。新加坡商会数量达到 36 个，越南为 19 个，美国和加拿大均为 10 个。华人网络较强的国家，通常具有更好的组织连接、商业互助和信息传播基础，也更容易形成华商企业的社会支撑网络。</p>
@@ -1791,14 +1868,14 @@
           </section>
           <section>
             <h3>4. 区域结构判断</h3>
-            <p>从区域均值看，北美洲综合指数均值为 68.1，在各区域中最高。北美洲华商基础均值为 81.8，市场条件均值为 82.5，说明其优势主要来自企业基础和市场容量。北美洲华商企业数合计为 13,756 条，是当前海外华商企业的重要承载区。</p>
-            <p>亚洲综合指数均值为 54.6，华商企业数合计为 16,182 条，在企业数量上超过其他区域。亚洲的中国联系指数均值为 62.3，市场条件均值为 68.6，说明亚洲市场在对华经贸联系和区域产业协作方面具有较强基础。东南亚国家尤其具有代表性，越南、菲律宾、马来西亚、印度尼西亚和泰国在华商企业数量、中国联系或华人网络方面均有突出表现。</p>
+            <p>从区域均值看，北美洲综合指数均值为 68.1，在各区域中最高。北美洲华商基础均值为 81.8，市场条件均值为 82.5，说明其优势主要来自企业基础和市场容量。北美洲微观企业记录合计为 13,756 条，是当前海外华商企业的重要承载区。</p>
+            <p>亚洲综合指数均值为 54.6，微观企业记录合计为 16,182 条，在企业数量上超过其他区域。亚洲的中国联系指数均值为 62.3，市场条件均值为 68.6，说明亚洲市场在对华经贸联系和区域产业协作方面具有较强基础。东南亚国家尤其具有代表性，越南、菲律宾、马来西亚、印度尼西亚和泰国在华商企业数量、中国联系或华人网络方面均有突出表现。</p>
             <p>欧洲综合指数均值为 50.4，制度环境均值为 69.4，在制度环境维度上具有明显优势。但欧洲中国联系指数均值为 33.5，华人网络指数均值为 23.2，说明其制度和市场基础较好，但对华联系和华人网络整体较分散。欧洲更适合作为观察高端服务、专业服务和节点型华商网络的区域。</p>
             <p>大洋洲综合指数均值为 59.0，制度环境均值为 75.7，华人网络均值为 48.6，表现较为均衡。非洲和拉丁美洲综合指数均值分别为 45.5 和 40.0，企业数量和华人网络基础相对有限，但部分国家可能在资源、工程合作或区域市场方面具有节点价值。</p>
           </section>
           <section>
             <h3>5. 行业结构特征</h3>
-            <p>行业维度主要用于解释华商基础中的企业结构和资产结构。当前华商企业数量最多的行业为制造业，共 7,996 条，占比 21.3%；其次为批发零售业，共 6,770 条，占比 18.0%；公共与居民服务业为 4,463 条，占比 11.9%；金融业为 4,194 条，占比 11.1%；商业服务业为 3,809 条，占比 10.1%。</p>
+            <p>行业维度主要用于解释华商基础中的企业结构和资产结构。当前微观企业记录最多的行业为制造业，共 7,996 条，占比 21.3%；其次为批发零售业，共 6,770 条，占比 18.0%；公共与居民服务业为 4,463 条，占比 11.9%；金融业为 4,194 条，占比 11.1%；商业服务业为 3,809 条，占比 10.1%。</p>
             <p>从资产结构看，金融业资产合计达到 52.8 亿美元，商业服务业资产合计达到 32.7 亿美元，明显高于多数行业。这说明华商企业的数量优势主要集中在制造、批发零售和服务业，但资产集中度更可能体现在金融和商业服务领域。</p>
             <p>重点国家的行业结构也存在明显差异。美国第一大行业为金融业，企业数为 2,915 条，占美国华商企业的 25.4%；英国第一大行业同样为金融业，占比 23.9%。澳大利亚和加拿大第一大行业均为采矿业，国家内占比均为 33.7%。阿拉伯联合酋长国和沙特阿拉伯第一大行业为批发零售业，分别占 57.5% 和 38.1%。这些差异说明，不同国家的华商网络往往嵌入当地不同的产业结构之中。</p>
           </section>
@@ -1954,27 +2031,52 @@
 
     function renderKpis(containerId) {
       const s = DATA.summary || {};
-      const cards = [
+      const industryCount = new Set((DATA.industry_rollup || [])
+        .filter(row => (row.huashang_count || row.cn_loose_pos || 0) > 0)
+        .map(row => row.industry_group_zh || industryName(row))).size;
+      const isOverview = containerId === 'overview-kpis';
+      const cards = isOverview ? [
         {
-          value: fmt(s.cn_loose_pos),
-          label: '华商总量',
-          sub: '覆盖主要海外市场',
+          value: fmt(macroTotal()),
+          label: '海外华商总数',
+          sub: '覆盖主要海外市场'
+        },
+        {
+          value: fmt(microTotal()),
+          label: '微观企业记录',
+          sub: '支持检索与分页查看',
+          drill: 'all',
+          action: '查看微观记录'
+        },
+        {
+          value: fmt(s.valid_huashang_iso3_countries),
+          label: '覆盖国家/地区',
+          sub: '总览与微观数据覆盖'
+        },
+        {
+          value: fmt(s.chamber_count || 0),
+          label: '商会组织',
+          sub: '人物职务 ' + fmt(s.chamber_person_role_count || 0) + ' 条'
+        }
+      ] : [
+        {
+          value: fmt(microTotal()),
+          label: '微观企业记录',
+          sub: '可检索企业明细',
           drill: 'all',
           action: '查看企业明细'
         },
         {
-          value: fmt(new Set((DATA.industry_rollup || [])
-            .filter(row => (row.huashang_count || row.cn_loose_pos || 0) > 0)
-            .map(row => row.industry_group_zh || industryName(row))).size),
+          value: fmt(industryCount),
           label: '重点行业',
-          sub: '覆盖金融、制造、服务等领域',
+          sub: '按微观记录归类',
           drill: 'industry',
           action: '查看行业企业'
         },
         {
           value: fmt(s.valid_huashang_iso3_countries),
           label: '覆盖国家/地区',
-          sub: '保留有效华商记录'
+          sub: '微观记录覆盖市场'
         },
         {
           value: fmt(s.chamber_count || 0),
@@ -2002,7 +2104,7 @@
         if (card.dataset.drill === 'industry') {
           openEnterpriseModal({ title: '重点行业企业明细', mode: 'industry' });
         } else {
-          openEnterpriseModal({ title: '华商总量企业明细', mode: 'total' });
+          openEnterpriseModal({ title: '微观企业记录明细', mode: 'total' });
         }
       });
       container.dataset.drillReady = '1';
@@ -2020,6 +2122,7 @@
 
     function wrapCnLabel(text, size = 4, maxLines = 3) {
       const value = String(text || '');
+      if (value === '建筑与地产') return '建筑与\n地产';
       if (value.length <= size) return value;
       const parts = [];
       for (let i = 0; i < value.length; i += size) {
@@ -2095,13 +2198,13 @@
     }
 
     function initOverviewDefinitionBar() {
-      renderChart('overview-definition-bar', 'summary.region_calibration_targets', () => {
-        const rows = (DATA.summary.region_calibration_targets || [])
-          .filter(row => row.display_count > 0)
+      renderChart('overview-definition-bar', 'summary.macro_region_distribution', () => {
+        const rows = (DATA.summary.macro_region_distribution || DATA.summary.region_calibration_targets || [])
+          .filter(row => (row.macro_count || row.display_count || 0) > 0)
           .map((row, index) => ({
             name: row.name,
-            value: (row.display_share || 0) * 100,
-            count: row.display_count,
+            value: (row.macro_share || row.display_share || 0) * 100,
+            count: row.macro_count || row.display_count,
             itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [0, 6, 6, 0] }
           }))
           .sort((a, b) => a.value - b.value);
@@ -2110,7 +2213,7 @@
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
-            formatter: params => `${params[0].name}<br>华商数量：${fmt(params[0].data.count)}<br>区域占比：${pctPoint(params[0].value)}`
+            formatter: params => `${params[0].name}<br>总数：${fmt(params[0].data.count)}<br>区域占比：${pctPoint(params[0].value)}`
           },
           xAxis: {
             type: 'value',
@@ -2138,18 +2241,18 @@
     }
 
     function initOverviewBlocBar() {
-      renderChart('overview-bloc-bar', 'five_eyes/bri_countries.huashang_count', () => {
-        const five = [...(DATA.five_eyes || [])].sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
+      renderChart('overview-bloc-bar', 'five_eyes/bri_countries.macro_huashang_count', () => {
+        const five = [...(DATA.five_eyes || [])].sort((a, b) => macroCount(b) - macroCount(a));
         const bri = [...(DATA.bri_countries || [])]
           .filter(row => row.has_huashang_data)
-          .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+          .sort((a, b) => macroCount(b) - macroCount(a))
           .slice(0, 10);
         const categories = [
           ...five.map(row => '五眼\n' + row.iso2),
           ...bri.map(row => '一带一路\n' + row.iso2)
         ];
-        const fiveData = categories.map((_, index) => index < five.length ? { value: five[index].huashang_count, raw: five[index] } : null);
-        const briData = categories.map((_, index) => index >= five.length ? { value: bri[index - five.length].huashang_count, raw: bri[index - five.length] } : null);
+        const fiveData = categories.map((_, index) => index < five.length ? { value: macroCount(five[index]), raw: five[index] } : null);
+        const briData = categories.map((_, index) => index >= five.length ? { value: macroCount(bri[index - five.length]), raw: bri[index - five.length] } : null);
         return {
           grid: commonGrid(),
           tooltip: {
@@ -2159,7 +2262,7 @@
               const hit = params.find(item => item.data && item.data.raw);
               if (!hit) return '';
               const row = hit.data.raw;
-              return `${countryName(row)}<br>海外华商数：${fmt(row.huashang_count)}<br>总量占比：${pct(totalShare(row))}`;
+              return `${countryName(row)}<br>总数：${fmt(macroCount(row))}<br>总数占比：${pct(macroShare(row))}`;
             }
           },
           legend: { top: 0, right: 0 },
@@ -2185,8 +2288,8 @@
       if (!country) return '';
       return [
         countryName(country),
-        '海外华商数：' + fmt(country.huashang_count || country.cn_loose_pos),
-        '总量占比：' + pct(totalShare(country)),
+        '总数：' + fmt(macroCount(country)),
+        '总数占比：' + pct(macroShare(country)),
         '华商资产：' + assetText(country.huashang_asset_sum),
         '五眼联盟：' + (country.is_five_eyes ? '是' : '否'),
         '一带一路：' + (country.is_bri ? '是' : '否')
@@ -2199,7 +2302,7 @@
       const data = [];
       (DATA.country_map || []).forEach(country => {
         if (!isDisplayCountry(country)) return;
-        const count = num(country.huashang_count) || num(country.cn_loose_pos) || 0;
+        const count = macroCount(country);
         if (count <= 0) return;
         const name = resolveMapName(country);
         if (!name) return;
@@ -2257,7 +2360,7 @@
             left: 10,
             bottom: 10,
             calculable: true,
-            text: ['华商数高', '低'],
+            text: ['总数高', '低'],
             inRange: { color: colors },
             textStyle: { color: '#64748b' }
           },
@@ -2373,21 +2476,31 @@
         const labels = rows.map(row => row.name);
         const loose = rows.map(row => row.huashang_count || row.cn_loose_pos || 0);
         return {
-          grid: commonGrid(),
+          grid: { left: 64, right: 28, top: 18, bottom: 78, containLabel: true },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
             formatter: params => {
               const index = params[0].dataIndex;
               const row = rows[index];
-              return `${row.name}<br>华商数：${fmt(row.huashang_count || row.cn_loose_pos)}<br>行业占比：${pct((row.huashang_count || row.cn_loose_pos || 0) / (DATA.summary.cn_loose_pos || 1))}`;
+              return `${row.name}<br>微观记录：${fmt(row.huashang_count || row.cn_loose_pos)}<br>行业占比：${pct((row.huashang_count || row.cn_loose_pos || 0) / (microTotal() || 1))}`;
             }
           },
           dataZoom: [{ type: 'slider', xAxisIndex: 0, height: 18, bottom: 8 }, { type: 'inside' }],
           xAxis: {
             type: 'category',
             data: labels,
-            axisLabel: { rotate: 24, interval: 0, fontSize: 12, fontWeight: 500, color: '#334155', formatter: value => wrapCnLabel(value, 5, 2) }
+            axisLabel: {
+              rotate: 0,
+              interval: 0,
+              margin: 16,
+              fontSize: 11,
+              lineHeight: 15,
+              fontWeight: 600,
+              color: '#334155',
+              formatter: value => wrapCnLabel(value, 4, 3)
+            },
+            axisTick: { alignWithLabel: true }
           },
           yAxis: {
             type: 'value',
@@ -2395,12 +2508,13 @@
             splitLine: { lineStyle: { color: '#d7e3f5' } }
           },
           series: [{
-            name: '华商企业',
+            name: '微观记录',
             type: 'bar',
             data: loose.map((value, index) => ({
               value,
               itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [6, 6, 0, 0] }
-            }))
+            })),
+            barWidth: 24
           }]
         };
       });
@@ -2464,7 +2578,7 @@
     }
 
     function updateEnterpriseCountryBar() {
-      renderChart('enterprise-country-bar', 'country_map.huashang_count', () => {
+      renderChart('enterprise-country-bar', 'country_map.micro_enterprise_count', () => {
         const keyword = document.getElementById('country-search').value.trim().toLowerCase();
         const rows = overseasCountries()
           .filter(row => {
@@ -2482,7 +2596,7 @@
             axisPointer: { type: 'shadow' },
             formatter: params => {
               const row = rows[params[0].dataIndex];
-              return `${countryName(row)}<br>海外华商数：${fmt(row.huashang_count)}<br>总量占比：${pct(totalShare(row))}<br>华商资产：${assetText(row.huashang_asset_sum)}`;
+              return `${countryName(row)}<br>微观记录：${fmt(microCount(row))}<br>记录占比：${pct(totalShare(row))}<br>华商资产：${assetText(row.huashang_asset_sum)}`;
             }
           },
           xAxis: {
@@ -2498,7 +2612,7 @@
           series: [{
             type: 'bar',
             data: rows.map(row => ({
-              value: row.huashang_count,
+              value: microCount(row),
               itemStyle: { color: countryGroupColor(row), borderRadius: [0, 6, 6, 0] }
             })),
             barWidth: 12
@@ -2617,20 +2731,19 @@
     }
 
     function renderFiveEyeCards() {
-      const flag = { US: '🇺🇸', GB: '🇬🇧', CA: '🇨🇦', AU: '🇦🇺', NZ: '🇳🇿', VN: '🇻🇳', PH: '🇵🇭', MY: '🇲🇾', SG: '🇸🇬', KR: '🇰🇷', FR: '🇫🇷' };
       const rows = overseasCountries()
-        .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+        .sort((a, b) => macroCount(b) - macroCount(a))
         .slice(0, 10);
       document.getElementById('five-eye-cards').innerHTML = rows.map(country => {
         const latest = state.latestByIso.get(country.iso3) || {};
+        const code = country.iso2 === 'GB' ? 'UK' : (country.iso2 || country.iso3 || '');
         return `
           <div class="card country-card">
-            <div class="country-name"><span class="flag">${flag[country.iso2] || ''}</span>${countryName(country)}</div>
-            <div class="metric-row"><span>海外华商数</span><strong>${fmt(country.huashang_count)}</strong></div>
-            <div class="metric-row"><span>总量占比</span><strong>${pct(totalShare(country))}</strong></div>
+            <div class="country-name"><span class="country-code">${code}</span><span class="country-title">${countryName(country)}</span></div>
+            <div class="metric-row"><span>总数</span><strong>${fmt(macroCount(country))}</strong></div>
+            <div class="metric-row"><span>总数占比</span><strong>${pct(macroShare(country))}</strong></div>
             <div class="metric-row"><span>华商资产</span><strong>${assetText(country.huashang_asset_sum)}</strong></div>
             <div class="metric-row"><span>GDP</span><strong>${fmtMoneyUsd(latest.gdp_current_usd)}</strong></div>
-            <div class="metric-row"><span>华人人口参考值</span><strong>${fmt(latest.ethnic_chinese_population_estimate)}</strong></div>
           </div>
         `;
       }).join('');
@@ -2659,16 +2772,16 @@
     }
 
     function initGeoBlocShare() {
-      renderChart('geo-bloc-share', 'country_map.huashang_count group structure', () => {
-        const total = DATA.summary.cn_loose_pos || 1;
+      renderChart('geo-bloc-share', 'country_map.macro_huashang_count group structure', () => {
+        const total = macroTotal() || 1;
         const groups = [
           { name: '五眼联盟', color: FIVE_EYES_COLOR, rows: overseasCountries().filter(row => Number(row.is_five_eyes) === 1) },
           { name: '一带一路', color: BRI_COLOR, rows: overseasCountries().filter(row => Number(row.is_bri) === 1) },
           { name: '其他国家', color: '#7c3aed', rows: overseasCountries().filter(row => Number(row.is_five_eyes) !== 1 && Number(row.is_bri) !== 1) }
         ].map(group => {
-          const count = group.rows.reduce((sum, row) => sum + (num(row.huashang_count) || 0), 0);
+          const count = group.rows.reduce((sum, row) => sum + macroCount(row), 0);
           const top = [...group.rows]
-            .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+            .sort((a, b) => macroCount(b) - macroCount(a))
             .slice(0, 4)
             .map(countryName)
             .join('、');
@@ -2682,7 +2795,7 @@
             axisPointer: { type: 'shadow' },
             formatter: params => {
               const row = params[0].data.raw;
-              return `${row.name}<br>华商总量：${fmt(row.count)}<br>总量占比：${pct(row.share)}<br>代表国家：${row.top || '暂无'}`;
+              return `${row.name}<br>总数：${fmt(row.count)}<br>总数占比：${pct(row.share)}<br>代表国家：${row.top || '暂无'}`;
             }
           },
           xAxis: {
@@ -2696,7 +2809,7 @@
             axisTick: { show: false }
           },
           series: [{
-            name: '华商总量',
+            name: '总数',
             type: 'bar',
             barWidth: 24,
             data: groups.map(row => ({
@@ -2775,12 +2888,12 @@
         .filter(row => row.is_overseas_scope !== false)
         .map(row => {
           const country = state.countryByIso.get(row.iso3) || {};
-          const firms = num(country.huashang_count) || 0;
+          const firms = microCount(country);
           return {
             ...row,
             ...country,
             firms,
-            share: (firms / (DATA.summary.cn_loose_pos || 1)) * 100,
+            share: (firms / (microTotal() || 1)) * 100,
             investment: num(row.aei_total_millions_usd) || 0,
             population: num(row.ethnic_chinese_population_estimate) || 0
           };
@@ -2819,8 +2932,7 @@
                 countryName(row),
                 `${geoVariableLabel(xKey)}：${geoValueText(xKey, row.x)}`,
                 `${geoVariableLabel(yKey)}：${geoValueText(yKey, row.y)}`,
-                `华商企业数：${fmt(row.firms)}`,
-                `华人人口参考值：${fmt(row.population)}`
+                `微观记录：${fmt(row.firms)}`
               ].join('<br>');
             }
           },
@@ -2978,7 +3090,7 @@
               const row = groups[params[0].dataIndex];
               const lines = [
                 row.name,
-                `华商总量：${fmt(row.total)}`,
+                `微观记录：${fmt(row.total)}`,
                 `覆盖国家：${fmt(row.countries)}`,
                 `Top3：${row.top || '暂无'}`
               ];
@@ -3290,8 +3402,8 @@
         .map(row => ({
           ...row,
           x: num(row[xKey]),
-          y: (num(row.huashang_count) || num(row.cn_loose_pos) || 0) / (DATA.summary.cn_loose_pos || 1) * 100,
-          firms: num(row.huashang_count) || num(row.cn_loose_pos) || 0
+          y: microCount(row) / (microTotal() || 1) * 100,
+          firms: microCount(row)
         }))
         .filter(row => row.firms > 0)
         .filter(row => row.x != null && row.y != null);
@@ -3323,7 +3435,7 @@
             trigger: 'item',
             formatter: params => {
               const row = params.data.raw;
-              return `${countryName(row)}<br>${variableLabel(xKey)}：${fmt(row.x)}<br>总量占比：${pctPoint(row.y)}<br>海外华商数：${fmt(row.firms)}<br>年份：${row.year}`;
+              return `${countryName(row)}<br>${variableLabel(xKey)}：${fmt(row.x)}<br>记录占比：${pctPoint(row.y)}<br>微观记录：${fmt(row.firms)}<br>年份：${row.year}`;
             }
           },
           xAxis: {
@@ -3333,7 +3445,7 @@
             splitLine: { lineStyle: { color: '#d7e3f5' } }
           },
           yAxis: {
-            name: '华商总量占比',
+            name: '微观记录占比',
             type: 'value',
             axisLabel: { formatter: '{value}%' },
             splitLine: { lineStyle: { color: '#d7e3f5' } }
@@ -3550,8 +3662,8 @@
       });
 
       try {
-        const raw = await fetch('huashang-data-e2074d50.json').then(response => {
-          if (!response.ok) throw new Error('huashang-data-e2074d50.json HTTP ' + response.status);
+        const raw = await fetch('huashang-data-110b31e0.json').then(response => {
+          if (!response.ok) throw new Error('huashang-data-110b31e0.json HTTP ' + response.status);
           return response.json();
         });
         prepareData(raw);
@@ -3578,5 +3690,3 @@
   </script>
 </body>
 </html>
-
-
