@@ -2,12 +2,14 @@
 <html lang="zh-CN">
 <head>
       <script>
-      const password = "jYQ7fnmmeFw3";
-      const input = window.prompt("请输入访问密码");
-      if (input !== password) {
-        document.documentElement.innerHTML = "<head><title>访问受限</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;"><main style="text-align:center;"><h1 style="font-size:24px;margin-bottom:8px;">访问受限</h1><p style="color:#607086;">请输入正确密码后访问。</p></main></body>";
-        throw new Error("访问受限");
-      }
+      (() => {
+        const password = "jYQ7fnmmeFw3";
+        const input = window.prompt("???????");
+        if (input !== password) {
+          document.documentElement.innerHTML = `<head><title>????</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;"><main style="text-align:center;"><h1 style="font-size:24px;margin-bottom:8px;">????</h1><p style="color:#607086;">???????????</p></main></body>`;
+          throw new Error("????");
+        }
+      })();
     </script><meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>华商经济数据库</title>
@@ -3669,7 +3671,7 @@
         prepareData(raw);
       } catch (error) {
         console.error(error);
-        showAppError('数据文件加载失败，请稍后刷新重试。');
+        showAppError('?????????????????');
         return;
       }
 
