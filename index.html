@@ -1,16 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
       <script>
       (() => {
         const password = "jYQ7fnmmeFw3";
-        const input = window.prompt("Password");
+        const input = window.prompt("请输入访问密码");
         if (input !== password) {
-          document.documentElement.innerHTML = `<head><title>Access Restricted</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;"><main style="text-align:center;"><h1 style="font-size:24px;margin-bottom:8px;">Access Restricted</h1><p style="color:#607086;">Please enter the correct password.</p></main></body>`;
+          document.documentElement.innerHTML = `<head><title>访问受限</title></head><body style="margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;"><main style="text-align:center;"><h1 style="font-size:24px;margin-bottom:8px;">访问受限</h1><p style="color:#607086;">请输入正确密码。</p></main></body>`;
           throw new Error("Access Restricted");
         }
       })();
-    </script><meta charset="UTF-8">
+    </script>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>华商经济数据库</title>
   <link rel="icon" href="data:,">
@@ -104,7 +105,12 @@
     main {
       max-width: 1480px;
       margin: 0 auto;
-      padding: 28px 24px 34px;
+      padding: 28px 24px 72px;
+    }
+
+    .tab-panel {
+      display: flow-root;
+      padding-bottom: 40px;
     }
 
     .tab-panel[hidden] {
@@ -113,6 +119,10 @@
 
     .section {
       margin-bottom: 24px;
+    }
+
+    .tab-panel > .section:last-child {
+      margin-bottom: 0;
     }
 
     .kpi-grid {
@@ -149,7 +159,10 @@
       border-color: rgba(191, 219, 254, .66);
       box-shadow: var(--shadow);
       position: relative;
-      overflow: hidden;
+      overflow: visible;
+      min-height: 112px;
+      padding: 18px 20px 16px;
+      z-index: 1;
     }
 
     .kpi-grid .card::before {
@@ -169,13 +182,27 @@
       transform: translateY(-2px);
       border-color: #8fc5ff;
       box-shadow: 0 20px 48px rgba(37, 99, 235, .18);
+      z-index: 5;
+    }
+
+    .kpi-grid .card:hover {
+      z-index: 10;
+    }
+
+    .kpi-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
     }
 
     .kpi-action {
-      margin-top: 12px;
+      flex: 0 0 auto;
       color: var(--primary);
       font-size: 13px;
       font-weight: 600;
+      white-space: nowrap;
     }
 
     .card-header {
@@ -209,9 +236,66 @@
     }
 
     .kpi-label {
-      margin-top: 10px;
+      min-width: 0;
       color: var(--text);
       font-weight: 500;
+    }
+
+    .kpi-label-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text);
+      font-weight: 500;
+      min-width: 0;
+    }
+
+    .estimate-help {
+      position: relative;
+      display: inline-flex;
+      height: 24px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(37, 99, 235, .24);
+      border-radius: 999px;
+      background: rgba(219, 234, 254, .72);
+      color: #1d4ed8;
+      cursor: help;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    .estimate-help::after {
+      content: attr(data-tip);
+      position: absolute;
+      z-index: 80;
+      left: 0;
+      top: calc(100% + 10px);
+      width: 390px;
+      max-width: 78vw;
+      padding: 13px 15px;
+      border: 1px solid rgba(147, 197, 253, .44);
+      border-radius: 10px;
+      background: rgba(7, 27, 51, .97);
+      box-shadow: 0 18px 42px rgba(15, 23, 42, .28);
+      color: #f8fbff;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.65;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-4px);
+      transition: opacity .16s ease, transform .16s ease;
+      white-space: normal;
+    }
+
+    .estimate-help:hover::after,
+    .estimate-help:focus-visible::after {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .kpi-sub {
@@ -243,6 +327,18 @@
       display: block;
       min-width: 0;
       border-radius: 8px;
+    }
+
+    #overview-definition-bar,
+    #overview-bloc-bar,
+    #enterprise-industry-stack,
+    #enterprise-asset-rank,
+    #chamber-region-chart,
+    #chamber-type-chart,
+    #school-region-chart,
+    #school-country-chart,
+    #school-stage-chart {
+      height: 340px;
     }
 
     .chart-map {
@@ -307,7 +403,7 @@
       height: 100%;
       min-height: 0;
       grid-template-columns: repeat(12, minmax(0, 1fr));
-      grid-template-rows: repeat(3, minmax(96px, 1fr));
+      grid-template-rows: repeat(4, minmax(76px, 1fr));
       gap: 8px;
       padding: 8px;
     }
@@ -348,6 +444,56 @@
     .industry-tile-name,
     .industry-tile-count {
       overflow-wrap: anywhere;
+    }
+
+    #school-kpis {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .analysis-row {
+      align-items: stretch;
+    }
+
+    .analysis-row > .card {
+      display: grid;
+      grid-template-rows: minmax(52px, auto) minmax(0, 1fr);
+      align-content: stretch;
+    }
+
+    .analysis-row > .card > .card-header {
+      min-height: 52px;
+      margin-bottom: 0;
+    }
+
+    #tab-overview .overview-grid.analysis-row > .card > .chart {
+      height: 380px;
+      min-height: 380px;
+    }
+
+    #tab-enterprise .analysis-row > .card > .chart,
+    #tab-geo .analysis-row > .card > .chart,
+    #tab-chamber .analysis-row > .card > .chart {
+      height: 360px;
+      min-height: 360px;
+    }
+
+    #tab-school .analysis-row > .card > .chart {
+      height: 390px;
+      min-height: 390px;
+    }
+
+    #tab-school .school-wide-analysis {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    #tab-school .school-wide-analysis > .card-header {
+      margin-bottom: 0;
+    }
+
+    #tab-school #school-stage-chart {
+      height: 340px;
+      min-height: 340px;
     }
 
     .industry-tile-count {
@@ -631,7 +777,9 @@
     #industry-table th,
     #industry-table td,
     #chamber-table th,
-    #chamber-table td {
+    #chamber-table td,
+    #school-table th,
+    #school-table td {
       text-align: center;
     }
 
@@ -937,6 +1085,10 @@
       .kpi-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .analysis-row > .card {
+        grid-template-rows: auto minmax(0, 1fr);
+      }
     }
 
     @media (max-width: 720px) {
@@ -962,7 +1114,11 @@
       }
 
       main {
-        padding: 16px;
+        padding: 16px 16px 72px;
+      }
+
+      .tab-panel {
+        padding-bottom: 32px;
       }
 
       .five-eye-grid,
@@ -984,6 +1140,7 @@
       <button class="tab-btn" data-tab="enterprise" role="tab">华商企业</button>
       <button class="tab-btn" data-tab="geo" role="tab">地缘视角</button>
       <button class="tab-btn" data-tab="chamber" role="tab">商会网络</button>
+      <button class="tab-btn" data-tab="school" role="tab">华文学校</button>
       <button class="tab-btn" data-tab="research" role="tab">指数分析</button>
     </div>
   </nav>
@@ -996,7 +1153,7 @@
         <span>网站数据分为两部分：总数体现在总览卡片、总数地图、区域分布和地缘比较；除这些总数视图外，行业结构、企业检索、交叉表和指数分析主要使用微观企业记录。</span>
       </section>
 
-      <section class="section overview-grid">
+      <section class="section overview-grid analysis-row">
         <div class="card">
           <div class="card-header">
             <div>
@@ -1070,12 +1227,12 @@
     <div id="tab-enterprise" class="tab-panel" hidden>
       <section class="section kpi-grid" id="enterprise-kpis"></section>
 
-      <section class="section two-col">
+      <section class="section two-col analysis-row">
         <div class="card">
           <div class="card-header">
             <div>
-              <h2 class="card-title">行业分布柱状图</h2>
-              <p class="card-subtitle">按行业大类展示微观企业记录</p>
+              <h2 class="card-title">行业记录排名</h2>
+              <p class="card-subtitle">前 11 个行业的微观企业记录</p>
             </div>
           </div>
           <div id="enterprise-industry-stack" class="chart"><div class="chart-loading">数据加载中...</div></div>
@@ -1167,7 +1324,7 @@
         <div class="five-eye-grid" id="five-eye-cards"></div>
       </section>
 
-      <section class="section two-col">
+      <section class="section two-col analysis-row">
         <div class="card">
           <div class="card-header">
             <div>
@@ -1200,7 +1357,7 @@
         </div>
       </section>
 
-      <section class="section two-col">
+      <section class="section two-col analysis-row">
         <div class="card">
           <div class="card-header">
             <div>
@@ -1226,7 +1383,7 @@
     <div id="tab-chamber" class="tab-panel" hidden>
       <section class="section kpi-grid" id="chamber-kpis"></section>
 
-      <section class="section two-col">
+      <section class="section two-col analysis-row">
         <div class="card">
           <div class="card-header">
             <div>
@@ -1277,6 +1434,76 @@
           <div class="pager">
             <button id="chamber-prev" type="button">上一页</button>
             <button id="chamber-next" type="button">下一页</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="tab-school" class="tab-panel" hidden>
+      <section class="section kpi-grid" id="school-kpis"></section>
+
+      <section class="section two-col analysis-row">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">华文学校全球分布</h2>
+              <p class="card-subtitle">滚轮缩放、拖拽查看，悬浮圆点查看国家明细</p>
+            </div>
+          </div>
+          <div id="school-region-chart" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">办学形态 × 教育对象分布</h2>
+            </div>
+          </div>
+          <div id="school-country-chart" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        </div>
+      </section>
+
+      <section class="section card school-wide-analysis">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">成立年代 × 区域</h2>
+            <p class="card-subtitle">仅统计成立年份可识别的学校，颜色越深代表数量越多</p>
+          </div>
+        </div>
+        <div id="school-stage-chart" class="chart"><div class="chart-loading">数据加载中...</div></div>
+      </section>
+
+      <section class="section card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">华文学校与人物关系</h2>
+            <p class="card-subtitle">学校、人物职务、创办与资助关系三类记录可检索翻页</p>
+          </div>
+        </div>
+        <div class="data-tabs" id="school-data-tabs">
+          <button type="button" class="active" data-kind="schools">华文学校</button>
+          <button type="button" data-kind="people">人物职务</button>
+          <button type="button" data-kind="relations">创办资助关系</button>
+        </div>
+        <div class="toolbar" style="margin-bottom:14px">
+          <input id="school-search" type="search" placeholder="检索学校、国家、城市、人物、机构">
+          <select id="school-page-size" aria-label="华文学校表每页条数">
+            <option value="20">每页20条</option>
+            <option value="40">每页40条</option>
+            <option value="80">每页80条</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table id="school-table">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <div id="school-table-count">表格总条数：0</div>
+          <div class="pager">
+            <button id="school-prev" type="button">上一页</button>
+            <button id="school-next" type="button">下一页</button>
           </div>
         </div>
       </section>
@@ -1420,6 +1647,12 @@
       },
       chamber: {
         kind: 'chambers',
+        page: 1,
+        pageSize: 20,
+        search: ''
+      },
+      school: {
+        kind: 'schools',
         page: 1,
         pageSize: 20,
         search: ''
@@ -1620,7 +1853,9 @@
 
     function linkCell(url) {
       if (!url) return '暂无';
-      return `<a class="table-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">打开</a>`;
+      const first = String(url).split(/\s+/).find(item => /^https?:\/\//i.test(item));
+      if (!first) return escapeHtml(url);
+      return `<a class="table-link" href="${escapeHtml(first)}" target="_blank" rel="noopener noreferrer">打开</a>`;
     }
 
     function valueText(value) {
@@ -2041,7 +2276,8 @@
         {
           value: fmt(macroTotal()),
           label: '海外华商总数',
-          sub: '覆盖主要海外市场'
+          sub: '覆盖主要海外市场',
+          help: '总数以美国商务部/人口普查局公开企业统计作为锚点，结合当前可检索记录中的国家分布比例推算各国总数，并汇总形成海外华商总数。'
         },
         {
           value: fmt(microTotal()),
@@ -2089,9 +2325,14 @@
       document.getElementById(containerId).innerHTML = cards.map(card => `
         <div class="card" ${card.drill ? `data-drill="${card.drill}"` : ''}>
           <p class="kpi-value">${card.value}</p>
-          <div class="kpi-label">${card.label}</div>
+          <div class="kpi-meta">
+            <div class="${card.help ? 'kpi-label-row' : 'kpi-label'}">
+              <span>${card.label}</span>
+              ${card.help ? `<span class="estimate-help" tabindex="0" data-tip="${escapeHtml(card.help)}">测算说明</span>` : ''}
+            </div>
+            ${card.action ? `<div class="kpi-action">${card.action}</div>` : ''}
+          </div>
           <div class="kpi-sub">${card.sub}</div>
-          ${card.action ? `<div class="kpi-action">${card.action}</div>` : ''}
         </div>
       `).join('');
       setupKpiDrill(containerId);
@@ -2157,17 +2398,17 @@
         .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
         .slice(0, 11);
       const placements = [
-        'grid-column:1 / 4;grid-row:1 / 2;',
-        'grid-column:1 / 4;grid-row:2 / 3;',
-        'grid-column:4 / 7;grid-row:1 / 2;',
-        'grid-column:7 / 10;grid-row:1 / 2;',
-        'grid-column:4 / 7;grid-row:2 / 3;',
-        'grid-column:7 / 10;grid-row:2 / 3;',
-        'grid-column:10 / 13;grid-row:2 / 3;',
-        'grid-column:10 / 13;grid-row:1 / 2;',
-        'grid-column:1 / 5;grid-row:3 / 4;',
-        'grid-column:5 / 9;grid-row:3 / 4;',
-        'grid-column:9 / 13;grid-row:3 / 4;'
+        'grid-column:1 / 5;grid-row:1 / 3;',
+        'grid-column:5 / 9;grid-row:1 / 3;',
+        'grid-column:9 / 13;grid-row:1 / 2;',
+        'grid-column:9 / 13;grid-row:2 / 3;',
+        'grid-column:1 / 4;grid-row:3 / 4;',
+        'grid-column:4 / 7;grid-row:3 / 4;',
+        'grid-column:7 / 10;grid-row:3 / 4;',
+        'grid-column:10 / 13;grid-row:3 / 4;',
+        'grid-column:1 / 5;grid-row:4 / 5;',
+        'grid-column:5 / 9;grid-row:4 / 5;',
+        'grid-column:9 / 13;grid-row:4 / 5;'
       ];
       container.innerHTML = `
         <div class="industry-tile-grid">
@@ -2211,7 +2452,7 @@
           }))
           .sort((a, b) => a.value - b.value);
         return {
-          grid: { left: 72, right: 52, top: 16, bottom: 24, containLabel: true },
+          grid: { left: 72, right: 92, top: 14, bottom: 28, containLabel: false },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
@@ -2230,7 +2471,7 @@
           },
           series: [{
             type: 'bar',
-            barWidth: 18,
+            barWidth: 24,
             data: rows,
             label: {
               show: true,
@@ -2244,44 +2485,59 @@
 
     function initOverviewBlocBar() {
       renderChart('overview-bloc-bar', 'five_eyes/bri_countries.macro_huashang_count', () => {
-        const five = [...(DATA.five_eyes || [])].sort((a, b) => macroCount(b) - macroCount(a));
-        const bri = [...(DATA.bri_countries || [])]
-          .filter(row => row.has_huashang_data)
-          .sort((a, b) => macroCount(b) - macroCount(a))
-          .slice(0, 10);
-        const categories = [
-          ...five.map(row => '五眼\n' + row.iso2),
-          ...bri.map(row => '一带一路\n' + row.iso2)
-        ];
-        const fiveData = categories.map((_, index) => index < five.length ? { value: macroCount(five[index]), raw: five[index] } : null);
-        const briData = categories.map((_, index) => index >= five.length ? { value: macroCount(bri[index - five.length]), raw: bri[index - five.length] } : null);
+        const total = macroTotal() || 1;
+        const groups = [
+          { name: '五眼联盟', color: FIVE_EYES_COLOR, rows: overseasCountries().filter(row => Number(row.is_five_eyes) === 1) },
+          { name: '一带一路', color: BRI_COLOR, rows: overseasCountries().filter(row => Number(row.is_bri) === 1) },
+          { name: '其他国家', color: '#7c3aed', rows: overseasCountries().filter(row => Number(row.is_five_eyes) !== 1 && Number(row.is_bri) !== 1) }
+        ].map(group => {
+          const count = group.rows.reduce((acc, row) => acc + macroCount(row), 0);
+          const top = [...group.rows]
+            .sort((a, b) => macroCount(b) - macroCount(a))
+            .slice(0, 4)
+            .map(countryName)
+            .join('、');
+          return { ...group, count, share: count / total, top };
+        }).sort((a, b) => a.count - b.count);
         return {
-          grid: commonGrid(),
+          grid: { left: 72, right: 92, top: 14, bottom: 28, containLabel: false },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
             formatter: params => {
-              const hit = params.find(item => item.data && item.data.raw);
-              if (!hit) return '';
-              const row = hit.data.raw;
-              return `${countryName(row)}<br>总数：${fmt(macroCount(row))}<br>总数占比：${pct(macroShare(row))}`;
+              const row = params[0].data.raw;
+              return `${row.name}<br>总数：${fmt(row.count)}<br>总数占比：${pct(row.share)}<br>代表国家：${row.top || '暂无'}`;
             }
           },
-          legend: { top: 0, right: 0 },
           xAxis: {
-            type: 'category',
-            data: categories,
-            axisLabel: { fontSize: 12, fontWeight: 500, color: '#334155' }
-          },
-          yAxis: {
             type: 'value',
-            axisLabel: { formatter: axisShort },
+            splitNumber: 4,
+            axisLabel: { formatter: axisShort, hideOverlap: true },
             splitLine: { lineStyle: { color: '#d7e3f5' } }
           },
-          series: [
-            { name: '五眼', type: 'bar', barWidth: 16, data: fiveData, itemStyle: { color: FIVE_EYES_COLOR, borderRadius: [6, 6, 0, 0] } },
-            { name: '一带一路', type: 'bar', barWidth: 16, data: briData, itemStyle: { color: BRI_COLOR, borderRadius: [6, 6, 0, 0] } }
-          ]
+          yAxis: {
+            type: 'category',
+            data: groups.map(row => row.name),
+            axisTick: { show: false },
+            axisLabel: { fontSize: 12, fontWeight: 600, color: '#334155' }
+          },
+          series: [{
+            name: '总数',
+            type: 'bar',
+            barWidth: 30,
+            data: groups.map(row => ({
+              value: row.count,
+              raw: row,
+              itemStyle: { color: row.color, borderRadius: [0, 8, 8, 0] }
+            })),
+            label: {
+              show: true,
+              position: 'right',
+              formatter: params => `${fmt(params.value)}  ${pct(params.data.raw.share)}`,
+              color: '#102033',
+              fontWeight: 600
+            }
+          }]
         };
       });
     }
@@ -2474,60 +2730,75 @@
 
     function initEnterpriseIndustryStack() {
       renderChart('enterprise-industry-stack', 'industry_rollup.cn_loose_pos/firm_count', () => {
-        const rows = groupedIndustryRows(DATA.industry_rollup).sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
-        const labels = rows.map(row => row.name);
-        const loose = rows.map(row => row.huashang_count || row.cn_loose_pos || 0);
+        const rows = groupedIndustryRows(DATA.industry_rollup)
+          .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0))
+          .slice(0, 11)
+          .sort((a, b) => (a.huashang_count || 0) - (b.huashang_count || 0));
         return {
-          grid: { left: 64, right: 28, top: 18, bottom: 78, containLabel: true },
+          grid: { left: 118, right: 62, top: 18, bottom: 28, containLabel: false },
           tooltip: {
             trigger: 'axis',
-            axisPointer: { type: 'shadow' },
+            axisPointer: { type: 'line' },
             formatter: params => {
-              const index = params[0].dataIndex;
-              const row = rows[index];
-              return `${row.name}<br>微观记录：${fmt(row.huashang_count || row.cn_loose_pos)}<br>行业占比：${pct((row.huashang_count || row.cn_loose_pos || 0) / (microTotal() || 1))}`;
+              const row = rows[params[0].dataIndex];
+              const count = row.huashang_count || row.cn_loose_pos || 0;
+              return `${row.name}<br>微观记录：${fmt(count)}<br>行业占比：${pct(count / (microTotal() || 1))}`;
             }
           },
-          dataZoom: [{ type: 'slider', xAxisIndex: 0, height: 18, bottom: 8 }, { type: 'inside' }],
           xAxis: {
-            type: 'category',
-            data: labels,
-            axisLabel: {
-              rotate: 0,
-              interval: 0,
-              margin: 16,
-              fontSize: 11,
-              lineHeight: 15,
-              fontWeight: 600,
-              color: '#334155',
-              formatter: value => wrapCnLabel(value, 4, 3)
-            },
-            axisTick: { alignWithLabel: true }
-          },
-          yAxis: {
             type: 'value',
             axisLabel: { formatter: axisShort },
             splitLine: { lineStyle: { color: '#d7e3f5' } }
           },
-          series: [{
-            name: '微观记录',
-            type: 'bar',
-            data: loose.map((value, index) => ({
-              value,
-              itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [6, 6, 0, 0] }
-            })),
-            barWidth: 24
-          }]
+          yAxis: {
+            type: 'category',
+            data: rows.map(row => row.name),
+            axisTick: { show: false },
+            axisLabel: { color: '#334155', fontSize: 12, fontWeight: 600 }
+          },
+          series: [
+            {
+              name: '记录数',
+              type: 'bar',
+              barWidth: 4,
+              silent: true,
+              data: rows.map((row, index) => ({
+                value: row.huashang_count || row.cn_loose_pos || 0,
+                itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: 4 }
+              }))
+            },
+            {
+              name: '记录数',
+              type: 'scatter',
+              symbolSize: 13,
+              z: 4,
+              data: rows.map((row, index) => ({
+                value: [row.huashang_count || row.cn_loose_pos || 0, row.name],
+                itemStyle: { color: PALETTE[index % PALETTE.length], borderColor: '#fff', borderWidth: 2 }
+              })),
+              label: {
+                show: true,
+                position: 'right',
+                formatter: params => fmt(params.value[0]),
+                color: '#334155',
+                fontSize: 11,
+                fontWeight: 600
+              }
+            }
+          ]
         };
       });
     }
 
     function initEnterpriseAssetRank() {
       renderChart('enterprise-asset-rank', 'literature_benchmarks.industry_asset_distribution', () => {
-        const rows = benchmarkRows('industry_asset_distribution').sort((a, b) => a.value - b.value);
+        const rows = benchmarkRows('industry_asset_distribution')
+          .sort((a, b) => (b.value || 0) - (a.value || 0))
+          .slice(0, 11)
+          .sort((a, b) => (a.value || 0) - (b.value || 0));
         const values = rows.map(row => row.value || 0);
         return {
-          grid: { left: 128, right: 24, top: 26, bottom: 28 },
+          grid: { left: 118, right: 62, top: 18, bottom: 28, containLabel: false },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
@@ -2558,7 +2829,15 @@
               value: row.value,
               itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [0, 6, 6, 0] }
             })),
-            barWidth: 14,
+            barWidth: 18,
+            label: {
+              show: true,
+              position: 'right',
+              formatter: params => pctPoint(params.value),
+              color: '#334155',
+              fontSize: 11,
+              fontWeight: 600
+            }
           }]
         };
       });
@@ -2791,7 +3070,7 @@
         }).sort((a, b) => a.count - b.count);
 
         return {
-          grid: { left: 84, right: 44, top: 26, bottom: 36 },
+          grid: { left: 86, right: 54, top: 18, bottom: 28, containLabel: true },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
@@ -2813,7 +3092,7 @@
           series: [{
             name: '总数',
             type: 'bar',
-            barWidth: 24,
+            barWidth: 32,
             data: groups.map(row => ({
               value: row.count,
               raw: row,
@@ -2925,7 +3204,7 @@
         const continents = [...new Set(rows.map(row => row.continent || '其他'))].sort();
 
         return {
-          grid: commonGrid(),
+          grid: { left: 64, right: 34, top: 52, bottom: 46, containLabel: true },
           tooltip: {
             trigger: 'item',
             formatter: params => {
@@ -2938,15 +3217,13 @@
               ].join('<br>');
             }
           },
-          legend: { top: 0, right: 0 },
+          legend: { top: 2, right: 0, type: 'scroll', itemWidth: 10, itemHeight: 10 },
           xAxis: {
-            name: geoVariableLabel(xKey),
             type: 'value',
             axisLabel: { formatter: geoAxisLabel(xKey) },
             splitLine: { lineStyle: { color: '#d7e3f5' } }
           },
           yAxis: {
-            name: geoVariableLabel(yKey),
             type: 'value',
             axisLabel: { formatter: geoAxisLabel(yKey) },
             splitLine: { lineStyle: { color: '#d7e3f5' } }
@@ -3009,9 +3286,10 @@
 
         return {
           tooltip: { trigger: 'item' },
-          legend: { top: 0, right: 0 },
+          legend: { top: 0, right: 0, itemWidth: 10, itemHeight: 10 },
           radar: {
-            radius: '66%',
+            radius: '80%',
+            center: ['50%', '56%'],
             indicator: [
               { name: '华商基础', max: 100 },
               { name: '廉洁指数', max: 100 },
@@ -3021,13 +3299,12 @@
               { name: '中国投资', max: 100 }
             ],
             splitArea: { areaStyle: { color: ['#f3f7ff', '#ffffff'] } },
-            axisName: { color: '#334155' }
+            axisName: { color: '#334155', fontSize: 12, fontWeight: 600 }
           },
           series: [{
             type: 'radar',
             label: {
-              show: true,
-              formatter: params => params.value
+              show: false
             },
             data: [
               {
@@ -3084,7 +3361,7 @@
           { name: '其他国家', key: 'other', color: '#cbd5e1' }
         ];
         return {
-          grid: { left: 72, right: 34, top: 54, bottom: 50, containLabel: true },
+          grid: { left: 78, right: 30, top: 48, bottom: 34, containLabel: true },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
@@ -3120,7 +3397,7 @@
               name: segment.name,
               type: 'bar',
               stack: 'share',
-              barWidth: 28,
+              barWidth: 34,
               data: groups.map(row => ({
                 value: segment.key === 'other' ? row.other : row.topValues[segment.key].value,
                 raw: row,
@@ -3166,7 +3443,7 @@
       renderChart('chamber-region-chart', 'chamber_data.summary.region_counts', () => {
         const rows = [ ...(((DATA.chamber_data || {}).summary || {}).region_counts || []) ].slice(0, 12).reverse();
         return {
-          grid: { left: 88, right: 24, top: 18, bottom: 28 },
+          grid: { left: 88, right: 50, top: 10, bottom: 28, containLabel: false },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
@@ -3177,7 +3454,14 @@
           series: [{
             type: 'bar',
             data: rows.map(row => ({ value: row.count, itemStyle: { color: '#2563eb', borderRadius: [0, 6, 6, 0] } })),
-            barWidth: 14
+            barWidth: 18,
+            label: {
+              show: true,
+              position: 'right',
+              formatter: params => fmt(params.value),
+              color: '#334155',
+              fontWeight: 600
+            }
           }]
         };
       });
@@ -3188,7 +3472,7 @@
         const rows = [ ...(((DATA.chamber_data || {}).summary || {}).org_type_counts || []) ]
           .sort((a, b) => (a.count || 0) - (b.count || 0));
         return {
-          grid: { left: 86, right: 42, top: 16, bottom: 28, containLabel: true },
+          grid: { left: 88, right: 50, top: 10, bottom: 28, containLabel: false },
           tooltip: {
             trigger: 'axis',
             axisPointer: { type: 'shadow' },
@@ -3208,7 +3492,7 @@
           },
           series: [{
             type: 'bar',
-            barWidth: 18,
+            barWidth: 24,
             data: rows.map((row, index) => ({
               value: row.count,
               itemStyle: { color: PALETTE[index % PALETTE.length], borderRadius: [0, 8, 8, 0] }
@@ -3318,6 +3602,508 @@
       document.getElementById('chamber-table-count').textContent = `表格总条数：${fmt(rows.length)} · 第 ${state.chamber.page}/${pages} 页`;
       document.getElementById('chamber-prev').disabled = state.chamber.page <= 1;
       document.getElementById('chamber-next').disabled = state.chamber.page >= pages;
+    }
+
+    function initSchool() {
+      renderSchoolKpis();
+      renderSchoolRegionChart();
+      renderSchoolCountryChart();
+      renderSchoolStageChart();
+      setupSchoolTable();
+      renderSchoolTable();
+    }
+
+    function schoolSummary() {
+      return (DATA.school_data || {}).summary || {};
+    }
+
+    function renderSchoolKpis() {
+      const summary = schoolSummary();
+      const cards = [
+        { value: fmt(summary.school_count || 0), label: '华文学校', sub: '覆盖 ' + fmt(summary.country_count || 0) + ' 个国家/地区' },
+        { value: fmt(summary.country_count || 0), label: '覆盖国家/地区', sub: '按学校所在国家统计' },
+        { value: fmt(summary.person_role_count || 0), label: '人物职务', sub: '学校负责人及公开职务' }
+      ];
+      document.getElementById('school-kpis').innerHTML = cards.map(card => `
+        <div class="card">
+          <p class="kpi-value">${card.value}</p>
+          <div class="kpi-label">${card.label}</div>
+          <div class="kpi-sub">${card.sub}</div>
+        </div>
+      `).join('');
+    }
+
+    function schoolRowsAll() {
+      return (DATA.school_data || {}).schools || [];
+    }
+
+    function schoolKnown(value) {
+      const text = value === null || value === undefined ? '' : String(value).trim();
+      if (!text) return false;
+      if (/^(?:待核实|未发现|未公开|不详|未知|unknown|null|undefined|n\/?a|[-—])(?:$|[（(])/i.test(text)) return false;
+      return !/未标明/.test(text);
+    }
+
+    function schoolDisplayValue(value) {
+      return schoolKnown(value) ? String(value).trim() : '不详';
+    }
+
+    function schoolCountryGeoData() {
+      if (!WORLD_GEO) throw new Error('world map missing');
+      const aliases = { '苏里南': 'SUR', '奥地利': 'AUT', '阿联酋': 'ARE' };
+      const countryByZh = new Map((DATA.country_map || [])
+        .filter(row => row.country_name_zh)
+        .map(row => [String(row.country_name_zh).trim(), row]));
+      const countryByIso = new Map((DATA.country_map || []).map(row => [row.iso3, row]));
+      const countMap = new Map();
+      const regionMap = new Map();
+      schoolRowsAll().forEach(row => {
+        const country = String(row['国家或地区'] || '').trim();
+        if (!country) return;
+        countMap.set(country, (countMap.get(country) || 0) + 1);
+        regionMap.set(country, String(row['所属区域'] || '其他区域').trim() || '其他区域');
+      });
+      return [...countMap.entries()].map(([countryName, count]) => {
+        const country = countryByZh.get(countryName) || countryByIso.get(aliases[countryName]);
+        const lng = num(country && country.capital_lng);
+        const lat = num(country && country.capital_lat);
+        if (lng == null || lat == null) return null;
+        return {
+          name: countryName,
+          value: [lng, lat, count],
+          region: regionMap.get(countryName) || '其他区域',
+          iso3: country && country.iso3
+        };
+      }).filter(Boolean);
+    }
+
+    function normalizeSchoolForm(value) {
+      const text = String(value || '').trim();
+      if (!schoolKnown(text)) return '';
+      if (text.includes('全日')) return '全日制';
+      if (text.includes('周末') && text.includes('课后')) return '周末/课后制';
+      if (text.includes('周末')) return '周末制';
+      if (text.includes('课后')) return '课后制';
+      if (text.includes('混合') || text.includes('综合')) return '混合/综合';
+      return '其他形态';
+    }
+
+    function normalizeSchoolStage(value) {
+      const text = String(value || '').trim();
+      if (!schoolKnown(text)) return '';
+      const hits = [
+        text.includes('幼儿'),
+        text.includes('小学') || text.includes('儿童'),
+        text.includes('高中') || text.includes('中学') || text.includes('青少年'),
+        text.includes('成人'),
+        text.includes('高等')
+      ].filter(Boolean).length;
+      if (hits >= 2 || text.includes('综合') || text.includes('至')) return '综合阶段';
+      if (text.includes('幼儿')) return '幼儿教育';
+      if (text.includes('小学') || text.includes('儿童')) return '小学/儿童';
+      if (text.includes('高中') || text.includes('中学') || text.includes('青少年')) return '中学/青少年';
+      if (text.includes('成人')) return '成人教育';
+      if (text.includes('高等')) return '高等教育';
+      return '其他阶段';
+    }
+
+    function schoolStageGroups(value) {
+      const text = String(value || '').trim();
+      if (!schoolKnown(text)) return [];
+      const groups = [];
+      if (text.includes('幼儿') || text.includes('小学') || text.includes('儿童') || /(?:[2-9]|1[01])岁/.test(text)) {
+        groups.push('幼儿/小学');
+      }
+      if (text.includes('初中') || text.includes('中学') || text.includes('高中') || text.includes('青少年') || /1[2-9]岁/.test(text)) {
+        groups.push('中学/青少年');
+      }
+      if (text.includes('成人') || text.includes('高等')) {
+        groups.push('成人/高等');
+      }
+      if (!groups.length) groups.push('综合/其他');
+      return [...new Set(groups)];
+    }
+
+    function schoolFormStageDonutData() {
+      const stages = ['幼儿/小学', '中学/青少年', '成人/高等', '综合/其他'];
+      const formMap = new Map();
+      schoolRowsAll().forEach(row => {
+        const form = normalizeSchoolForm(row['办学形态']);
+        const stageGroups = schoolStageGroups(row['教育阶段']);
+        if (!form || !stageGroups.length) return;
+        if (!formMap.has(form)) formMap.set(form, { counts: new Map(), schoolCount: 0 });
+        const formData = formMap.get(form);
+        formData.schoolCount += 1;
+        stageGroups.forEach(stage => formData.counts.set(stage, (formData.counts.get(stage) || 0) + 1));
+      });
+      const forms = [...formMap.entries()]
+        .map(([name, data]) => ({ name, ...data }))
+        .sort((a, b) => b.schoolCount - a.schoolCount)
+        .slice(0, 5);
+      return { stages, forms };
+    }
+
+    function schoolDecadeHeatmapData() {
+      const rows = schoolRowsAll();
+      const regions = [...new Set(rows.map(row => String(row['所属区域'] || '').trim()).filter(Boolean))];
+      const regionOrder = (schoolSummary().region_counts || []).map(row => row.name).filter(name => regions.includes(name)).reverse();
+      const counts = new Map();
+      const decades = new Set();
+      rows.forEach(row => {
+        const match = String(row['成立年份'] || '').match(/(18|19|20)\d{2}/);
+        const region = String(row['所属区域'] || '').trim();
+        if (!match || !region) return;
+        const year = Number(match[0]);
+        if (year < 1900 || year > 2029) return;
+        const decade = Math.floor(year / 10) * 10;
+        decades.add(decade);
+        const key = `${decade}|||${region}`;
+        counts.set(key, (counts.get(key) || 0) + 1);
+      });
+      const decadeOrder = [...decades].sort((a, b) => a - b);
+      const data = [];
+      decadeOrder.forEach((decade, x) => {
+        regionOrder.forEach((region, y) => {
+          data.push([x, y, counts.get(`${decade}|||${region}`) || 0]);
+        });
+      });
+      return { regions: regionOrder, decades: decadeOrder, data };
+    }
+
+    function renderSchoolRegionChart() {
+      renderChart('school-region-chart', 'school_data.schools geo bubble distribution', () => {
+        const data = schoolCountryGeoData();
+        return {
+          tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(255,255,255,.97)',
+            borderColor: '#bfdbfe',
+            borderWidth: 1,
+            padding: [9, 12],
+            textStyle: { color: '#334155', fontSize: 12 },
+            formatter: params => params.seriesType === 'scatter'
+              ? `${params.name}<br>所属区域：${params.data.region}<br>学校数：${fmt(params.value[2])}<br>占全部学校：${pct(params.value[2] / (schoolRowsAll().length || 1))}`
+              : ''
+          },
+          geo: {
+            map: 'world',
+            roam: true,
+            zoom: 1.02,
+            scaleLimit: { min: 1, max: 6 },
+            top: 2,
+            bottom: 2,
+            label: { show: false },
+            itemStyle: {
+              areaColor: '#edf3fa',
+              borderColor: '#c8d6e8',
+              borderWidth: .65
+            },
+            emphasis: {
+              label: { show: false },
+              itemStyle: { areaColor: '#dbeafe' }
+            },
+            select: { disabled: true }
+          },
+          series: [{
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            data,
+            symbolSize: value => Math.min(34, 8 + Math.sqrt(value[2]) * 2.15),
+            itemStyle: {
+              color: '#2563eb',
+              opacity: .76,
+              borderColor: '#fff',
+              borderWidth: 2,
+              shadowBlur: 10,
+              shadowColor: 'rgba(37,99,235,.24)'
+            },
+            label: { show: false },
+            emphasis: {
+              scale: 1.18,
+              label: { show: false },
+              itemStyle: { color: '#1d4ed8', opacity: 1, shadowBlur: 16 }
+            }
+          }]
+        };
+      });
+    }
+
+    function renderSchoolCountryChart() {
+      renderChart('school-country-chart', 'school_data.schools form-stage lollipop distribution', () => {
+        const matrix = schoolFormStageDonutData();
+        const colors = {
+          '幼儿/小学': '#2563eb',
+          '中学/青少年': '#06b6d4',
+          '成人/高等': '#7c3aed',
+          '综合/其他': '#f59e0b'
+        };
+        const rows = matrix.forms
+          .flatMap(form => matrix.stages.map(stage => ({
+            form: form.name,
+            stage,
+            value: form.counts.get(stage) || 0,
+            label: `${form.name} · ${stage}`
+          })))
+          .filter(row => row.value > 0)
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 12)
+          .reverse();
+        const categories = rows.map(row => row.label);
+        return {
+          color: matrix.stages.map(stage => colors[stage]),
+          grid: { left: 154, right: 50, top: 42, bottom: 22 },
+          legend: {
+            top: 0,
+            left: 'center',
+            itemWidth: 9,
+            itemHeight: 9,
+            itemGap: 14,
+            textStyle: { color: '#475569', fontSize: 10 },
+            data: matrix.stages
+          },
+          tooltip: {
+            trigger: 'item',
+            backgroundColor: 'rgba(255,255,255,.97)',
+            borderColor: '#bfdbfe',
+            borderWidth: 1,
+            textStyle: { color: '#334155', fontSize: 12 },
+            formatter: params => {
+              const row = rows[params.dataIndex];
+              return row ? `${row.form}<br>${params.marker}${row.stage}：${fmt(row.value)}` : '';
+            }
+          },
+          xAxis: {
+            type: 'value',
+            min: 0,
+            axisLine: { show: false },
+            axisTick: { show: false },
+            axisLabel: { color: '#64748b', fontSize: 10 },
+            splitLine: { lineStyle: { color: '#dbe7f5' } }
+          },
+          yAxis: {
+            type: 'category',
+            data: categories,
+            axisLine: { show: false },
+            axisTick: { show: false },
+            axisLabel: { color: '#334155', fontSize: 10, margin: 10 }
+          },
+          series: [{
+            name: '_stem',
+            type: 'bar',
+            silent: true,
+            barWidth: 3,
+            data: rows.map(row => ({ value: row.value, itemStyle: { color: colors[row.stage], opacity: .3 } })),
+            tooltip: { show: false },
+            emphasis: { disabled: true },
+            z: 1
+          }, ...matrix.stages.map(stage => ({
+            name: stage,
+            type: 'scatter',
+            symbol: 'circle',
+            symbolSize: 13,
+            data: rows.map((row, index) => row.stage === stage ? [row.value, categories[index]] : null),
+            itemStyle: {
+              color: colors[stage],
+              borderColor: '#fff',
+              borderWidth: 2,
+              shadowBlur: 7,
+              shadowColor: `${colors[stage]}55`
+            },
+            label: {
+              show: true,
+              position: 'right',
+              distance: 6,
+              color: '#334155',
+              fontSize: 10,
+              fontWeight: 700,
+              formatter: params => fmt(params.value[0])
+            },
+            emphasis: { scale: 1.25 },
+            z: 3
+          }))]
+        };
+      });
+    }
+
+    function renderSchoolStageChart() {
+      renderChart('school-stage-chart', 'school_data.schools decade-region heatmap', () => {
+        const matrix = schoolDecadeHeatmapData();
+        const positiveValues = matrix.data.map(item => item[2]).filter(value => value > 0);
+        const maxValue = Math.max(3, quantile(positiveValues, .9));
+        return {
+          grid: { left: 76, right: 34, top: 12, bottom: 42, containLabel: false },
+          tooltip: {
+            position: 'top',
+            formatter: params => `${matrix.decades[params.value[0]]}年代 · ${matrix.regions[params.value[1]]}<br>学校数：${fmt(params.value[2])}`
+          },
+          visualMap: {
+            show: false,
+            min: 0,
+            max: maxValue,
+            inRange: { color: ['#f5f9ff', '#dbeafe', '#93c5fd', '#3b82f6', '#1d4ed8'] }
+          },
+          xAxis: {
+            type: 'category',
+            data: matrix.decades.map(decade => String(decade)),
+            splitArea: { show: true },
+            axisTick: { show: false },
+            axisLabel: { rotate: 0, color: '#475569', fontSize: 11, margin: 12 }
+          },
+          yAxis: {
+            type: 'category',
+            data: matrix.regions,
+            splitArea: { show: true },
+            axisTick: { show: false },
+            axisLabel: { color: '#334155', fontSize: 11, fontWeight: 600 }
+          },
+          series: [{
+            type: 'heatmap',
+            data: matrix.data.map(item => ({
+              value: item,
+              label: { color: item[2] >= maxValue * .48 ? '#fff' : '#334155' }
+            })),
+            label: {
+              show: true,
+              formatter: params => params.value[2] >= 2 ? fmt(params.value[2]) : '',
+              fontSize: 11,
+              fontWeight: 600
+            },
+            emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(15,23,42,.28)' } },
+            itemStyle: { borderColor: 'rgba(255,255,255,.96)', borderWidth: 4, borderRadius: 6 }
+          }]
+        };
+      });
+    }
+
+    function setupSchoolTable() {
+      const tabs = document.getElementById('school-data-tabs');
+      if (!tabs || tabs.dataset.ready) return;
+      tabs.addEventListener('click', event => {
+        const button = event.target.closest('button[data-kind]');
+        if (!button) return;
+        state.school.kind = button.dataset.kind;
+        state.school.page = 1;
+        tabs.querySelectorAll('button').forEach(btn => btn.classList.toggle('active', btn === button));
+        renderSchoolTable();
+      });
+      document.getElementById('school-search').addEventListener('input', event => {
+        state.school.search = event.target.value.trim().toLowerCase();
+        state.school.page = 1;
+        renderSchoolTable();
+      });
+      document.getElementById('school-page-size').addEventListener('change', event => {
+        state.school.pageSize = Number(event.target.value);
+        state.school.page = 1;
+        renderSchoolTable();
+      });
+      document.getElementById('school-prev').addEventListener('click', () => {
+        state.school.page = Math.max(1, state.school.page - 1);
+        renderSchoolTable();
+      });
+      document.getElementById('school-next').addEventListener('click', () => {
+        state.school.page += 1;
+        renderSchoolTable();
+      });
+      tabs.dataset.ready = '1';
+    }
+
+    function schoolColumns(kind) {
+      if (kind === 'people') {
+        return [
+          ['姓名', '姓名'],
+          ['职务或身份', '职务'],
+          ['所属学校', '所属学校'],
+          ['关联机构或企业', '关联机构'],
+          ['国家或地区', '国家/地区'],
+          ['来源链接', '来源']
+        ];
+      }
+      if (kind === 'relations') {
+        return [
+          ['学校名称', '学校'],
+          ['主体名称', '主体'],
+          ['主体类型', '类型'],
+          ['关系类型', '关系'],
+          ['时间', '时间'],
+          ['来源链接', '来源']
+        ];
+      }
+      return [
+        ['学校中文名称', '学校名称'],
+        ['国家或地区', '国家/地区'],
+        ['城市', '城市'],
+        ['所属区域', '区域'],
+        ['成立年份', '成立年份'],
+        ['办学形态', '办学形态'],
+        ['教育阶段', '教育阶段'],
+        ['运行状态', '状态'],
+        ['活跃度', '活跃度'],
+        ['官网或官方主页', '官网']
+      ];
+    }
+
+    function schoolCompletenessKeys(kind) {
+      if (kind === 'people') {
+        return ['姓名', '职务或身份', '所属学校', '关联机构或企业', '国家或地区', '任职或信息年份', '来源链接'];
+      }
+      if (kind === 'relations') {
+        return ['学校名称', '主体名称', '主体类型', '关系类型', '时间', '来源链接'];
+      }
+      return [
+        '学校中文名称', '学校外文名称', '所属区域', '国家或地区', '城市', '成立年份',
+        '办学形态', '教育阶段', '办学性质', '创办或主办主体', '华侨华人关联类型',
+        '学生规模', '运行状态', '活跃度', '官网或官方主页', '学校简介', '主要来源链接',
+        '核验日期', '证据等级'
+      ];
+    }
+
+    function schoolCompletenessScore(row, kind) {
+      const visibleKeys = schoolColumns(kind).map(([key]) => key);
+      const visibleScore = visibleKeys.reduce((sum, key) => sum + (schoolKnown(row[key]) ? 1 : 0), 0);
+      const detailScore = schoolCompletenessKeys(kind)
+        .reduce((sum, key) => sum + (schoolKnown(row[key]) ? 1 : 0), 0);
+      const evidenceBonus = kind === 'schools' && String(row['证据等级'] || '').trim() === 'A' ? 1.5 : 0;
+      const activeBonus = kind === 'schools' && String(row['活跃度'] || '').trim() === '高' ? .5 : 0;
+      return visibleScore * 5 + detailScore + evidenceBonus + activeBonus;
+    }
+
+    function schoolRows() {
+      const school = DATA.school_data || {};
+      const kind = state.school.kind;
+      const search = state.school.search;
+      return (school[kind] || [])
+        .map((row, index) => ({ row, index, score: schoolCompletenessScore(row, kind) }))
+        .filter(item => !search || Object.values(item.row).some(value => String(value ?? '').toLowerCase().includes(search)))
+        .sort((a, b) => b.score - a.score || a.index - b.index)
+        .map(item => item.row);
+    }
+
+    function renderSchoolTable() {
+      const columns = schoolColumns(state.school.kind);
+      const rows = schoolRows();
+      const pages = Math.max(1, Math.ceil(rows.length / state.school.pageSize));
+      state.school.page = Math.min(state.school.page, pages);
+      const start = (state.school.page - 1) * state.school.pageSize;
+      const pageRows = rows.slice(start, start + state.school.pageSize);
+
+      document.querySelector('#school-table thead').innerHTML = `
+        <tr>${columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr>
+      `;
+      document.querySelector('#school-table tbody').innerHTML = pageRows.map(row => `
+        <tr>
+          ${columns.map(([key]) => {
+            const value = row[key];
+            const isLink = key.includes('链接') || key.includes('官网');
+            const display = isLink
+              ? (schoolKnown(value) ? linkCell(value) : '不详')
+              : escapeHtml(schoolDisplayValue(value));
+            return `<td>${display}</td>`;
+          }).join('')}
+        </tr>
+      `).join('');
+      document.getElementById('school-table-count').textContent = `表格总条数：${fmt(rows.length)} · 第 ${state.school.page}/${pages} 页`;
+      document.getElementById('school-prev').disabled = state.school.page <= 1;
+      document.getElementById('school-next').disabled = state.school.page >= pages;
     }
 
     function initResearch() {
@@ -3589,6 +4375,7 @@
       if (tab === 'enterprise') initEnterprise();
       if (tab === 'geo') initGeo();
       if (tab === 'chamber') initChamber();
+      if (tab === 'school') initSchool();
       if (tab === 'research') initResearch();
       state.loadedTabs.add(tab);
       setTimeout(resizeCharts, 40);
@@ -3664,14 +4451,22 @@
       });
 
       try {
-        const raw = await fetch('huashang-data-110b31e0.json').then(response => {
-          if (!response.ok) throw new Error('huashang-data-110b31e0.json HTTP ' + response.status);
-          return response.json();
-        });
+        let raw = null;
+        try {
+          raw = await fetch('/api/dashboard-data', { cache: 'no-store' }).then(response => {
+            if (!response.ok) throw new Error('/api/dashboard-data HTTP ' + response.status);
+            return response.json();
+          });
+        } catch {
+          raw = await fetch('huashang-data-6067ff6c.json').then(response => {
+            if (!response.ok) throw new Error('huashang-data-6067ff6c.json HTTP ' + response.status);
+            return response.json();
+          });
+        }
         prepareData(raw);
       } catch (error) {
         console.error(error);
-        showAppError('Data file failed to load. Please refresh later.');
+        showAppError('数据加载失败。请确认本地后端已启动，或发布数据文件位于同一目录。');
         return;
       }
 
@@ -3692,3 +4487,4 @@
   </script>
 </body>
 </html>
+
