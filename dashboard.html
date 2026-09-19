@@ -451,20 +451,20 @@
     }
 
     #focus-kpis .card {
-      min-height: 112px;
-      align-content: center;
+      min-height: 98px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
     }
 
-    #focus-kpis .kpi-sub {
-      display: block;
-      margin-top: 6px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
+    #focus-kpis .kpi-value {
+      margin-bottom: 0;
     }
 
-    #tab-focus .data-scope-note {
-      align-items: flex-start;
+    #focus-kpis .kpi-label {
+      margin-top: 0;
     }
 
     #tab-focus .focus-table-card .card-header {
@@ -1335,7 +1335,7 @@
           <div id="overview-heatmap" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
           <aside class="index-explainer">
             <h3>指标说明</h3>
-            <p>华商发展指数从华商基础、制度环境、中国联系、华人网络和市场条件五个维度，衡量各国家和地区的综合表现，用于比较不同市场的华商发展基础、外部环境和拓展潜力。</p>
+            <p>华商发展指数从华商基础、制度环境、中国联系、华人网络和市场条件五个维度，衡量各地区的综合表现，用于比较不同市场的华商发展基础、外部环境和拓展潜力。</p>
             <div class="index-mini-metrics">
               <span>五个维度</span>
               <span>89个市场</span>
@@ -1343,7 +1343,7 @@
             </div>
             <div class="index-list-intro">通过这个指标，我们能够：</div>
             <ul class="index-list">
-              <li>筛选重点国家</li>
+              <li>筛选重点地区</li>
               <li>比较区域差异</li>
               <li>识别潜在市场</li>
             </ul>
@@ -1381,11 +1381,11 @@
       <section class="section card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">国家分布</h2>
-            <p class="card-subtitle">微观记录前40，可搜索国家名</p>
+            <h2 class="card-title">地区分布</h2>
+            <p class="card-subtitle">微观记录前40，可搜索地区名</p>
           </div>
           <div class="toolbar">
-            <input id="country-search" type="search" placeholder="搜索国家名">
+            <input id="country-search" type="search" placeholder="搜索地区名">
             <div class="legend-inline">
               <span><i class="legend-dot" style="background:#f59e0b"></i>五眼联盟</span>
               <span><i class="legend-dot" style="background:#06b6d4"></i>一带一路</span>
@@ -1400,7 +1400,7 @@
         <div class="card-header">
           <div>
             <h2 class="card-title">交叉统计表</h2>
-            <p class="card-subtitle">国家 × 行业，支持筛选与列排序</p>
+            <p class="card-subtitle">地区 × 行业，支持筛选与列排序</p>
           </div>
         </div>
         <div class="toolbar" style="margin-bottom:14px">
@@ -1422,7 +1422,7 @@
           <table id="industry-table">
             <thead>
               <tr>
-                <th data-sort="country_name_zh">国家</th>
+                <th data-sort="country_name_zh">地区</th>
                 <th data-sort="industry_label">行业</th>
                 <th data-sort="huashang_count">微观记录</th>
                 <th data-sort="rate">行业占比</th>
@@ -1445,17 +1445,12 @@
     <div id="tab-focus" class="tab-panel" hidden>
       <section class="section kpi-grid" id="focus-kpis"></section>
 
-      <section class="section data-scope-note">
-        <strong>数据说明</strong>
-        <span>重点华商页对应“重点国家 × 重点行业 × 重点企业”的深描层，展示重点人物、企业、控制集团及人物—企业关系；行业统一按中文口径归类。本页不替代总览页的海外华商总数和华商企业页的微观企业记录。</span>
-      </section>
-
       <section class="section two-col analysis-row">
         <div class="card">
           <div class="card-header">
             <div>
-              <h2 class="card-title">重点企业国家分布</h2>
-              <p class="card-subtitle">展示重点企业数量较多的国家/地区</p>
+              <h2 class="card-title">重点企业地区分布</h2>
+              <p class="card-subtitle">展示重点企业数量较多的地区</p>
             </div>
           </div>
           <div id="focus-country-chart" class="chart"><div class="chart-loading">数据加载中...</div></div>
@@ -1486,7 +1481,7 @@
           <button type="button" data-kind="relations"><span>人物—企业关系</span><span class="data-tab-count" id="focus-tab-count-relations">—</span></button>
         </div>
         <div class="toolbar focus-toolbar">
-          <input id="focus-search" type="search" placeholder="检索人物、企业、国家、行业、集团">
+          <input id="focus-search" type="search" placeholder="检索人物、企业、地区、行业、集团">
           <select id="focus-page-size" aria-label="重点华商表每页条数">
             <option value="20">每页20条</option>
             <option value="40">每页40条</option>
@@ -1513,8 +1508,8 @@
       <section class="section">
         <div class="card-header">
           <div>
-            <h2 class="card-title">重点国家概览</h2>
-            <p class="card-subtitle">按总数展示主要国家和地区</p>
+            <h2 class="card-title">重点地区概览</h2>
+            <p class="card-subtitle">按总数展示主要地区</p>
           </div>
         </div>
         <div class="five-eye-grid" id="five-eye-cards"></div>
@@ -1525,7 +1520,7 @@
           <div class="card-header">
             <div>
             <h2 class="card-title">地缘分组结构</h2>
-            <p class="card-subtitle">按总数拆分五眼、一带一路与其他国家</p>
+            <p class="card-subtitle">按总数拆分五眼、一带一路与其他地区</p>
             </div>
           </div>
           <div id="geo-bloc-share" class="chart chart-map"><div class="chart-loading">数据加载中...</div></div>
@@ -1535,13 +1530,13 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">地缘变量散点分析</h2>
-              <p class="card-subtitle">横轴为国家，纵轴为所选指标；气泡大小随指标值变化，颜色代表大洲</p>
+              <p class="card-subtitle">横轴为地区，纵轴为所选指标；气泡大小随指标值变化，颜色代表大洲</p>
             </div>
             <div class="toolbar">
               <select id="geo-metric" aria-label="地缘指标"></select>
               <select id="geo-scope" aria-label="地缘范围">
                 <option value="bri">一带一路</option>
-                <option value="all">全部国家</option>
+                <option value="all">全部地区</option>
                 <option value="five">五眼联盟</option>
                 <option value="asia">亚洲</option>
                 <option value="europe">欧洲</option>
@@ -1612,7 +1607,7 @@
           <button type="button" data-kind="enterprises">关联企业</button>
         </div>
         <div class="toolbar" style="margin-bottom:14px">
-          <input id="chamber-search" type="search" placeholder="检索名称、国家、商会、人物、企业">
+          <input id="chamber-search" type="search" placeholder="检索名称、地区、商会、人物、企业">
           <select id="chamber-page-size" aria-label="商会表每页条数">
             <option value="20">每页20条</option>
             <option value="40">每页40条</option>
@@ -1655,8 +1650,8 @@
         </div>
         <div class="insight-box">
           <p>综合指数排名靠前的市场包括新加坡、美国、澳大利亚、加拿大、马来西亚等，分别体现出华人网络、华商基础、制度环境、中国联系和市场条件等不同优势。综合排名并不等同于单一企业数量排名，而是反映多个维度叠加后的整体表现。</p>
-          <p>分项来看，美国、菲律宾、越南等国家的华商企业基础较突出，其中美国微观记录为 11,461 条，菲律宾为 7,023 条，越南为 6,483 条。制度环境方面，丹麦、芬兰、新加坡等国家表现较强，反映出更稳定的商业运行环境。</p>
-          <p>中国联系方面，沙特阿拉伯、马来西亚、印度尼西亚等市场排名靠前，说明其与中国之间的贸易、投资或工程合作联系更紧密。华人网络方面，新加坡、加拿大、澳大利亚等国家表现较好，其中新加坡商会数量达到 36 个，社群组织基础较强。</p>
+          <p>分项来看，美国、菲律宾、越南等地区的华商企业基础较突出，其中美国微观记录为 11,461 条，菲律宾为 7,023 条，越南为 6,483 条。制度环境方面，丹麦、芬兰、新加坡等地区表现较强，反映出更稳定的商业运行环境。</p>
+          <p>中国联系方面，沙特阿拉伯、马来西亚、印度尼西亚等市场排名靠前，说明其与中国之间的贸易、投资或工程合作联系更紧密。华人网络方面，新加坡、加拿大、澳大利亚等地区表现较好，其中新加坡商会数量达到 36 个，社群组织基础较强。</p>
           <p>总体来看，北美洲在华商基础和市场条件上更具优势，亚洲在企业数量和中国联系方面更突出，欧洲则主要体现为制度环境较强。海外华商网络呈现出“北美高承载、亚洲高连接、欧洲强制度、其他区域节点化”的总体特征。</p>
         </div>
       </section>
@@ -1682,7 +1677,7 @@
           <div class="field">
             <label>分组切换</label>
             <div class="segmented" id="research-group">
-              <button type="button" class="active" data-group="all">全部国家</button>
+              <button type="button" class="active" data-group="all">全部地区</button>
               <button type="button" data-group="five">仅五眼</button>
               <button type="button" data-group="bri">仅一带一路</button>
             </div>
@@ -1693,10 +1688,10 @@
       <section class="section card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">各国指标值分布</h2>
-            <p class="card-subtitle">横轴为国家，颜色代表大洲；悬浮查看国家，点击查看年度变化</p>
+            <h2 class="card-title">各地区指标值分布</h2>
+            <p class="card-subtitle">横轴为地区，颜色代表大洲；悬浮查看地区，点击查看年度变化</p>
           </div>
-          <div id="research-scatter-meta" class="meta-pill">有效国家 0</div>
+          <div id="research-scatter-meta" class="meta-pill">有效地区 0</div>
         </div>
         <div id="research-scatter" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
       </section>
@@ -1704,12 +1699,12 @@
       <section class="section card">
         <div class="card-header">
           <div>
-            <h2 class="card-title" id="trend-title">国家趋势</h2>
+            <h2 class="card-title" id="trend-title">地区趋势</h2>
             <p class="card-subtitle" id="trend-subtitle">柱状图显示年度水平，折线显示相对基准年的变化</p>
           </div>
           <button id="clear-country" class="text-button" type="button" hidden>取消选择×</button>
         </div>
-        <div id="research-trend" class="chart"><div class="chart-empty">点击国家气泡查看 2010–2024 趋势</div></div>
+        <div id="research-trend" class="chart"><div class="chart-empty">点击地区气泡查看 2010–2024 趋势</div></div>
       </section>
     </div>
   </main>
@@ -1788,8 +1783,40 @@
         page: 1,
         pageSize: 20,
         search: ''
-      }
+      },
+      searchIndexCache: new Map(),
+      focusScopedRowsCache: new Map(),
+      focusEnrichedCache: new Map(),
+      focusLookupCache: null,
+      enterpriseSortedCache: new Map(),
+      enterpriseSearchTextCache: new WeakMap(),
+      schoolRankedCache: new Map()
     };
+
+    function debounce(fn, wait = 160) {
+      let timer = null;
+      return (...args) => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          timer = null;
+          fn(...args);
+        }, wait);
+      };
+    }
+
+    function rowSearchText(row, keys = null) {
+      const values = keys ? keys.map(key => row && row[key]) : Object.values(row || {});
+      return values.map(value => String(value ?? '').toLowerCase()).join('\u0000');
+    }
+
+    function indexedRows(cacheKey, rows, keys = null) {
+      const cached = state.searchIndexCache.get(cacheKey);
+      const keySignature = keys ? keys.join('\u0001') : '*';
+      if (cached && cached.rows === rows && cached.keySignature === keySignature) return cached.items;
+      const items = rows.map(row => ({ row, text: rowSearchText(row, keys) }));
+      state.searchIndexCache.set(cacheKey, { rows, keySignature, items });
+      return items;
+    }
 
     const VARIABLE_OPTIONS = [
       ['gdp_per_capita_current_usd', '人均GDP'],
@@ -1894,7 +1921,7 @@
     }
 
     function countryName(row) {
-      return (row && (row.country_name_zh || row.country_name_cn || row.country_name_en || row.iso3)) || '未知国家/地区';
+      return (row && (row.country_name_zh || row.country_name_cn || row.country_name_en || row.iso3)) || '未知地区';
     }
 
     function microCount(row) {
@@ -2010,7 +2037,7 @@
     }
 
     function enterpriseRecords() {
-      return (DATA.enterprise_records || []).filter(row => row);
+      return DATA.enterprise_records || [];
     }
 
     function hashString(value) {
@@ -2050,13 +2077,42 @@
       ];
     }
 
-    function compareEnterpriseRows(a, b) {
-      const ar = state.drill.mode === 'industry' ? industryDisplayRank(a) : enterpriseDisplayRank(a);
-      const br = state.drill.mode === 'industry' ? industryDisplayRank(b) : enterpriseDisplayRank(b);
+    function compareEnterpriseRows(a, b, mode = state.drill.mode) {
+      const ar = mode === 'industry' ? industryDisplayRank(a) : enterpriseDisplayRank(a);
+      const br = mode === 'industry' ? industryDisplayRank(b) : enterpriseDisplayRank(b);
       for (let i = 0; i < ar.length; i += 1) {
         if (ar[i] !== br[i]) return ar[i] - br[i];
       }
       return String(a.name || '').localeCompare(String(b.name || ''));
+    }
+
+    function enterpriseSortedRecords(mode = state.drill.mode) {
+      if (state.enterpriseSortedCache.has(mode)) return state.enterpriseSortedCache.get(mode);
+      const rows = enterpriseRecords().slice().sort((a, b) => compareEnterpriseRows(a, b, mode));
+      state.enterpriseSortedCache.set(mode, rows);
+      return rows;
+    }
+
+    function enterpriseRecordSearchText(row) {
+      const cached = state.enterpriseSearchTextCache.get(row);
+      if (cached) return cached;
+      const text = rowSearchText(row, ['id', 'name', 'country', 'iso3', 'industry_group', 'industry', 'type']);
+      state.enterpriseSearchTextCache.set(row, text);
+      return text;
+    }
+
+    function warmEnterpriseSearchIndex() {
+      const rows = enterpriseRecords();
+      let index = 0;
+      const runChunk = () => {
+        const started = performance.now();
+        while (index < rows.length && performance.now() - started < 7) {
+          enterpriseRecordSearchText(rows[index]);
+          index += 1;
+        }
+        if (index < rows.length) setTimeout(runChunk, 12);
+      };
+      setTimeout(runChunk, 0);
     }
 
     function openEnterpriseModal(config = {}) {
@@ -2087,7 +2143,7 @@
               <tr>
                 <th>序号</th>
                 <th>公司名称</th>
-                <th>国家/地区</th>
+                <th>地区</th>
                 <th>行业</th>
                 <th>企业类型</th>
                 <th>企业编号</th>
@@ -2096,16 +2152,16 @@
               <tr>
                 <th>序号</th>
                 <th>公司名称</th>
-                <th>国家/地区</th>
+                <th>地区</th>
                 <th>企业类型</th>
                 <th>企业编号</th>
               </tr>
       `;
       showModal(state.drill.title, '', `
         <div class="modal-toolbar">
-          <input id="drill-search" type="search" placeholder="${mode === 'industry' ? '检索公司、国家、行业、编号' : '检索公司、国家、编号'}">
-          <select id="drill-country" aria-label="国家筛选">
-            <option value="all">全部国家/地区</option>
+          <input id="drill-search" type="search" placeholder="${mode === 'industry' ? '检索公司、地区、行业、编号' : '检索公司、地区、编号'}">
+          <select id="drill-country" aria-label="地区筛选">
+            <option value="all">全部地区</option>
             ${countries.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('')}
           </select>
           ${industryFilter}
@@ -2139,21 +2195,25 @@
       if (config.industry) document.getElementById('drill-industry').value = config.industry;
       bindEnterpriseModalControls();
       renderEnterpriseModalTable();
+      warmEnterpriseSearchIndex();
     }
 
     function bindEnterpriseModalControls() {
-      ['drill-search', 'drill-country', 'drill-industry', 'drill-type', 'drill-page-size'].forEach(id => {
-        const el = document.getElementById(id);
-        el.addEventListener(id === 'drill-search' ? 'input' : 'change', () => {
-          state.drill.page = 1;
-          state.drill.search = document.getElementById('drill-search').value.trim().toLowerCase();
-          state.drill.country = document.getElementById('drill-country').value;
-          state.drill.industry = document.getElementById('drill-industry').value;
-          state.drill.type = document.getElementById('drill-type').value;
-          state.drill.pageSize = Number(document.getElementById('drill-page-size').value);
-          renderEnterpriseModalTable();
-        });
+      const syncAndRender = () => {
+        state.drill.page = 1;
+        state.drill.search = document.getElementById('drill-search').value.trim().toLowerCase();
+        state.drill.country = document.getElementById('drill-country').value;
+        state.drill.industry = document.getElementById('drill-industry').value;
+        state.drill.type = document.getElementById('drill-type').value;
+        state.drill.pageSize = Number(document.getElementById('drill-page-size').value);
+        renderEnterpriseModalTable();
+      };
+
+      document.getElementById('drill-search').addEventListener('input', debounce(syncAndRender, 160));
+      ['drill-country', 'drill-industry', 'drill-type', 'drill-page-size'].forEach(id => {
+        document.getElementById(id).addEventListener('change', syncAndRender);
       });
+
       document.getElementById('drill-prev').addEventListener('click', () => {
         state.drill.page = Math.max(1, state.drill.page - 1);
         renderEnterpriseModalTable();
@@ -2166,15 +2226,14 @@
 
     function filteredEnterpriseRecords() {
       const search = state.drill.search;
-      return enterpriseRecords().filter(row => {
+      return enterpriseSortedRecords(state.drill.mode).filter(row => {
         const industryGroup = row.industry_group || row.industry || '';
         if (state.drill.country !== 'all' && row.country !== state.drill.country) return false;
         if (state.drill.industry !== 'all' && industryGroup !== state.drill.industry) return false;
         if (state.drill.type !== 'all' && row.type !== state.drill.type) return false;
         if (!search) return true;
-        return [row.id, row.name, row.country, row.iso3, row.industry_group, row.industry, row.type]
-          .some(value => String(value || '').toLowerCase().includes(search));
-      }).sort(compareEnterpriseRows);
+        return enterpriseRecordSearchText(row).includes(search);
+      });
     }
 
     function renderEnterpriseModalTable() {
@@ -2217,13 +2276,13 @@
         <div class="report-content">
           <section>
             <h3>1. 指数构建与分析目的</h3>
-            <p>华商发展指数旨在从多维度衡量不同国家和地区的华商发展基础与外部环境。指数由五个分项构成：华商基础指数、制度环境指数、中国联系指数、华人网络指数和市场条件指数。其中，华商基础指数权重为 25%，制度环境指数、中国联系指数和华人网络指数权重均为 20%，市场条件指数权重为 15%。</p>
+            <p>华商发展指数旨在从多维度衡量不同地区的华商发展基础与外部环境。指数由五个分项构成：华商基础指数、制度环境指数、中国联系指数、华人网络指数和市场条件指数。其中，华商基础指数权重为 25%，制度环境指数、中国联系指数和华人网络指数权重均为 20%，市场条件指数权重为 15%。</p>
             <p>在变量构成上，华商基础指数以华商数量、华商资产和核心企业占比衡量当地华商企业基础；制度环境指数以 CPI、法治、政府效能、监管质量和腐败控制衡量商业运行环境；中国联系指数以中国双边贸易、AEI 中国投资和 AEI 中国工程合作衡量对华经贸联系；华人网络指数以华人人口密度、中国来源移民存量密度和商会数量衡量社群网络基础；市场条件指数以人均 GDP、人口规模、FDI 流入和新企业密度衡量市场承载力。</p>
-            <p>指数构建采用 0—100 标准化方法。数量、资产、贸易、投资和人口类偏态变量先进行 log(1+x) 处理，再进行标准化；制度类 0—100 字段直接参与平均；综合指数按照五个分项权重加权合成。该指数的核心用途不是给国家作简单优劣排序，而是帮助识别不同市场在华商基础、制度条件、对华联系、社群网络和市场空间上的相对优势。</p>
+            <p>指数构建采用 0—100 标准化方法。数量、资产、贸易、投资和人口类偏态变量先进行 log(1+x) 处理，再进行标准化；制度类 0—100 字段直接参与平均；综合指数按照五个分项权重加权合成。该指数的核心用途不是给地区作简单优劣排序，而是帮助识别不同市场在华商基础、制度条件、对华联系、社群网络和市场空间上的相对优势。</p>
           </section>
           <section>
             <h3>2. 综合指数排名特征</h3>
-            <p>从综合指数看，新加坡、美国、澳大利亚、加拿大、马来西亚位居前五，综合指数分别为 84.2、79.5、75.3、75.0 和 72.2。英国、阿拉伯联合酋长国、沙特阿拉伯、西班牙和法国也进入综合指数前十。总体来看，排名靠前的国家通常并非只依靠单一优势，而是至少在两个以上维度上表现较强。</p>
+            <p>从综合指数看，新加坡、美国、澳大利亚、加拿大、马来西亚位居前五，综合指数分别为 84.2、79.5、75.3、75.0 和 72.2。英国、阿拉伯联合酋长国、沙特阿拉伯、西班牙和法国也进入综合指数前十。总体来看，排名靠前的地区通常并非只依靠单一优势，而是至少在两个以上维度上表现较强。</p>
             <p>新加坡综合指数最高，主要优势来自华人网络、制度环境、中国联系和市场条件的共同支撑。其华人网络指数达到 93.3，制度环境指数为 87.5，中国联系指数为 79.8，市场条件指数为 78.3，说明新加坡兼具华人社群基础、制度稳定性、对华经贸联系和市场承载力。</p>
             <p>美国综合指数位列第二，主要优势来自华商基础和市场条件。美国华商基础指数为 95.9，市场条件指数为 90.2，微观企业记录达到 11,461 条，说明其华商企业集聚程度和市场承载能力均较强。相比之下，美国华人网络指数为 59.9，制度环境指数为 72.5，中国联系指数为 77.5，显示其综合优势主要来自企业基础和市场规模，而非单一社群网络优势。</p>
             <p>澳大利亚、加拿大和马来西亚分别体现出不同类型的高分结构。澳大利亚在制度环境、市场条件和华商基础方面较均衡；加拿大在华商基础、制度环境和市场条件方面表现突出；马来西亚则在中国联系方面优势显著，中国联系指数达到 92.3，同时华商基础指数为 80.2，显示其在对华经贸联系和华商基础之间具有较强结合。</p>
@@ -2231,30 +2290,30 @@
           <section>
             <h3>3. 分项指数表现</h3>
             <p>华商基础指数反映企业集聚和资产信息可见度。美国、菲律宾、加拿大、西班牙、意大利、法国、新加坡、马来西亚、瑞士和印度位居前列。其中，美国微观记录为 11,461 条，菲律宾为 7,023 条，加拿大为 2,288 条，意大利为 1,701 条，法国为 1,498 条。这说明华商企业基础既集中在北美成熟市场，也集中在东南亚和部分欧洲市场。</p>
-            <p>制度环境指数反映商业运行环境的稳定性和可预期性。丹麦、芬兰、新加坡、卢森堡、挪威、新西兰、瑞士、瑞典、荷兰和列支敦士登排名靠前。这类市场通常具备更强的法治基础、政府效能和监管质量，适合金融、技术服务、专业服务和长期经营型企业发展。但部分制度环境较强的国家，华商企业数量未必很高，说明制度优势并不必然直接转化为华商企业集聚。</p>
-            <p>中国联系指数反映各国与中国之间的贸易、投资和工程合作强度。沙特阿拉伯、马来西亚、印度尼西亚、英国、匈牙利、阿拉伯联合酋长国、哈萨克斯坦、巴基斯坦、越南和泰国排名靠前。其中，沙特阿拉伯中国联系指数达到 100.0，马来西亚为 92.3，印度尼西亚为 90.9，说明能源、工程合作、区域产业协作和双边贸易关系是推动中国联系指数的重要来源。</p>
-            <p>华人网络指数反映当地华人人口、移民存量和商会组织基础。新加坡、加拿大、澳大利亚、美国、越南、马来西亚、新西兰、泰国、韩国和日本排名靠前。新加坡商会数量达到 36 个，越南为 19 个，美国和加拿大均为 10 个。华人网络较强的国家，通常具有更好的组织连接、商业互助和信息传播基础，也更容易形成华商企业的社会支撑网络。</p>
-            <p>市场条件指数反映当地市场容量、居民购买力、资本流入和企业活跃度。美国、德国、法国、加拿大、澳大利亚、日本、意大利、西班牙、新加坡和巴西排名靠前。其中，美国市场条件指数为 90.2，德国为 82.1，法国为 80.8，加拿大为 80.3，澳大利亚为 79.8。成熟经济体在市场条件维度上表现更突出，说明其对高附加值行业、资本服务和专业化经营具有更强承载能力。</p>
+            <p>制度环境指数反映商业运行环境的稳定性和可预期性。丹麦、芬兰、新加坡、卢森堡、挪威、新西兰、瑞士、瑞典、荷兰和列支敦士登排名靠前。这类市场通常具备更强的法治基础、政府效能和监管质量，适合金融、技术服务、专业服务和长期经营型企业发展。但部分制度环境较强的地区，华商企业数量未必很高，说明制度优势并不必然直接转化为华商企业集聚。</p>
+            <p>中国联系指数反映各地区与中国之间的贸易、投资和工程合作强度。沙特阿拉伯、马来西亚、印度尼西亚、英国、匈牙利、阿拉伯联合酋长国、哈萨克斯坦、巴基斯坦、越南和泰国排名靠前。其中，沙特阿拉伯中国联系指数达到 100.0，马来西亚为 92.3，印度尼西亚为 90.9，说明能源、工程合作、区域产业协作和双边贸易关系是推动中国联系指数的重要来源。</p>
+            <p>华人网络指数反映当地华人人口、移民存量和商会组织基础。新加坡、加拿大、澳大利亚、美国、越南、马来西亚、新西兰、泰国、韩国和日本排名靠前。新加坡商会数量达到 36 个，越南为 19 个，美国和加拿大均为 10 个。华人网络较强的地区，通常具有更好的组织连接、商业互助和信息传播基础，也更容易形成华商企业的社会支撑网络。</p>
+            <p>市场条件指数反映当地市场容量、居民购买力、资本流入和企业活跃度。美国、德国、法国、加拿大、澳大利亚、日本、意大利、西班牙、新加坡和巴西排名靠前。其中，美国市场条件指数为 90.2，德国为 82.1，法国为 80.8，加拿大为 80.3，澳大利亚为 79.8。成熟地区在市场条件维度上表现更突出，说明其对高附加值行业、资本服务和专业化经营具有更强承载能力。</p>
           </section>
           <section>
             <h3>4. 区域结构判断</h3>
             <p>从区域均值看，北美洲综合指数均值为 68.1，在各区域中最高。北美洲华商基础均值为 81.8，市场条件均值为 82.5，说明其优势主要来自企业基础和市场容量。北美洲微观企业记录合计为 13,756 条，是当前海外华商企业的重要承载区。</p>
-            <p>亚洲综合指数均值为 54.6，微观企业记录合计为 16,182 条，在企业数量上超过其他区域。亚洲的中国联系指数均值为 62.3，市场条件均值为 68.6，说明亚洲市场在对华经贸联系和区域产业协作方面具有较强基础。东南亚国家尤其具有代表性，越南、菲律宾、马来西亚、印度尼西亚和泰国在华商企业数量、中国联系或华人网络方面均有突出表现。</p>
+            <p>亚洲综合指数均值为 54.6，微观企业记录合计为 16,182 条，在企业数量上超过其他区域。亚洲的中国联系指数均值为 62.3，市场条件均值为 68.6，说明亚洲市场在对华经贸联系和区域产业协作方面具有较强基础。东南亚地区尤其具有代表性，越南、菲律宾、马来西亚、印度尼西亚和泰国在华商企业数量、中国联系或华人网络方面均有突出表现。</p>
             <p>欧洲综合指数均值为 50.4，制度环境均值为 69.4，在制度环境维度上具有明显优势。但欧洲中国联系指数均值为 33.5，华人网络指数均值为 23.2，说明其制度和市场基础较好，但对华联系和华人网络整体较分散。欧洲更适合作为观察高端服务、专业服务和节点型华商网络的区域。</p>
-            <p>大洋洲综合指数均值为 59.0，制度环境均值为 75.7，华人网络均值为 48.6，表现较为均衡。非洲和拉丁美洲综合指数均值分别为 45.5 和 40.0，企业数量和华人网络基础相对有限，部分国家主要呈现资源、工程合作或区域市场等节点特征。</p>
+            <p>大洋洲综合指数均值为 59.0，制度环境均值为 75.7，华人网络均值为 48.6，表现较为均衡。非洲和拉丁美洲综合指数均值分别为 45.5 和 40.0，企业数量和华人网络基础相对有限，部分地区主要呈现资源、工程合作或区域市场等节点特征。</p>
           </section>
           <section>
             <h3>5. 行业结构特征</h3>
             <p>行业维度主要用于解释华商基础中的企业结构和资产结构。当前微观企业记录最多的行业为制造业，共 7,996 条，占比 21.3%；其次为批发零售业，共 6,770 条，占比 18.0%；公共与居民服务业为 4,463 条，占比 11.9%；金融业为 4,194 条，占比 11.1%；商业服务业为 3,809 条，占比 10.1%。</p>
             <p>从资产结构看，金融业资产合计达到 52.8 亿美元，商业服务业资产合计达到 32.7 亿美元，明显高于多数行业。这说明华商企业的数量优势主要集中在制造、批发零售和服务业，但资产集中主要体现在金融和商业服务领域。</p>
-            <p>重点国家的行业结构也存在明显差异。美国第一大行业为金融业，企业数为 2,915 条，占美国华商企业的 25.4%；英国第一大行业同样为金融业，占比 23.9%。澳大利亚和加拿大第一大行业均为采矿业，国家内占比均为 33.7%。阿拉伯联合酋长国和沙特阿拉伯第一大行业为批发零售业，分别占 57.5% 和 38.1%。这些差异说明，不同国家的华商网络往往嵌入当地不同的产业结构之中。</p>
+            <p>重点地区的行业结构也存在明显差异。美国第一大行业为金融业，企业数为 2,915 条，占美国华商企业的 25.4%；英国第一大行业同样为金融业，占比 23.9%。澳大利亚和加拿大第一大行业均为采矿业，地区内占比均为 33.7%。阿拉伯联合酋长国和沙特阿拉伯第一大行业为批发零售业，分别占 57.5% 和 38.1%。这些差异说明，不同地区的华商网络往往嵌入当地不同的产业结构之中。</p>
           </section>
           <section>
             <h3>6. 综合判断</h3>
-            <p>第一，海外华商发展格局并不是单一的企业数量分布，而是企业基础、制度环境、中国联系、华人网络和市场条件共同作用的结果。美国、菲律宾、越南等国家企业数量突出，但综合指数还受到制度环境、市场条件和中国联系等因素影响。新加坡企业数量并不最高，但凭借华人网络、制度环境、中国联系和市场条件的综合优势位居第一。</p>
+            <p>第一，海外华商发展格局并不是单一的企业数量分布，而是企业基础、制度环境、中国联系、华人网络和市场条件共同作用的结果。美国、菲律宾、越南等地区企业数量突出，但综合指数还受到制度环境、市场条件和中国联系等因素影响。新加坡企业数量并不最高，但凭借华人网络、制度环境、中国联系和市场条件的综合优势位居第一。</p>
             <p>第二，北美洲和亚洲是当前海外华商网络最重要的两个板块，但优势类型不同。北美洲更突出市场承载力和企业基础，亚洲更突出企业数量、中国联系和区域产业协作。欧洲则更强调制度环境和节点型市场价值。</p>
-            <p>第三，五眼国家和一带一路相关国家体现出不同的观察逻辑。五眼国家更适合观察成熟市场中的金融、技术服务、专业服务和投资网络。一带一路相关国家则更适合观察跨境贸易、制造、批发零售、工程合作和区域产业联动。</p>
-            <p>第四，商会网络对于理解华商分布具有重要补充价值。单纯企业数量只能反映经营主体分布，而商会数量、人物职务和组织联系能够进一步反映社群连接、商业互助和潜在合作入口。新加坡、越南、美国、加拿大、澳大利亚等国家在商会网络方面具有较强代表性。</p>
+            <p>第三，五眼地区和一带一路相关地区体现出不同的观察逻辑。五眼地区更适合观察成熟市场中的金融、技术服务、专业服务和投资网络。一带一路相关地区则更适合观察跨境贸易、制造、批发零售、工程合作和区域产业联动。</p>
+            <p>第四，商会网络对于理解华商分布具有重要补充价值。单纯企业数量只能反映经营主体分布，而商会数量、人物职务和组织联系能够进一步反映社群连接、商业互助和潜在合作入口。新加坡、越南、美国、加拿大、澳大利亚等地区在商会网络方面具有较强代表性。</p>
             <p>第五，行业结构显示华商企业既有传统制造、批发零售和居民服务基础，也在金融、商业服务、技术服务和采矿等领域形成不同类型的资产和产业联系。未来观察华商网络，应同时关注企业数量、行业结构、资产分布和组织网络，而不宜只使用单一排名判断市场重要性。</p>
           </section>
         </div>
@@ -2410,7 +2469,7 @@
           value: fmt(macroTotal()),
           label: '海外华商总数',
           sub: '覆盖主要海外市场',
-          help: '总数以美国商务部/人口普查局公开企业统计作为锚点，结合当前可检索记录中的国家分布比例推算各国总数，并汇总形成海外华商总数。'
+          help: '总数以美国商务部/人口普查局公开企业统计作为锚点，结合当前可检索记录中的地区分布比例推算各地区总数，并汇总形成海外华商总数。'
         },
         {
           value: fmt(microTotal()),
@@ -2421,7 +2480,7 @@
         },
         {
           value: fmt(s.valid_huashang_iso3_countries),
-          label: '覆盖国家/地区',
+          label: '覆盖地区',
           sub: '总览与微观数据覆盖'
         },
         {
@@ -2446,7 +2505,7 @@
         },
         {
           value: fmt(s.valid_huashang_iso3_countries),
-          label: '覆盖国家/地区',
+          label: '覆盖地区',
           sub: '微观记录覆盖市场'
         },
         {
@@ -2622,7 +2681,7 @@
         const groups = [
           { name: '五眼联盟', color: FIVE_EYES_COLOR, rows: overseasCountries().filter(row => Number(row.is_five_eyes) === 1) },
           { name: '一带一路', color: BRI_COLOR, rows: overseasCountries().filter(row => Number(row.is_bri) === 1) },
-          { name: '其他国家', color: '#7c3aed', rows: overseasCountries().filter(row => Number(row.is_five_eyes) !== 1 && Number(row.is_bri) !== 1) }
+          { name: '其他地区', color: '#7c3aed', rows: overseasCountries().filter(row => Number(row.is_five_eyes) !== 1 && Number(row.is_bri) !== 1) }
         ].map(group => {
           const count = group.rows.reduce((acc, row) => acc + macroCount(row), 0);
           const top = [...group.rows]
@@ -2639,7 +2698,7 @@
             axisPointer: { type: 'shadow' },
             formatter: params => {
               const row = params[0].data.raw;
-              return `${row.name}<br>总数：${fmt(row.count)}<br>总数占比：${pct(row.share)}<br>代表国家：${row.top || '暂无'}`;
+              return `${row.name}<br>总数：${fmt(row.count)}<br>总数占比：${pct(row.share)}<br>代表地区：${row.top || '暂无'}`;
             }
           },
           xAxis: {
@@ -3002,7 +3061,7 @@
     function initEnterpriseCountryBar() {
       const input = document.getElementById('country-search');
       if (!input.dataset.bound) {
-        input.addEventListener('input', () => updateEnterpriseCountryBar());
+        input.addEventListener('input', debounce(() => updateEnterpriseCountryBar(), 120));
         input.dataset.bound = '1';
       }
       updateEnterpriseCountryBar();
@@ -3181,6 +3240,7 @@
 
       const merged = new Map();
       (focusBusiness().companies || []).forEach(row => {
+        if (focusCountryLabel(row.country) === '—') return;
         const companyDisplay = focusCompanyDisplay(row.company_name);
         const key = focusCompanyEntityKey(companyDisplay);
         if (!key) return;
@@ -3239,7 +3299,8 @@
       }
 
       const rows = [...merged.values()].map(item => {
-        let countries = uniqueFocusValues(item.countries);
+        let countries = uniqueFocusValues(item.countries)
+          .filter(country => focusCountryLabel(country) !== '—');
         const people = uniqueFocusValues(item.linked_people);
         const roles = uniqueFocusValues(item.linked_roles_all);
         const industries = uniqueFocusValues(item.industries_all);
@@ -3275,6 +3336,39 @@
       return rows;
     }
 
+    function focusScopedRows(kind) {
+      if (state.focusScopedRowsCache.has(kind)) return state.focusScopedRowsCache.get(kind);
+
+      const data = focusBusiness();
+      let rows;
+
+      if (kind === 'companies') {
+        rows = focusCompanyEntities();
+      } else {
+        const source = data[kind] || [];
+        if (kind === 'people' || kind === 'groups') {
+          rows = source.filter(row => focusCountryLabel(row.country) !== '—');
+        } else if (kind === 'relations') {
+          const allowedCompanyIds = new Set(
+            (data.companies || [])
+              .filter(row => focusCountryLabel(row.country) !== '—')
+              .flatMap(row => splitFocusValues(row.company_id))
+          );
+          const allowedCompanyKeys = new Set(focusCompanyEntities().map(row => focusCompanyEntityKey(row.company_name)));
+          rows = source.filter(row => {
+            const idOkay = !row.company_id || allowedCompanyIds.has(row.company_id);
+            const nameOkay = !row.company_name || allowedCompanyKeys.has(focusCompanyEntityKey(row.company_name));
+            return idOkay && nameOkay;
+          });
+        } else {
+          rows = source;
+        }
+      }
+
+      state.focusScopedRowsCache.set(kind, rows);
+      return rows;
+    }
+
     function focusSummary() {
       return focusBusiness().summary || {};
     }
@@ -3289,29 +3383,24 @@
     }
 
     function renderFocusTabCounts() {
-      const data = focusBusiness();
       ['people', 'companies', 'groups', 'relations'].forEach(kind => {
         const target = document.getElementById('focus-tab-count-' + kind);
         if (!target) return;
-        const count = kind === 'companies' ? focusCompanyEntities().length : (data[kind] || []).length;
-        target.textContent = fmt(count);
+        target.textContent = fmt(focusScopedRows(kind).length);
       });
     }
 
     function renderFocusKpis() {
-      const s = focusSummary();
-      const entityCount = focusCompanyEntities().length;
       const cards = [
-        { value: fmt(s.person_count || 0), label: '重点人物', sub: '已纳入重点人物档案' },
-        { value: fmt(entityCount), label: '重点企业实体', sub: `由 ${fmt(s.company_count || 0)} 条企业记录归并去重` },
-        { value: fmt(s.group_count || 0), label: '控制集团', sub: '按实际控制关系归并' },
-        { value: fmt(s.relation_count || 0), label: '人物—企业关系', sub: '人物与企业关系记录' }
+        { value: fmt(focusScopedRows('people').length), label: '重点人物' },
+        { value: fmt(focusScopedRows('companies').length), label: '重点企业' },
+        { value: fmt(focusScopedRows('groups').length), label: '控制集团' },
+        { value: fmt(focusScopedRows('relations').length), label: '人物—企业关系' }
       ];
       document.getElementById('focus-kpis').innerHTML = cards.map(card => `
         <div class="card">
           <p class="kpi-value">${card.value}</p>
           <div class="kpi-label">${card.label}</div>
-          <div class="kpi-sub">${card.sub}</div>
         </div>
       `).join('');
     }
@@ -3428,11 +3517,12 @@
         tabs.querySelectorAll('button').forEach(btn => btn.classList.toggle('active', btn === button));
         renderFocusTable();
       });
-      document.getElementById('focus-search').addEventListener('input', event => {
-        state.focus.search = event.target.value.trim().toLowerCase();
+      const focusSearch = document.getElementById('focus-search');
+      focusSearch.addEventListener('input', debounce(() => {
+        state.focus.search = focusSearch.value.trim().toLowerCase();
         state.focus.page = 1;
         renderFocusTable();
-      });
+      }, 140));
       document.getElementById('focus-page-size').addEventListener('change', event => {
         state.focus.pageSize = Number(event.target.value);
         state.focus.page = 1;
@@ -3509,22 +3599,33 @@
           state.focusCountryLabelMap.set(key, label);
         });
       }
-      const direct = state.focusCountryLabelMap.get(raw.toLowerCase());
-      if (direct) return direct;
-      const parts = raw.split(/\s*(?:\/|／|;|；|\||、)\s*/);
-      if (parts.length > 1) {
-        return parts.map(part => {
-          const clean = part.trim();
-          const key = clean.toLowerCase();
-          const base = clean.replace(/\s*\([^)]*\)\s*$/, '').trim().toLowerCase();
-          return state.focusCountryLabelMap.get(key)
-            || FOCUS_COUNTRY_ALIASES[key]
-            || state.focusCountryLabelMap.get(base)
-            || FOCUS_COUNTRY_ALIASES[base]
-            || clean;
-        }).join(' / ');
-      }
-      return FOCUS_COUNTRY_ALIASES[raw.toLowerCase()] || raw;
+
+      const excluded = new Set([
+        'china', 'cn', 'chn', '中国',
+        'hong kong', 'hong kong sar', 'china (hong kong)', 'hk', 'hkg', '中国香港',
+        'taiwan', 'tw', 'twn', '中国台湾',
+        'macau', 'macao', 'mo', 'mac', '中国澳门'
+      ]);
+
+      const translatePart = part => {
+        const clean = String(part || '').trim();
+        if (!clean) return '';
+        const key = clean.toLowerCase();
+        const base = clean.replace(/\s*\([^)]*\)\s*$/, '').trim().toLowerCase();
+        if (excluded.has(key) || excluded.has(base)) return '';
+        return state.focusCountryLabelMap.get(key)
+          || FOCUS_COUNTRY_ALIASES[key]
+          || state.focusCountryLabelMap.get(base)
+          || FOCUS_COUNTRY_ALIASES[base]
+          || clean;
+      };
+
+      const parts = raw
+        .split(/\s*(?:\/|／|;|；|\||、)\s*/)
+        .map(translatePart)
+        .filter(Boolean);
+
+      return parts.length ? [...new Set(parts)].join(' / ') : '—';
     }
 
     function splitMixedName(value, explicitEnglish = '') {
@@ -3817,10 +3918,18 @@
       return '其他行业';
     }
 
-    function enrichFocusRow(row, kind) {
+    function focusLookupMaps() {
+      if (state.focusLookupCache) return state.focusLookupCache;
       const data = focusBusiness();
-      const companyById = new Map((data.companies || []).map(item => [item.company_id, item]));
-      const entityByKey = new Map(focusCompanyEntities().map(item => [focusCompanyEntityKey(item.company_name), item]));
+      state.focusLookupCache = {
+        companyById: new Map((data.companies || []).map(item => [item.company_id, item])),
+        entityByKey: new Map(focusCompanyEntities().map(item => [focusCompanyEntityKey(item.company_name), item]))
+      };
+      return state.focusLookupCache;
+    }
+
+    function enrichFocusRow(row, kind) {
+      const { companyById, entityByKey } = focusLookupMaps();
       const result = { ...row, country_display: focusCountryLabel(row.country), role_display: localizeRole(row.role) };
       if (kind === 'people') {
         const p = splitMixedName(row.name_chinese || row.name, row.name_english);
@@ -3850,7 +3959,7 @@
       if (kind === 'companies') {
         return [
           ['company_display', '企业名称'],
-          ['country_display', '国家/地区'],
+          ['country_display', '地区'],
           ['industry_display', '行业'],
           ['linked_persons_display', '关联人物'],
           ['group_name', '控制集团']
@@ -3859,7 +3968,7 @@
       if (kind === 'groups') {
         return [
           ['group_name_display', '控制集团'],
-          ['country_display', '国家/地区'],
+          ['country_display', '地区'],
           ['controller_display', '控制主体'],
           ['representative_company_display', '代表企业']
         ];
@@ -3875,28 +3984,37 @@
       return [
         ['name_zh', '中文名'],
         ['name_en', '英文名'],
-        ['country_display', '国家/地区'],
+        ['country_display', '地区'],
         ['company_display', '关联企业'],
         ['role_display', '职位/角色'],
         ['industry_display', '行业']
       ];
     }
 
-    function focusRows() {
-      const data = focusBusiness();
-      const kind = state.focus.kind;
-      const sourceRows = kind === 'companies' ? focusCompanyEntities() : (data[kind] || []);
-      const rows = sourceRows.map(row => enrichFocusRow(row, kind));
-      const search = state.focus.search;
+    function focusEnrichedRows(kind) {
+      if (state.focusEnrichedCache.has(kind)) return state.focusEnrichedCache.get(kind);
       const visibleKeys = focusColumns(kind).map(([key]) => key);
-      const filtered = search
-        ? rows.filter(row => visibleKeys.some(key => String(row[key] || '').toLowerCase().includes(search)))
-        : rows.slice();
-      return filtered.sort((a, b) => {
-        const an = a.company_display || a.group_name_display || a.name_zh || a.name_en || a.person_display || '';
-        const bn = b.company_display || b.group_name_display || b.name_zh || b.name_en || b.person_display || '';
-        return String(an).localeCompare(String(bn), 'zh-CN');
-      });
+      const rows = focusScopedRows(kind)
+        .map(row => {
+          const enriched = enrichFocusRow(row, kind);
+          enriched.__searchText = rowSearchText(enriched, visibleKeys);
+          return enriched;
+        })
+        .sort((a, b) => {
+          const an = a.company_display || a.group_name_display || a.name_zh || a.name_en || a.person_display || '';
+          const bn = b.company_display || b.group_name_display || b.name_zh || b.name_en || b.person_display || '';
+          return String(an).localeCompare(String(bn), 'zh-CN');
+        });
+      state.focusEnrichedCache.set(kind, rows);
+      return rows;
+    }
+
+    function focusRows() {
+      const kind = state.focus.kind;
+      const rows = focusEnrichedRows(kind);
+      const search = state.focus.search;
+      if (!search) return rows;
+      return rows.filter(row => row.__searchText.includes(search));
     }
 
     function focusCell(key, value) {
@@ -3996,7 +4114,7 @@
         const groups = [
           { name: '五眼联盟', color: FIVE_EYES_COLOR, rows: overseasCountries().filter(row => Number(row.is_five_eyes) === 1) },
           { name: '一带一路', color: BRI_COLOR, rows: overseasCountries().filter(row => Number(row.is_bri) === 1) },
-          { name: '其他国家', color: '#7c3aed', rows: overseasCountries().filter(row => Number(row.is_five_eyes) !== 1 && Number(row.is_bri) !== 1) }
+          { name: '其他地区', color: '#7c3aed', rows: overseasCountries().filter(row => Number(row.is_five_eyes) !== 1 && Number(row.is_bri) !== 1) }
         ].map(group => {
           const count = group.rows.reduce((sum, row) => sum + macroCount(row), 0);
           const top = [...group.rows]
@@ -4014,7 +4132,7 @@
             axisPointer: { type: 'shadow' },
             formatter: params => {
               const row = params[0].data.raw;
-              return `${row.name}<br>总数：${fmt(row.count)}<br>总数占比：${pct(row.share)}<br>代表国家：${row.top || '暂无'}`;
+              return `${row.name}<br>总数：${fmt(row.count)}<br>总数占比：${pct(row.share)}<br>代表地区：${row.top || '暂无'}`;
             }
           },
           xAxis: {
@@ -4164,7 +4282,7 @@
           },
           legend: { top: 2, right: 0, type: 'scroll', itemWidth: 10, itemHeight: 10 },
           xAxis: {
-            name: '国家',
+            name: '地区',
             nameLocation: 'middle',
             nameGap: 26,
             type: 'category',
@@ -4319,10 +4437,10 @@
           build('一带一路', BRI_COLOR, overseasCountries().filter(row => Number(row.is_bri) === 1))
         ];
         const segments = [
-          { name: '第一国家', key: 0, color: '#2563eb' },
-          { name: '第二国家', key: 1, color: '#06b6d4' },
-          { name: '第三国家', key: 2, color: '#7c3aed' },
-          { name: '其他国家', key: 'other', color: '#cbd5e1' }
+          { name: '第一地区', key: 0, color: '#2563eb' },
+          { name: '第二地区', key: 1, color: '#06b6d4' },
+          { name: '第三地区', key: 2, color: '#7c3aed' },
+          { name: '其他地区', key: 'other', color: '#cbd5e1' }
         ];
         return {
           grid: { left: 78, right: 30, top: 48, bottom: 34, containLabel: true },
@@ -4334,13 +4452,13 @@
               const lines = [
                 row.name,
                 `微观记录：${fmt(row.total)}`,
-                `覆盖国家：${fmt(row.countries)}`,
+                `覆盖地区：${fmt(row.countries)}`,
                 `Top3：${row.top || '暂无'}`
               ];
               row.topValues.forEach((item, index) => {
                 if (item.count > 0) lines.push(`第${index + 1}：${item.name} ${pctPoint(item.value)}（${fmt(item.count)}）`);
               });
-              lines.push(`其他国家：${pctPoint(row.other)}`);
+              lines.push(`其他地区：${pctPoint(row.other)}`);
               return lines.join('<br>');
             }
           },
@@ -4389,7 +4507,7 @@
     function renderChamberKpis() {
       const summary = (DATA.chamber_data || {}).summary || {};
       const cards = [
-        { value: fmt(summary.chamber_count), label: '商会组织', sub: '覆盖 ' + fmt((summary.country_counts || []).length) + ' 个国家/地区' },
+        { value: fmt(summary.chamber_count), label: '商会组织', sub: '覆盖 ' + fmt((summary.country_counts || []).length) + ' 个地区' },
         { value: fmt(summary.person_role_count), label: '人物职务', sub: '来自商会官网与公开来源' },
         { value: fmt(summary.linked_enterprise_count), label: '关联企业', sub: '人物所涉及企业记录' },
         { value: fmt((summary.region_counts || [])[0] && summary.region_counts[0].count), label: '最大区域', sub: ((summary.region_counts || [])[0] || {}).name || '暂无' }
@@ -4482,11 +4600,12 @@
         tabs.querySelectorAll('button').forEach(btn => btn.classList.toggle('active', btn === button));
         renderChamberTable();
       });
-      document.getElementById('chamber-search').addEventListener('input', event => {
-        state.chamber.search = event.target.value.trim().toLowerCase();
+      const chamberSearch = document.getElementById('chamber-search');
+      chamberSearch.addEventListener('input', debounce(() => {
+        state.chamber.search = chamberSearch.value.trim().toLowerCase();
         state.chamber.page = 1;
         renderChamberTable();
-      });
+      }, 140));
       document.getElementById('chamber-page-size').addEventListener('change', event => {
         state.chamber.pageSize = Number(event.target.value);
         state.chamber.page = 1;
@@ -4510,7 +4629,7 @@
           ['职务', '职务'],
           ['关联企业', '关联企业'],
           ['所属商会', '所属商会'],
-          ['国家/地区', '国家/地区'],
+          ['地区', '地区'],
           ['来源链接', '来源']
         ];
       }
@@ -4524,7 +4643,7 @@
       }
       return [
         ['组织名称', '商会/组织'],
-        ['国家/地区', '国家/地区'],
+        ['地区', '地区'],
         ['所属区域', '区域'],
         ['组织类型', '类型'],
         ['成立年份', '成立年份'],
@@ -4540,7 +4659,10 @@
       const rows = chamber[kind] || [];
       const search = state.chamber.search;
       if (!search) return rows;
-      return rows.filter(row => Object.values(row).some(value => String(value || '').toLowerCase().includes(search)));
+      const keys = chamberColumns(kind).map(([key]) => key);
+      return indexedRows(`chamber:${kind}`, rows, keys)
+        .filter(item => item.text.includes(search))
+        .map(item => item.row);
     }
 
     function renderChamberTable() {
@@ -4584,8 +4706,8 @@
     function renderSchoolKpis() {
       const summary = schoolSummary();
       const cards = [
-        { value: fmt(summary.school_count || 0), label: '华文学校', sub: '覆盖 ' + fmt(summary.country_count || 0) + ' 个国家/地区' },
-        { value: fmt(summary.country_count || 0), label: '覆盖国家/地区', sub: '按学校所在国家统计' },
+        { value: fmt(summary.school_count || 0), label: '华文学校', sub: '覆盖 ' + fmt(summary.country_count || 0) + ' 个地区' },
+        { value: fmt(summary.country_count || 0), label: '覆盖地区', sub: '按学校所在地区统计' },
         { value: fmt(summary.person_role_count || 0), label: '人物职务', sub: '学校负责人及公开职务' }
       ];
       document.getElementById('school-kpis').innerHTML = cards.map(card => `
@@ -4622,7 +4744,7 @@
       const countMap = new Map();
       const regionMap = new Map();
       schoolRowsAll().forEach(row => {
-        const country = String(row['国家或地区'] || '').trim();
+        const country = String(row['地区或地区'] || '').trim();
         if (!country) return;
         countMap.set(country, (countMap.get(country) || 0) + 1);
         regionMap.set(country, String(row['所属区域'] || '其他区域').trim() || '其他区域');
@@ -4978,7 +5100,7 @@
           ['职务或身份', '职务'],
           ['所属学校', '所属学校'],
           ['关联机构或企业', '关联机构'],
-          ['国家或地区', '国家/地区'],
+          ['地区或地区', '地区'],
           ['来源链接', '来源']
         ];
       }
@@ -4994,7 +5116,7 @@
       }
       return [
         ['学校中文名称', '学校名称'],
-        ['国家或地区', '国家/地区'],
+        ['地区或地区', '地区'],
         ['城市', '城市'],
         ['所属区域', '区域'],
         ['成立年份', '成立年份'],
@@ -5008,13 +5130,13 @@
 
     function schoolCompletenessKeys(kind) {
       if (kind === 'people') {
-        return ['姓名', '职务或身份', '所属学校', '关联机构或企业', '国家或地区', '任职或信息年份', '来源链接'];
+        return ['姓名', '职务或身份', '所属学校', '关联机构或企业', '地区或地区', '任职或信息年份', '来源链接'];
       }
       if (kind === 'relations') {
         return ['学校名称', '主体名称', '主体类型', '关系类型', '时间', '来源链接'];
       }
       return [
-        '学校中文名称', '学校外文名称', '所属区域', '国家或地区', '城市', '成立年份',
+        '学校中文名称', '学校外文名称', '所属区域', '地区或地区', '城市', '成立年份',
         '办学形态', '教育阶段', '办学性质', '创办或主办主体', '华侨华人关联类型',
         '学生规模', '运行状态', '活跃度', '官网或官方主页', '学校简介', '主要来源链接',
         '核验日期', '证据等级'
@@ -5180,7 +5302,7 @@
         const minValue = positive.length ? Math.min(...positive) : 0;
         const maxValue = positive.length ? Math.max(...positive) : 0;
         const useLog = positive.length === values.length && minValue > 0 && maxValue / minValue > 30;
-        document.getElementById('research-scatter-meta').textContent = `${year} 年 · ${fmt(rows.length)} 个国家 · 颜色=大洲`;
+        document.getElementById('research-scatter-meta').textContent = `${year} 年 · ${fmt(rows.length)} 个地区 · 颜色=大洲`;
 
         return {
           grid: { left: 78, right: 34, top: 56, bottom: 52, containLabel: true },
@@ -5199,7 +5321,7 @@
             textStyle: { color: '#64748b', fontSize: 11 }
           },
           xAxis: {
-            name: '国家',
+            name: '地区',
             nameLocation: 'middle',
             nameGap: 28,
             type: 'category',
@@ -5257,10 +5379,10 @@
           charts['research-trend'].dispose();
           delete charts['research-trend'];
         }
-        document.getElementById('trend-title').textContent = '国家趋势';
+        document.getElementById('trend-title').textContent = '地区趋势';
         document.getElementById('trend-subtitle').textContent = '柱状图显示年度水平，折线显示相对基准年的变化';
         clearBtn.hidden = true;
-        trendEl.innerHTML = '<div class="chart-empty">点击国家气泡查看 2010–2024 趋势</div>';
+        trendEl.innerHTML = '<div class="chart-empty">点击地区气泡查看 2010–2024 趋势</div>';
         return;
       }
 
