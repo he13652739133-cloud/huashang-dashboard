@@ -4,10 +4,14 @@
   <script>
     (() => {
       const password = "jYQ7fnmmeFw3";
-      const input = window.prompt("请输入访问密码");
-      if (input !== password) {
-        document.documentElement.innerHTML = "<head><title>访问受限</title></head><body style=\"margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;\"><main style=\"text-align:center;\"><h1 style=\"font-size:24px;margin-bottom:8px;\">访问受限</h1><p style=\"color:#607086;\">请输入正确密码后访问。</p></main></body>";
-        throw new Error("Unauthorized");
+      const input = window.prompt("\u8bf7\u8f93\u5165\u8bbf\u95ee\u5bc6\u7801");
+      window.__huashangAccessGranted = input === password;
+      if (!window.__huashangAccessGranted) {
+        document.documentElement.style.visibility = 'hidden';
+        document.addEventListener('DOMContentLoaded', () => {
+          document.body.innerHTML = "<main style=\"min-height:100vh;display:grid;place-items:center;font-family:Arial,'Microsoft YaHei',sans-serif;background:#edf4ff;color:#102033;\"><div style=\"text-align:center\"><h1>\u8bbf\u95ee\u53d7\u9650</h1><p>\u8bf7\u8f93\u5165\u6b63\u786e\u5bc6\u7801\u3002</p></div></main>";
+          document.documentElement.style.visibility = 'visible';
+        }, { once: true });
       }
     })();
   </script>
@@ -163,6 +167,22 @@
       min-height: 112px;
       padding: 18px 20px 16px;
       z-index: 1;
+    }
+
+    #chamber-kpis .card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 12px;
+      padding-bottom: 12px;
+    }
+
+    #chamber-kpis .kpi-value {
+      font-size: 38px;
+    }
+
+    #chamber-kpis .kpi-label {
+      font-size: 16px;
     }
 
     .kpi-grid .card::before {
@@ -358,9 +378,24 @@
       height: 420px;
     }
 
+    .research-analysis-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .research-analysis-grid .card {
+      min-width: 0;
+    }
+
+    .research-main-card {
+      height: 100%;
+    }
+
     #overview-heatmap {
-      height: 500px;
-      min-height: 500px;
+      height: 340px;
+      min-height: 340px;
     }
 
     #overview-industry-donut {
@@ -376,7 +411,7 @@
     }
 
     .overview-index-layout .chart {
-      min-height: 500px;
+      min-height: 430px;
     }
 
     .index-explainer,
@@ -392,7 +427,7 @@
 
     .index-explainer {
       display: flex;
-      min-height: 500px;
+      min-height: 430px;
       flex-direction: column;
       gap: 16px;
       padding: 20px;
@@ -647,7 +682,7 @@
 
     .index-list {
       display: grid;
-      gap: 12px;
+      gap: 20px;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -658,7 +693,7 @@
       border-left: 3px solid #60a5fa;
       border-radius: 8px;
       background: rgba(239, 246, 255, 0.78);
-      padding: 10px 12px;
+      padding: 12px 14px;
       font-weight: 600;
     }
 
@@ -682,6 +717,13 @@
 
     .action-button:hover {
       background: rgba(219, 234, 254, .86);
+    }
+
+    #index-intro-link {
+      height: 42px;
+      min-width: 112px;
+      padding: 0 20px;
+      font-size: 14px;
     }
 
     .chart-loading,
@@ -832,6 +874,15 @@
       color: var(--text);
       font-weight: 500;
       text-align: right;
+    }
+
+    .row-index {
+      width: 64px;
+      min-width: 64px;
+      text-align: center !important;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     .table-wrap {
@@ -988,7 +1039,7 @@
 
     .research-controls {
       display: grid;
-      grid-template-columns: minmax(220px, 1.1fr) minmax(180px, .9fr) minmax(220px, 1fr) auto;
+      grid-template-columns: minmax(260px, .8fr) minmax(420px, 1.2fr);
       gap: 16px;
       align-items: end;
     }
@@ -1002,9 +1053,8 @@
     .method-item {
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 12px;
+      padding: 14px 16px 8px;
       background: linear-gradient(180deg, #ffffff, #f3f7ff);
-      min-height: 120px;
     }
 
     .method-title {
@@ -1015,7 +1065,18 @@
     .method-weight {
       color: var(--primary);
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+    }
+
+    .method-count {
+      font-size: 30px;
+      line-height: 1.15;
+    }
+
+    .method-unit {
+      margin-left: 5px;
+      font-size: 12px;
+      font-weight: 500;
     }
 
     .method-fields {
@@ -1205,6 +1266,7 @@
       .two-col,
       .overview-index-layout,
       .research-controls,
+      .research-analysis-grid,
       .method-grid {
         grid-template-columns: 1fr;
       }
@@ -1327,29 +1389,23 @@
       <section class="section card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">华商发展指数构建</h2>
-            <p class="card-subtitle">由华商基础、制度环境、中国联系、华人网络、市场条件构建综合指数</p>
+            <h2 class="card-title">重点地区华商结构</h2>
+            <p class="card-subtitle" id="overview-structure-subtitle">重点企业 · 前 8 个地区</p>
+          </div>
+          <div class="toolbar">
+            <label for="overview-structure-sort" class="control-label">查看指标</label>
+            <select id="overview-structure-sort" aria-label="重点地区查看指标">
+              <option value="focus_company_count">重点企业</option>
+              <option value="focus_person_count">重点人物</option>
+              <option value="focus_group_count">控制集团</option>
+              <option value="chamber_count">商会网络</option>
+              <option value="huashang_asset_sum">华商资产</option>
+            </select>
+            <button class="action-button" id="index-intro-link" type="button">指数分析</button>
           </div>
         </div>
-        <div class="overview-index-layout">
-          <div id="overview-heatmap" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
-          <aside class="index-explainer">
-            <h3>指标说明</h3>
-            <p>华商发展指数从华商基础、制度环境、中国联系、华人网络和市场条件五个维度，衡量各地区的综合表现，用于比较不同市场的华商发展基础、外部环境和拓展潜力。</p>
-            <div class="index-mini-metrics">
-              <span>五个维度</span>
-              <span>89个市场</span>
-              <span>0-100分</span>
-            </div>
-            <div class="index-list-intro">通过这个指标，我们能够：</div>
-            <ul class="index-list">
-              <li>筛选重点地区</li>
-              <li>比较区域差异</li>
-              <li>识别潜在市场</li>
-            </ul>
-            <button class="action-button" id="index-intro-link" type="button">查看指数分析</button>
-          </aside>
-        </div>
+        <div id="overview-heatmap" class="chart"><div class="chart-loading">数据加载中...</div></div>
+        <span id="index-covered-regions" hidden>89个地区</span>
       </section>
     </div>
 
@@ -1422,7 +1478,8 @@
           <table id="industry-table">
             <thead>
               <tr>
-                <th data-sort="country_name_zh">地区</th>
+                <th class="row-index">序号</th>
+            <th data-sort="country_name_zh">地区</th>
                 <th data-sort="industry_label">行业</th>
                 <th data-sort="huashang_count">微观记录</th>
                 <th data-sort="rate">行业占比</th>
@@ -1529,20 +1586,10 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h2 class="card-title">地缘变量散点分析</h2>
-              <p class="card-subtitle">横轴为地区，纵轴为所选指标；气泡大小随指标值变化，颜色代表大洲</p>
+              <h2 class="card-title">大洲结构特征</h2>
+              <p class="card-subtitle">比较五类华商指标在不同大洲的分布结构</p>
             </div>
-            <div class="toolbar">
-              <select id="geo-metric" aria-label="地缘指标"></select>
-              <select id="geo-scope" aria-label="地缘范围">
-                <option value="bri">一带一路</option>
-                <option value="all">全部地区</option>
-                <option value="five">五眼联盟</option>
-                <option value="asia">亚洲</option>
-                <option value="europe">欧洲</option>
-                <option value="americas">美洲</option>
-              </select>
-            </div>
+            
           </div>
           <div id="geo-bri-scatter" class="chart chart-map"><div class="chart-loading">数据加载中...</div></div>
         </div>
@@ -1553,7 +1600,7 @@
           <div class="card-header">
             <div>
               <h2 class="card-title">五眼 vs 一带一路对比</h2>
-              <p class="card-subtitle">制度、市场、投资与华商指标雷达图</p>
+              <p class="card-subtitle">重点企业、人物、集团、商会与资产结构对比</p>
             </div>
           </div>
           <div id="geo-radar" class="chart chart-radar"><div class="chart-loading">数据加载中...</div></div>
@@ -1562,8 +1609,8 @@
         <div class="card">
           <div class="card-header">
             <div>
-              <h2 class="card-title">组内集中度</h2>
-              <p class="card-subtitle">对比重点经济圈内部华商分布集中程度</p>
+              <h2 class="card-title">组内重点企业集中度</h2>
+              <p class="card-subtitle">按组内重点企业分布比较 Top1、Top2、Top3 与其余地区占比</p>
             </div>
           </div>
           <div id="geo-concentration" class="chart chart-radar"><div class="chart-loading">数据加载中...</div></div>
@@ -1634,8 +1681,8 @@
       <section class="section card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">指数构建变量</h2>
-            <p class="card-subtitle">综合指数采用0-100标准化，按权重合成</p>
+            <h2 class="card-title">分析指标</h2>
+            <p class="card-subtitle">重点企业、重点人物、控制集团、商会与资产</p>
           </div>
         </div>
         <div id="index-method-grid" class="method-grid"></div>
@@ -1644,15 +1691,15 @@
       <section class="section card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">研究结论</h2>
+            <h2 class="card-title">主要特征</h2>
           </div>
-          <button id="open-report" class="action-button" type="button">打开研究报告</button>
+          <button id="open-report" class="action-button" type="button">查看分析说明</button>
         </div>
         <div class="insight-box">
-          <p>综合指数排名靠前的市场包括新加坡、美国、澳大利亚、加拿大、马来西亚等，分别体现出华人网络、华商基础、制度环境、中国联系和市场条件等不同优势。综合排名并不等同于单一企业数量排名，而是反映多个维度叠加后的整体表现。</p>
-          <p>分项来看，美国、菲律宾、越南等地区的华商企业基础较突出，其中美国微观记录为 11,461 条，菲律宾为 7,023 条，越南为 6,483 条。制度环境方面，丹麦、芬兰、新加坡等地区表现较强，反映出更稳定的商业运行环境。</p>
-          <p>中国联系方面，沙特阿拉伯、马来西亚、印度尼西亚等市场排名靠前，说明其与中国之间的贸易、投资或工程合作联系更紧密。华人网络方面，新加坡、加拿大、澳大利亚等地区表现较好，其中新加坡商会数量达到 36 个，社群组织基础较强。</p>
-          <p>总体来看，北美洲在华商基础和市场条件上更具优势，亚洲在企业数量和中国联系方面更突出，欧洲则主要体现为制度环境较强。海外华商网络呈现出“北美高承载、亚洲高连接、欧洲强制度、其他区域节点化”的总体特征。</p>
+          <p>从重点企业和重点人物分布看，美国与新加坡构成最突出的两个节点，印度尼西亚、马来西亚、加拿大和菲律宾等地区随后形成较为稳定的第二梯队。企业与人物的空间分布总体一致，说明重点华商活动主要集中在少数成熟商业节点，并在东南亚与北美形成较强集聚。</p>
+          <p>控制集团的地区分布与重点企业并不完全一致。印度尼西亚、新加坡、马来西亚和菲律宾更为突出，东南亚在家族集团、综合控股和实际控制网络方面表现出更强的组织化特征，与北美以企业和人物节点为主的结构形成差异。</p>
+          <p>商会网络与资产分布又呈现出另一种空间结构。新加坡、越南、美国和加拿大的商会网络较为突出，而可识别华商资产更多集中在美国、英国、加拿大和新加坡。组织节点与资本节点并非完全重合，反映出海外华商网络在不同地区承担的功能存在差异。</p>
+          <p>总体来看，当前数据呈现出“北美企业与资产节点突出、东南亚集团与组织网络密集、欧洲形成若干资产节点”的多中心格局。单一指标难以概括不同地区的华商结构，因此本页通过企业、人物、集团、商会和资产五个维度进行并列比较。</p>
         </div>
       </section>
 
@@ -1661,18 +1708,6 @@
           <div class="field">
             <label for="research-x">指标选择</label>
             <select id="research-x"></select>
-          </div>
-          <div class="field">
-            <label>颜色</label>
-            <input value="按大洲区分" disabled>
-          </div>
-          <div class="field">
-            <label for="research-year">年份：<span id="research-year-value">2022</span></label>
-            <div class="range-row">
-              <span class="meta-pill">2010</span>
-              <input id="research-year" type="range" min="2010" max="2024" step="1" value="2022">
-              <span class="meta-pill">2024</span>
-            </div>
           </div>
           <div class="field">
             <label>分组切换</label>
@@ -1685,26 +1720,18 @@
         </div>
       </section>
 
-      <section class="section card">
-        <div class="card-header">
-          <div>
-            <h2 class="card-title">各地区指标值分布</h2>
-            <p class="card-subtitle">横轴为地区，颜色代表大洲；悬浮查看地区，点击查看年度变化</p>
+      <section class="section research-analysis-grid">
+        <div class="card research-main-card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">地区指标比较</h2>
+              <p class="card-subtitle" id="research-scatter-subtitle">选择指标比较各地区数值</p>
+            </div>
+            <div id="research-scatter-meta" class="meta-pill">总地区 0</div>
           </div>
-          <div id="research-scatter-meta" class="meta-pill">有效地区 0</div>
+          <div id="research-scatter" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
         </div>
-        <div id="research-scatter" class="chart chart-research"><div class="chart-loading">数据加载中...</div></div>
-      </section>
 
-      <section class="section card">
-        <div class="card-header">
-          <div>
-            <h2 class="card-title" id="trend-title">地区趋势</h2>
-            <p class="card-subtitle" id="trend-subtitle">柱状图显示年度水平，折线显示相对基准年的变化</p>
-          </div>
-          <button id="clear-country" class="text-button" type="button" hidden>取消选择×</button>
-        </div>
-        <div id="research-trend" class="chart"><div class="chart-empty">点击地区气泡查看 2010–2024 趋势</div></div>
       </section>
     </div>
   </main>
@@ -1728,13 +1755,6 @@
     const BRI_COLOR = '#06b6d4';
     const BOUNDARY_COLOR = '#8b5cf6';
     const DISPLAY_EXCLUDED_ISO = new Set(['BMU', 'CYM']);
-    const INDEX_COMPONENTS = [
-      ['huashang_development_index', '华商基础', 0.25, '#2563eb'],
-      ['institution_index', '制度环境', 0.20, '#4f46e5'],
-      ['china_connection_index', '中国联系', 0.20, '#d97706'],
-      ['diaspora_network_index', '华人网络', 0.20, '#7c3aed'],
-      ['market_condition_index', '市场条件', 0.15, '#dc2626']
-    ];
     const charts = {};
 
     let DATA = null;
@@ -1748,7 +1768,6 @@
       latestByIso: new Map(),
       activeTab: 'overview',
       researchGroup: 'all',
-      selectedCountryIso: null,
       table: {
         page: 1,
         pageSize: 20,
@@ -1819,20 +1838,19 @@
     }
 
     const VARIABLE_OPTIONS = [
-      ['gdp_per_capita_current_usd', '人均GDP'],
-      ['cpi_score', '廉洁指数'],
-      ['rule_of_law_score_0_100', '法治水平'],
-      ['government_effectiveness_score_0_100', '政府效能'],
-      ['aei_total_millions_usd', '中国投资额'],
-      ['ethnic_chinese_estimate_per_10k_population', '华人密度'],
-      ['trade_balance_usd', '贸易顺差'],
-      ['political_stability_score_0_100', '政治稳定性']
+      ['focus_company_count', '重点企业'],
+      ['focus_person_count', '重点人物'],
+      ['focus_group_count', '控制集团'],
+      ['chamber_count', '商会数量'],
+      ['huashang_asset_sum', '华商资产']
     ];
 
     const GEO_VARIABLE_OPTIONS = [
-      ['investment', '中国投资额'],
-      ['diaspora', '华侨华人人口'],
-      ['gdp_pc', '人均GDP']
+      ['focus_companies', '重点企业'],
+      ['focus_people', '重点人物'],
+      ['focus_groups', '控制集团'],
+      ['chambers', '商会数量'],
+      ['assets', '华商资产']
     ];
 
     const MAP_NAME_ALIAS_BY_ISO3 = {
@@ -2272,49 +2290,23 @@
     }
 
     function openResearchReport() {
-      showModal('华商发展指数研究报告', '指标、现状、趋势分析与决策建议', `
+      showModal('华商结构分析说明', '重点企业、人物、集团、商会与资产', `
         <div class="report-content">
           <section>
-            <h3>1. 指数构建与分析目的</h3>
-            <p>华商发展指数旨在从多维度衡量不同地区的华商发展基础与外部环境。指数由五个分项构成：华商基础指数、制度环境指数、中国联系指数、华人网络指数和市场条件指数。其中，华商基础指数权重为 25%，制度环境指数、中国联系指数和华人网络指数权重均为 20%，市场条件指数权重为 15%。</p>
-            <p>在变量构成上，华商基础指数以华商数量、华商资产和核心企业占比衡量当地华商企业基础；制度环境指数以 CPI、法治、政府效能、监管质量和腐败控制衡量商业运行环境；中国联系指数以中国双边贸易、AEI 中国投资和 AEI 中国工程合作衡量对华经贸联系；华人网络指数以华人人口密度、中国来源移民存量密度和商会数量衡量社群网络基础；市场条件指数以人均 GDP、人口规模、FDI 流入和新企业密度衡量市场承载力。</p>
-            <p>指数构建采用 0—100 标准化方法。数量、资产、贸易、投资和人口类偏态变量先进行 log(1+x) 处理，再进行标准化；制度类 0—100 字段直接参与平均；综合指数按照五个分项权重加权合成。该指数的核心用途不是给地区作简单优劣排序，而是帮助识别不同市场在华商基础、制度条件、对华联系、社群网络和市场空间上的相对优势。</p>
+            <h3>总体特征</h3>
+            <p>重点企业与重点人物在地区分布上具有较高一致性，美国和新加坡是最突出的两个节点，印度尼西亚、马来西亚、加拿大和菲律宾等地区构成第二梯队。由此形成北美与东南亚并重的重点华商空间格局。</p>
           </section>
           <section>
-            <h3>2. 综合指数排名特征</h3>
-            <p>从综合指数看，新加坡、美国、澳大利亚、加拿大、马来西亚位居前五，综合指数分别为 84.2、79.5、75.3、75.0 和 72.2。英国、阿拉伯联合酋长国、沙特阿拉伯、西班牙和法国也进入综合指数前十。总体来看，排名靠前的地区通常并非只依靠单一优势，而是至少在两个以上维度上表现较强。</p>
-            <p>新加坡综合指数最高，主要优势来自华人网络、制度环境、中国联系和市场条件的共同支撑。其华人网络指数达到 93.3，制度环境指数为 87.5，中国联系指数为 79.8，市场条件指数为 78.3，说明新加坡兼具华人社群基础、制度稳定性、对华经贸联系和市场承载力。</p>
-            <p>美国综合指数位列第二，主要优势来自华商基础和市场条件。美国华商基础指数为 95.9，市场条件指数为 90.2，微观企业记录达到 11,461 条，说明其华商企业集聚程度和市场承载能力均较强。相比之下，美国华人网络指数为 59.9，制度环境指数为 72.5，中国联系指数为 77.5，显示其综合优势主要来自企业基础和市场规模，而非单一社群网络优势。</p>
-            <p>澳大利亚、加拿大和马来西亚分别体现出不同类型的高分结构。澳大利亚在制度环境、市场条件和华商基础方面较均衡；加拿大在华商基础、制度环境和市场条件方面表现突出；马来西亚则在中国联系方面优势显著，中国联系指数达到 92.3，同时华商基础指数为 80.2，显示其在对华经贸联系和华商基础之间具有较强结合。</p>
+            <h3>集团网络</h3>
+            <p>控制集团的空间分布更集中于东南亚。印度尼西亚、新加坡、马来西亚和菲律宾较为突出，体现出家族集团、综合控股和实际控制关系在东南亚华商经济中的重要地位。</p>
           </section>
           <section>
-            <h3>3. 分项指数表现</h3>
-            <p>华商基础指数反映企业集聚和资产信息可见度。美国、菲律宾、加拿大、西班牙、意大利、法国、新加坡、马来西亚、瑞士和印度位居前列。其中，美国微观记录为 11,461 条，菲律宾为 7,023 条，加拿大为 2,288 条，意大利为 1,701 条，法国为 1,498 条。这说明华商企业基础既集中在北美成熟市场，也集中在东南亚和部分欧洲市场。</p>
-            <p>制度环境指数反映商业运行环境的稳定性和可预期性。丹麦、芬兰、新加坡、卢森堡、挪威、新西兰、瑞士、瑞典、荷兰和列支敦士登排名靠前。这类市场通常具备更强的法治基础、政府效能和监管质量，适合金融、技术服务、专业服务和长期经营型企业发展。但部分制度环境较强的地区，华商企业数量未必很高，说明制度优势并不必然直接转化为华商企业集聚。</p>
-            <p>中国联系指数反映各地区与中国之间的贸易、投资和工程合作强度。沙特阿拉伯、马来西亚、印度尼西亚、英国、匈牙利、阿拉伯联合酋长国、哈萨克斯坦、巴基斯坦、越南和泰国排名靠前。其中，沙特阿拉伯中国联系指数达到 100.0，马来西亚为 92.3，印度尼西亚为 90.9，说明能源、工程合作、区域产业协作和双边贸易关系是推动中国联系指数的重要来源。</p>
-            <p>华人网络指数反映当地华人人口、移民存量和商会组织基础。新加坡、加拿大、澳大利亚、美国、越南、马来西亚、新西兰、泰国、韩国和日本排名靠前。新加坡商会数量达到 36 个，越南为 19 个，美国和加拿大均为 10 个。华人网络较强的地区，通常具有更好的组织连接、商业互助和信息传播基础，也更容易形成华商企业的社会支撑网络。</p>
-            <p>市场条件指数反映当地市场容量、居民购买力、资本流入和企业活跃度。美国、德国、法国、加拿大、澳大利亚、日本、意大利、西班牙、新加坡和巴西排名靠前。其中，美国市场条件指数为 90.2，德国为 82.1，法国为 80.8，加拿大为 80.3，澳大利亚为 79.8。成熟地区在市场条件维度上表现更突出，说明其对高附加值行业、资本服务和专业化经营具有更强承载能力。</p>
+            <h3>组织与资产</h3>
+            <p>商会网络与资产分布并不完全重合。新加坡、越南、美国和加拿大形成较突出的商会组织节点，而可识别华商资产更多集中于美国、英国、加拿大和新加坡，反映出组织网络与资本节点的功能差异。</p>
           </section>
           <section>
-            <h3>4. 区域结构判断</h3>
-            <p>从区域均值看，北美洲综合指数均值为 68.1，在各区域中最高。北美洲华商基础均值为 81.8，市场条件均值为 82.5，说明其优势主要来自企业基础和市场容量。北美洲微观企业记录合计为 13,756 条，是当前海外华商企业的重要承载区。</p>
-            <p>亚洲综合指数均值为 54.6，微观企业记录合计为 16,182 条，在企业数量上超过其他区域。亚洲的中国联系指数均值为 62.3，市场条件均值为 68.6，说明亚洲市场在对华经贸联系和区域产业协作方面具有较强基础。东南亚地区尤其具有代表性，越南、菲律宾、马来西亚、印度尼西亚和泰国在华商企业数量、中国联系或华人网络方面均有突出表现。</p>
-            <p>欧洲综合指数均值为 50.4，制度环境均值为 69.4，在制度环境维度上具有明显优势。但欧洲中国联系指数均值为 33.5，华人网络指数均值为 23.2，说明其制度和市场基础较好，但对华联系和华人网络整体较分散。欧洲更适合作为观察高端服务、专业服务和节点型华商网络的区域。</p>
-            <p>大洋洲综合指数均值为 59.0，制度环境均值为 75.7，华人网络均值为 48.6，表现较为均衡。非洲和拉丁美洲综合指数均值分别为 45.5 和 40.0，企业数量和华人网络基础相对有限，部分地区主要呈现资源、工程合作或区域市场等节点特征。</p>
-          </section>
-          <section>
-            <h3>5. 行业结构特征</h3>
-            <p>行业维度主要用于解释华商基础中的企业结构和资产结构。当前微观企业记录最多的行业为制造业，共 7,996 条，占比 21.3%；其次为批发零售业，共 6,770 条，占比 18.0%；公共与居民服务业为 4,463 条，占比 11.9%；金融业为 4,194 条，占比 11.1%；商业服务业为 3,809 条，占比 10.1%。</p>
-            <p>从资产结构看，金融业资产合计达到 52.8 亿美元，商业服务业资产合计达到 32.7 亿美元，明显高于多数行业。这说明华商企业的数量优势主要集中在制造、批发零售和服务业，但资产集中主要体现在金融和商业服务领域。</p>
-            <p>重点地区的行业结构也存在明显差异。美国第一大行业为金融业，企业数为 2,915 条，占美国华商企业的 25.4%；英国第一大行业同样为金融业，占比 23.9%。澳大利亚和加拿大第一大行业均为采矿业，地区内占比均为 33.7%。阿拉伯联合酋长国和沙特阿拉伯第一大行业为批发零售业，分别占 57.5% 和 38.1%。这些差异说明，不同地区的华商网络往往嵌入当地不同的产业结构之中。</p>
-          </section>
-          <section>
-            <h3>6. 综合判断</h3>
-            <p>第一，海外华商发展格局并不是单一的企业数量分布，而是企业基础、制度环境、中国联系、华人网络和市场条件共同作用的结果。美国、菲律宾、越南等地区企业数量突出，但综合指数还受到制度环境、市场条件和中国联系等因素影响。新加坡企业数量并不最高，但凭借华人网络、制度环境、中国联系和市场条件的综合优势位居第一。</p>
-            <p>第二，北美洲和亚洲是当前海外华商网络最重要的两个板块，但优势类型不同。北美洲更突出市场承载力和企业基础，亚洲更突出企业数量、中国联系和区域产业协作。欧洲则更强调制度环境和节点型市场价值。</p>
-            <p>第三，五眼地区和一带一路相关地区体现出不同的观察逻辑。五眼地区更适合观察成熟市场中的金融、技术服务、专业服务和投资网络。一带一路相关地区则更适合观察跨境贸易、制造、批发零售、工程合作和区域产业联动。</p>
-            <p>第四，商会网络对于理解华商分布具有重要补充价值。单纯企业数量只能反映经营主体分布，而商会数量、人物职务和组织联系能够进一步反映社群连接、商业互助和潜在合作入口。新加坡、越南、美国、加拿大、澳大利亚等地区在商会网络方面具有较强代表性。</p>
-            <p>第五，行业结构显示华商企业既有传统制造、批发零售和居民服务基础，也在金融、商业服务、技术服务和采矿等领域形成不同类型的资产和产业联系。未来观察华商网络，应同时关注企业数量、行业结构、资产分布和组织网络，而不宜只使用单一排名判断市场重要性。</p>
+            <h3>结构比较</h3>
+            <p>综合五个维度可以看到，北美更突出企业、人物和资产节点，东南亚更突出集团与组织网络，欧洲则形成若干资产型节点。不同地区的优势维度并不相同，因此采用多维并列方式呈现华商结构。</p>
           </section>
         </div>
       `);
@@ -2575,6 +2567,8 @@
     }
 
     function initOverview() {
+      const covered = document.getElementById('index-covered-regions');
+      if (covered) covered.textContent = `${fmt((DATA.summary || {}).valid_huashang_iso3_countries || 0)}个地区`;
       renderKpis('overview-kpis');
       initOverviewIndustryDonut();
       initOverviewDefinitionBar();
@@ -2857,74 +2851,57 @@
     }
 
     function initOverviewHeatmap() {
-      renderChart('overview-heatmap', 'analysis_indices.composite_index', () => {
-        const rows = [...(DATA.analysis_indices || [])]
-          .filter(isDisplayCountry)
-          .filter(row => num(row.composite_index) != null)
-          .sort((a, b) => (b.composite_index || 0) - (a.composite_index || 0))
-          .slice(0, 10)
-          .reverse();
+      const sortSelect = document.getElementById('overview-structure-sort');
+      if (sortSelect && !sortSelect.dataset.ready) {
+        sortSelect.addEventListener('change', initOverviewHeatmap);
+        sortSelect.dataset.ready = '1';
+      }
+      renderChart('overview-heatmap', 'Huashang structure top regions', () => {
+        const metricKey = (sortSelect && sortSelect.value) || 'focus_company_count';
+        const metricLabel = variableLabel(metricKey);
+        const rows = structureMetricRows()
+          .filter(row => structureMetricValue(row, metricKey) > 0)
+          .sort((a, b) => structureMetricValue(b, metricKey) - structureMetricValue(a, metricKey))
+          .slice(0, 8);
+        document.getElementById('overview-structure-subtitle').textContent = `${metricLabel} · 前 ${rows.length} 个地区`;
         return {
-          color: INDEX_COMPONENTS.map(item => item[3]),
-          grid: { left: 98, right: 58, top: 52, bottom: 42 },
+          grid: { left: 92, right: 26, top: 12, bottom: 28 },
           tooltip: {
-            trigger: 'axis',
-            axisPointer: { type: 'shadow' },
-            formatter: params => {
-              const row = rows[params[0].dataIndex];
-              const lines = [
-                countryName(row),
-                '综合指数：' + fmt(row.composite_index),
-                '商会数量：' + fmt(row.chamber_count)
-              ];
-              INDEX_COMPONENTS.forEach(([key, label, weight]) => {
-                lines.push(`${label}：${fmt(row[key])} × ${Math.round(weight * 100)}%`);
-              });
-              return lines.join('<br>');
-            }
+            trigger: 'item',
+            formatter: params => `${countryName(params.data.raw)}<br>${metricLabel}：${structureMetricText(metricKey, params.value)}`
           },
-          legend: { top: 0, right: 0, itemWidth: 10, itemHeight: 10 },
           xAxis: {
             type: 'value',
-            max: value => Math.max(60, Math.ceil(value.max / 10) * 10),
-            axisLabel: { formatter: '{value}', fontSize: 12, fontWeight: 500, color: '#334155' },
-            splitLine: { lineStyle: { color: '#d7e3f5' } }
+            axisLabel: { formatter: axisShort },
+            splitLine: { lineStyle: { color: '#e2e8f0' } }
           },
           yAxis: {
             type: 'category',
+            inverse: true,
             data: rows.map(countryName),
-            axisLabel: { fontSize: 12, fontWeight: 500, color: '#334155' }
+            axisLine: { show: false },
+            axisTick: { show: false },
+            axisLabel: { color: '#334155', fontSize: 13, fontWeight: 500 }
           },
-          series: [
-            ...INDEX_COMPONENTS.map(([key, label, weight, color], index) => ({
-              name: label,
-              type: 'bar',
-              stack: 'score',
-              barWidth: 22,
-              data: rows.map(row => ({
-                value: (num(row[key]) || 0) * weight,
-                raw: row,
-                itemStyle: {
-                  color,
-                  borderRadius: index === INDEX_COMPONENTS.length - 1 ? [0, 6, 6, 0] : 0
-                }
-              }))
+          series: [{
+            name: metricLabel,
+            type: 'bar',
+            barMaxWidth: 24,
+            showBackground: true,
+            backgroundStyle: { color: '#f1f5f9', borderRadius: 5 },
+            data: rows.map((row, index) => ({
+              value: structureMetricValue(row, metricKey),
+              raw: row,
+              itemStyle: { color: index === 0 ? '#1d4ed8' : '#6d8fda', borderRadius: [0, 5, 5, 0] }
             })),
-            {
-              name: '综合指数',
-              type: 'scatter',
-              symbolSize: 0,
-              data: rows.map(row => row.composite_index),
-              label: {
-                show: true,
-                position: 'right',
-                formatter: params => Number(params.value).toFixed(1),
-                color: '#13201f',
-                fontSize: 12,
-                fontWeight: 700
-              }
+            label: {
+              show: true,
+              position: 'right',
+              color: '#334155',
+              fontSize: 12,
+              formatter: params => metricKey === 'huashang_asset_sum' ? '$' + axisShort(params.value) : fmt(params.value)
             }
-          ]
+          }]
         };
       });
     }
@@ -3196,8 +3173,9 @@
       const start = (state.table.page - 1) * state.table.pageSize;
       const pageRows = rows.slice(start, start + state.table.pageSize);
 
-      document.querySelector('#industry-table tbody').innerHTML = pageRows.map(row => `
+      document.querySelector('#industry-table tbody').innerHTML = pageRows.map((row, index) => `
         <tr>
+          <td class="row-index">${fmt(start + index + 1)}</td>
           <td>${countryName(row)}</td>
           <td>${row.industry_display}</td>
           <td>${fmt(row.huashang_count)}</td>
@@ -4031,10 +4009,11 @@
       const pageRows = rows.slice(start, start + state.focus.pageSize);
 
       document.querySelector('#focus-table thead').innerHTML = `
-        <tr>${columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr>
+        <tr><th class="row-index">序号</th>${columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr>
       `;
-      document.querySelector('#focus-table tbody').innerHTML = pageRows.map(row => `
+      document.querySelector('#focus-table tbody').innerHTML = pageRows.map((row, index) => `
         <tr>
+          <td class="row-index">${fmt(start + index + 1)}</td>
           ${columns.map(([key]) => `<td>${focusCell(key, row[key], row)}</td>`).join('')}
         </tr>
       `).join('');
@@ -4055,11 +4034,12 @@
     }
 
     function renderFiveEyeCards() {
+      const structureByIso = new Map(structureMetricRows().map(row => [row.iso3, row]));
       const rows = overseasCountries()
         .sort((a, b) => macroCount(b) - macroCount(a))
         .slice(0, 10);
       document.getElementById('five-eye-cards').innerHTML = rows.map(country => {
-        const latest = state.latestByIso.get(country.iso3) || {};
+        const structure = structureByIso.get(country.iso3) || {};
         const code = country.iso2 === 'GB' ? 'UK' : (country.iso2 || country.iso3 || '');
         return `
           <div class="card country-card">
@@ -4067,7 +4047,7 @@
             <div class="metric-row"><span>总数</span><strong>${fmt(macroCount(country))}</strong></div>
             <div class="metric-row"><span>总数占比</span><strong>${pct(macroShare(country))}</strong></div>
             <div class="metric-row"><span>华商资产</span><strong>${assetText(country.huashang_asset_sum)}</strong></div>
-            <div class="metric-row"><span>GDP</span><strong>${fmtMoneyUsd(latest.gdp_current_usd)}</strong></div>
+            <div class="metric-row"><span>重点企业</span><strong>${fmt(structure.focus_company_count || 0)}</strong></div>
           </div>
         `;
       }).join('');
@@ -4173,7 +4153,7 @@
       metricSelect.innerHTML = GEO_VARIABLE_OPTIONS
         .map(([key, label]) => `<option value="${key}">${label}</option>`)
         .join('');
-      metricSelect.value = 'investment';
+      metricSelect.value = 'focus_companies';
       [metricSelect, scopeSelect].forEach(select => {
         select.addEventListener('change', initBriScatter);
       });
@@ -4186,45 +4166,27 @@
     }
 
     function geoVariableValue(row, key) {
-      if (key === 'investment') return num(row.investment);
-      if (key === 'firms') return num(row.firms);
-      if (key === 'share') return num(row.share);
-      if (key === 'diaspora') return num(row.population);
-      if (key === 'gdp_pc') return num(row.gdp_per_capita_current_usd);
-      if (key === 'trade') return num(row.china_trade_total_usd);
-      return num(row[key]);
+      if (key === 'focus_companies') return num(row.focus_company_count);
+      if (key === 'focus_people') return num(row.focus_person_count);
+      if (key === 'focus_groups') return num(row.focus_group_count);
+      if (key === 'chambers') return num(row.chamber_count);
+      if (key === 'assets') return num(row.huashang_asset_sum);
+      return null;
     }
 
     function geoValueText(key, value) {
       if (value == null) return '暂无';
-      if (key === 'share') return pct(value / 100);
-      if (key === 'investment') return fmtMillionUsd(value);
-      if (key === 'trade') return fmtMoneyUsd(value);
-      if (key === 'gdp_pc') return fmtMoneyUsd(value);
+      if (key === 'assets') return fmtMoneyUsd(value);
       return fmt(value);
     }
 
     function geoAxisLabel(key) {
-      return value => {
-        if (key === 'share') return Number(value).toFixed(0) + '%';
-        return axisShort(value);
-      };
+      return value => axisShort(value);
     }
 
     function geoScatterRows() {
       const scope = document.getElementById('geo-scope') ? document.getElementById('geo-scope').value : 'bri';
-      return (DATA.latest_country_year || [])
-        .filter(row => row.is_overseas_scope !== false)
-        .map(row => {
-          const country = state.countryByIso.get(row.iso3) || {};
-          return {
-            ...row,
-            ...country,
-            continent: normalizeContinent(country.continent || row.continent || country.region_group || row.region_group),
-            investment: num(row.aei_total_millions_usd),
-            population: num(row.ethnic_chinese_population_estimate)
-          };
-        })
+      return structureMetricRows()
         .filter(row => !!row.continent)
         .filter(row => {
           if (scope === 'bri') return Number(row.is_bri) === 1;
@@ -4250,77 +4212,76 @@
     }
 
     function initBriScatter() {
-      renderChart('geo-bri-scatter', 'geo country metric distribution', () => {
-        const metricKey = document.getElementById('geo-metric')
-          ? document.getElementById('geo-metric').value
-          : 'investment';
-        const rows = geoScatterRows()
-          .map(row => ({
-            ...row,
-            metric: geoVariableValue(row, metricKey)
-          }))
-          .filter(row => row.metric != null && row.metric > 0)
-          .sort((a, b) => countryName(a).localeCompare(countryName(b), 'zh-CN'));
-        const values = rows.map(row => row.metric);
+      renderChart('geo-bri-scatter', 'continent Huashang structure shares', () => {
+        const rows = structureMetricRows();
+        const metrics = [
+          ['focus_company_count', '重点企业'],
+          ['focus_person_count', '重点人物'],
+          ['focus_group_count', '控制集团'],
+          ['chamber_count', '商会网络'],
+          ['huashang_asset_sum', '华商资产']
+        ];
         const continents = CONTINENT_ORDER.filter(continent => rows.some(row => row.continent === continent));
-        const minValue = values.length ? Math.min(...values) : 0;
-        const maxValue = values.length ? Math.max(...values) : 0;
-        const useLog = minValue > 0 && maxValue / minValue > 30;
+        const shares = new Map();
+
+        metrics.forEach(([key]) => {
+          const totals = new Map(continents.map(continent => [continent, 0]));
+          rows.forEach(row => {
+            const value = num(row[key]) || 0;
+            if (row.continent && totals.has(row.continent)) {
+              totals.set(row.continent, totals.get(row.continent) + value);
+            }
+          });
+          const total = [...totals.values()].reduce((sum, value) => sum + value, 0) || 1;
+          shares.set(key, new Map(continents.map(continent => [continent, totals.get(continent) / total * 100])));
+        });
 
         return {
-          grid: { left: 72, right: 26, top: 56, bottom: 44, containLabel: true },
+          grid: { left: 88, right: 28, top: 58, bottom: 34, containLabel: true },
           tooltip: {
-            trigger: 'item',
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' },
             formatter: params => {
-              const row = params.data.raw;
-              return [
-                countryName(row),
-                `${geoVariableLabel(metricKey)}：${geoValueText(metricKey, row.metric)}`,
-                `大洲：${continentLabel(row.continent)}`
-              ].join('<br>');
+              const lines = [params[0].axisValue];
+              params.forEach(item => {
+                if (item.value > 0) lines.push(`${item.seriesName}：${pctPoint(item.value)}`);
+              });
+              return lines.join('<br>');
             }
           },
-          legend: { top: 2, right: 0, type: 'scroll', itemWidth: 10, itemHeight: 10 },
-          xAxis: {
-            name: '地区',
-            nameLocation: 'middle',
-            nameGap: 26,
-            type: 'category',
-            boundaryGap: true,
-            data: rows.map(row => countryName(row)),
-            axisLabel: { show: false },
-            axisTick: { show: false },
-            splitLine: { show: false }
+          legend: {
+            top: 4,
+            right: 0,
+            itemWidth: 10,
+            itemHeight: 10,
+            textStyle: { color: '#64748b', fontSize: 11 }
           },
-          yAxis: {
-            name: geoVariableLabel(metricKey),
-            nameGap: 18,
-            type: useLog ? 'log' : 'value',
-            logBase: 10,
-            scale: true,
-            axisLabel: { formatter: geoAxisLabel(metricKey) },
+          xAxis: {
+            type: 'value',
+            max: 100,
+            axisLabel: { formatter: '{value}%' },
             splitLine: { lineStyle: { color: '#d7e3f5' } }
           },
-          dataZoom: rows.length > 70
-            ? [{ type: 'inside', xAxisIndex: 0, filterMode: 'none', zoomOnMouseWheel: false, moveOnMouseWheel: true }]
-            : [],
+          yAxis: {
+            type: 'category',
+            data: metrics.map(([, label]) => label),
+            axisLabel: { color: '#334155', fontSize: 12, fontWeight: 600 }
+          },
           series: continents.map(continent => ({
             name: continentLabel(continent),
-            type: 'scatter',
-            clip: false,
-            data: rows
-              .filter(row => row.continent === continent)
-              .map(row => ({
-                value: [countryName(row), row.metric],
-                raw: row,
-                symbolSize: geoMetricBubbleSize(row.metric, values),
-                itemStyle: {
-                  color: continentColor(continent),
-                  opacity: .84,
-                  borderColor: '#fff',
-                  borderWidth: 1.2
-                }
-              }))
+            type: 'bar',
+            stack: 'share',
+            barWidth: 28,
+            itemStyle: { color: continentColor(continent) },
+            data: metrics.map(([key]) => Number((shares.get(key).get(continent) || 0).toFixed(2))),
+            label: {
+              show: true,
+              position: 'inside',
+              formatter: params => params.value >= 9 ? pctPoint(params.value, 0) : '',
+              color: '#fff',
+              fontSize: 10,
+              fontWeight: 600
+            }
           }))
         };
       });
@@ -4344,62 +4305,74 @@
     }
 
     function initGeoRadar() {
-      renderChart('geo-radar', 'latest_country_year group averages', () => {
-        const rows = (DATA.latest_country_year || [])
-          .filter(row => row.is_overseas_scope !== false)
-          .map(row => ({
-            ...row,
-            current_huashang_count: num((state.countryByIso.get(row.iso3) || {}).huashang_count) || 0
-          }))
-          .filter(row => row.current_huashang_count > 0);
-        const gdpValues = rows.map(row => num(row.gdp_per_capita_current_usd)).filter(v => v != null && v > 0);
-        const investmentValues = rows.map(row => num(row.aei_total_millions_usd)).filter(v => v != null && v > 0);
+      renderChart('geo-radar', 'Chinese diaspora and Huashang percentile profile', () => {
+        const rows = structureMetricRows();
         const five = rows.filter(row => Number(row.is_five_eyes) === 1);
         const bri = rows.filter(row => Number(row.is_bri) === 1);
+        const metrics = [
+          ['focus_company_count', '重点企业'],
+          ['focus_person_count', '重点人物'],
+          ['focus_group_count', '控制集团'],
+          ['chamber_count', '商会网络'],
+          ['huashang_asset_sum', '华商资产']
+        ];
 
-        const makeValues = group => [
-          average(group, row => (row.current_huashang_count / (DATA.summary.cn_loose_pos || 1)) * 100),
-          average(group, row => row.cpi_score),
-          average(group, row => row.government_effectiveness_score_0_100),
-          average(group, row => row.rule_of_law_score_0_100),
-          average(group, row => logNormalize(row.gdp_per_capita_current_usd, gdpValues)),
-          average(group, row => logNormalize(row.aei_total_millions_usd, investmentValues))
-        ].map(value => Number(value.toFixed(1)));
+        const percentile = (value, values) => {
+          const valid = values.map(num).filter(v => v != null && v > 0).sort((a, b) => a - b);
+          const x = num(value);
+          if (!valid.length || x == null || x <= 0) return null;
+          let count = 0;
+          valid.forEach(v => { if (v <= x) count += 1; });
+          return count / valid.length * 100;
+        };
+
+        const median = values => {
+          const valid = values.filter(v => v != null).sort((a, b) => a - b);
+          if (!valid.length) return 0;
+          const mid = Math.floor(valid.length / 2);
+          return valid.length % 2 ? valid[mid] : (valid[mid - 1] + valid[mid]) / 2;
+        };
+
+        const makeValues = group => metrics.map(([key]) => {
+          const universe = rows.map(row => row[key]);
+          const ranks = group.map(row => percentile(row[key], universe)).filter(v => v != null);
+          return Number(median(ranks).toFixed(1));
+        });
 
         return {
-          tooltip: { trigger: 'item' },
+          tooltip: {
+            trigger: 'item',
+            formatter: params => {
+              const lines = [params.name];
+              metrics.forEach(([, label], index) => lines.push(`${label}：${Number(params.value[index]).toFixed(1)}`));
+              return lines.join('<br>');
+            }
+          },
           legend: { top: 0, right: 0, itemWidth: 10, itemHeight: 10 },
           radar: {
-            radius: '80%',
-            center: ['50%', '56%'],
-            indicator: [
-              { name: '华商基础', max: 100 },
-              { name: '廉洁指数', max: 100 },
-              { name: '政府效能', max: 100 },
-              { name: '法治水平', max: 100 },
-              { name: '人均GDP', max: 100 },
-              { name: '中国投资', max: 100 }
-            ],
+            radius: '78%',
+            center: ['50%', '57%'],
+            indicator: metrics.map(([, label]) => ({ name: label, max: 100 })),
             splitArea: { areaStyle: { color: ['#f3f7ff', '#ffffff'] } },
             axisName: { color: '#334155', fontSize: 12, fontWeight: 600 }
           },
           series: [{
             type: 'radar',
-            label: {
-              show: false
-            },
+            label: { show: false },
             data: [
               {
                 value: makeValues(five),
                 name: '五眼联盟',
+                lineStyle: { color: FIVE_EYES_COLOR, width: 2 },
                 itemStyle: { color: FIVE_EYES_COLOR },
                 areaStyle: { color: 'rgba(245,158,11,.16)' }
               },
               {
                 value: makeValues(bri),
                 name: '一带一路',
+                lineStyle: { color: BRI_COLOR, width: 2 },
                 itemStyle: { color: BRI_COLOR },
-                areaStyle: { color: 'rgba(16,185,129,.16)' }
+                areaStyle: { color: 'rgba(6,182,212,.16)' }
               }
             ]
           }]
@@ -4408,39 +4381,37 @@
     }
 
     function initGeoConcentration() {
-      renderChart('geo-concentration', 'country_map group concentration', () => {
+      renderChart('geo-concentration', 'focus company group concentration', () => {
+        const allRows = structureMetricRows();
         const build = (name, color, rows) => {
           const valid = rows
-            .filter(row => (num(row.huashang_count) || 0) > 0)
-            .sort((a, b) => (b.huashang_count || 0) - (a.huashang_count || 0));
-          const total = sum(valid, 'huashang_count') || 1;
+            .filter(row => (num(row.focus_company_count) || 0) > 0)
+            .sort((a, b) => (b.focus_company_count || 0) - (a.focus_company_count || 0));
+          const total = valid.reduce((sum, row) => sum + (num(row.focus_company_count) || 0), 0) || 1;
           const top = valid.slice(0, 3);
           const topValues = top.map(row => ({
             name: countryName(row),
-            value: (num(row.huashang_count) || 0) / total * 100,
-            count: num(row.huashang_count) || 0
+            value: (num(row.focus_company_count) || 0) / total * 100
           }));
-          while (topValues.length < 3) topValues.push({ name: '暂无', value: 0, count: 0 });
+          while (topValues.length < 3) topValues.push({ name: '暂无', value: 0 });
           const other = Math.max(0, 100 - topValues.reduce((acc, row) => acc + row.value, 0));
           return {
             name,
             color,
-            total,
-            countries: valid.length,
             topValues,
             other,
             top: top.map(countryName).join('、')
           };
         };
         const groups = [
-          build('五眼联盟', FIVE_EYES_COLOR, overseasCountries().filter(row => Number(row.is_five_eyes) === 1)),
-          build('一带一路', BRI_COLOR, overseasCountries().filter(row => Number(row.is_bri) === 1))
+          build('五眼联盟', FIVE_EYES_COLOR, allRows.filter(row => Number(row.is_five_eyes) === 1)),
+          build('一带一路', BRI_COLOR, allRows.filter(row => Number(row.is_bri) === 1))
         ];
         const segments = [
-          { name: '第一地区', key: 0, color: '#2563eb' },
-          { name: '第二地区', key: 1, color: '#06b6d4' },
-          { name: '第三地区', key: 2, color: '#7c3aed' },
-          { name: '其他地区', key: 'other', color: '#cbd5e1' }
+          { name: 'Top1地区', key: 0, color: '#2563eb' },
+          { name: 'Top2地区', key: 1, color: '#06b6d4' },
+          { name: 'Top3地区', key: 2, color: '#7c3aed' },
+          { name: '其余地区', key: 'other', color: '#cbd5e1' }
         ];
         return {
           grid: { left: 78, right: 30, top: 48, bottom: 34, containLabel: true },
@@ -4449,16 +4420,11 @@
             axisPointer: { type: 'shadow' },
             formatter: params => {
               const row = groups[params[0].dataIndex];
-              const lines = [
-                row.name,
-                `微观记录：${fmt(row.total)}`,
-                `覆盖地区：${fmt(row.countries)}`,
-                `Top3：${row.top || '暂无'}`
-              ];
+              const lines = [row.name, `前三名地区：${row.top || '暂无'}`];
               row.topValues.forEach((item, index) => {
-                if (item.count > 0) lines.push(`第${index + 1}：${item.name} ${pctPoint(item.value)}（${fmt(item.count)}）`);
+                if (item.value > 0) lines.push(`第${index + 1}：${item.name} ${pctPoint(item.value)}`);
               });
-              lines.push(`其他地区：${pctPoint(row.other)}`);
+              lines.push(`其余地区：${pctPoint(row.other)}`);
               return lines.join('<br>');
             }
           },
@@ -4472,25 +4438,28 @@
           yAxis: {
             type: 'category',
             data: groups.map(row => row.name),
-            axisTick: { show: false },
-            axisLabel: { fontSize: 12, fontWeight: 600 }
+            axisLabel: { color: '#334155', fontSize: 12, fontWeight: 600 }
           },
           series: segments.map(segment => ({
-              name: segment.name,
-              type: 'bar',
-              stack: 'share',
-              barWidth: 34,
-              data: groups.map(row => ({
-                value: segment.key === 'other' ? row.other : row.topValues[segment.key].value,
-                raw: row,
-                itemStyle: { color: segment.color }
-              })),
-              label: {
-                show: true,
-                formatter: params => params.value >= 9 ? pctPoint(params.value, 0) : '',
-                color: segment.key === 'other' ? '#334155' : '#fff',
-                fontWeight: 600
-              }
+            name: segment.name,
+            type: 'bar',
+            stack: 'share',
+            barWidth: 34,
+            itemStyle: { color: segment.color },
+            data: groups.map(row => ({
+              value: segment.key === 'other' ? row.other : row.topValues[segment.key].value,
+              raw: row
+            })),
+            label: {
+              show: true,
+              formatter: params => {
+                if (params.value < 12) return '';
+                return pctPoint(params.value, 0);
+              },
+              color: segment.key === 'other' ? '#334155' : '#fff',
+              fontWeight: 600,
+              fontSize: 11
+            }
           }))
         };
       });
@@ -4674,10 +4643,11 @@
       const pageRows = rows.slice(start, start + state.chamber.pageSize);
 
       document.querySelector('#chamber-table thead').innerHTML = `
-        <tr>${columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr>
+        <tr><th class="row-index">序号</th>${columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr>
       `;
-      document.querySelector('#chamber-table tbody').innerHTML = pageRows.map(row => `
+      document.querySelector('#chamber-table tbody').innerHTML = pageRows.map((row, index) => `
         <tr>
+          <td class="row-index">${fmt(start + index + 1)}</td>
           ${columns.map(([key]) => {
             const value = row[key];
             const isLink = key.includes('链接');
@@ -5173,10 +5143,11 @@
       const pageRows = rows.slice(start, start + state.school.pageSize);
 
       document.querySelector('#school-table thead').innerHTML = `
-        <tr>${columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr>
+        <tr><th class="row-index">序号</th>${columns.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join('')}</tr>
       `;
-      document.querySelector('#school-table tbody').innerHTML = pageRows.map(row => `
+      document.querySelector('#school-table tbody').innerHTML = pageRows.map((row, index) => `
         <tr>
+          <td class="row-index">${fmt(start + index + 1)}</td>
           ${columns.map(([key]) => {
             const value = row[key];
             const isLink = key.includes('链接') || key.includes('官网');
@@ -5196,47 +5167,90 @@
       renderIndexMethod();
       setupResearchControls();
       updateResearchScatter();
-      renderResearchTrend();
+    }
+
+    function structureMetricRows() {
+      const indexByIso = new Map((DATA.analysis_indices || []).map(row => [row.iso3, row]));
+      const labelToIso = new Map();
+      (DATA.country_map || []).forEach(country => {
+        [countryName(country), country.country_name_zh, country.country_name_cn, country.country_name_en, country.iso3]
+          .filter(Boolean)
+          .forEach(label => labelToIso.set(String(label).trim().toLowerCase(), country.iso3));
+      });
+
+      const counters = {
+        focus_company_count: new Map(),
+        focus_person_count: new Map(),
+        focus_group_count: new Map()
+      };
+      const add = (counter, value) => {
+        const label = focusCountryLabel(value);
+        if (!label || label === '—') return;
+        label.split(/\s*\/\s*/).forEach(part => {
+          const iso = labelToIso.get(String(part).trim().toLowerCase());
+          if (!iso || ['CHN', 'HKG', 'TWN', 'MAC'].includes(iso)) return;
+          counter.set(iso, (counter.get(iso) || 0) + 1);
+        });
+      };
+
+      focusCompanyEntities().forEach(row => add(counters.focus_company_count, row.primary_country || row.country));
+      focusScopedRows('people').forEach(row => add(counters.focus_person_count, row.country));
+      focusScopedRows('groups').forEach(row => add(counters.focus_group_count, row.country));
+
+      return (DATA.country_map || [])
+        .filter(row => row.is_overseas_scope !== false)
+        .filter(row => !['CHN', 'HKG', 'TWN', 'MAC'].includes(row.iso3))
+        .filter(isDisplayCountry)
+        .map(country => ({
+          ...country,
+          ...(state.latestByIso.get(country.iso3) || {}),
+          ...(indexByIso.get(country.iso3) || {}),
+          focus_company_count: counters.focus_company_count.get(country.iso3) || 0,
+          focus_person_count: counters.focus_person_count.get(country.iso3) || 0,
+          focus_group_count: counters.focus_group_count.get(country.iso3) || 0,
+          continent: normalizeContinent(country.continent || country.region_group)
+        }));
+    }
+
+    function structureMetricValue(row, key) {
+      return num(row[key]);
+    }
+
+    function structureMetricText(key, value) {
+      if (value == null) return '暂无';
+      if (key === 'huashang_asset_sum') return fmtMoneyUsd(value);
+      return fmt(value);
     }
 
     function renderIndexMethod() {
-      const method = DATA.analysis_index_method || {};
-      const components = method.components || [];
-      const descriptions = {
-        '华商基础指数': '以华商数量、华商资产、核心企业占比衡量当地华商企业基础。分值越高，通常说明企业集聚更强，或资产信息可见度更高。',
-        '制度环境指数': '以 CPI、法治、政府效能、监管质量、腐败控制衡量商业运行环境。分值越高，说明制度稳定性和经营可预期性更强。',
-        '中国联系指数': '以中国双边贸易、AEI 中国投资、AEI 中国工程合作衡量对华经贸联系。分值越高，说明贸易、投资和工程合作基础更强。',
-        '华人网络指数': '以华人人口密度、中国来源移民存量密度、商会数量衡量社群网络基础。分值越高，说明组织连接和商业互助基础更强。',
-        '市场条件指数': '以人均 GDP、人口规模、FDI 流入、新企业密度衡量市场承载力。分值越高，说明当地消费能力、资本流入和企业活跃度更强。'
-      };
+      const rows = structureMetricRows();
+      const definitions = [
+        ['focus_company_count', '重点企业', '重点企业实体'],
+        ['focus_person_count', '重点人物', '重点华商人物'],
+        ['focus_group_count', '控制集团', '实际控制集团'],
+        ['chamber_count', '商会网络', '华人商会组织'],
+        ['huashang_asset_sum', '华商资产', '可识别企业资产']
+      ];
       const grid = document.getElementById('index-method-grid');
       if (!grid) return;
-      grid.innerHTML = components.map(item => `
-        <div class="method-item">
-          <div class="method-title">${escapeHtml(item.name)}</div>
-          <div class="method-weight">权重 ${pct(item.weight, 0)}</div>
-          <div class="method-fields">${escapeHtml(descriptions[item.name] || (item.fields || []).join('、'))}</div>
-        </div>
-      `).join('');
-      const note = document.getElementById('index-method-note');
-      if (note) {
-        note.remove();
-      }
+      grid.innerHTML = definitions.map(([key, name, description]) => {
+        const coverage = rows.filter(row => structureMetricValue(row, key) > 0).length;
+        return `
+          <div class="method-item">
+            <div class="method-weight"><span class="method-count">${fmt(coverage)}</span><span class="method-unit">个地区</span></div>
+            <div class="method-title">${escapeHtml(name)}</div>
+            <div class="method-fields">${escapeHtml(description)}</div>
+          </div>
+        `;
+      }).join('');
     }
 
     function setupResearchControls() {
       const xSelect = document.getElementById('research-x');
       if (!xSelect.dataset.ready) {
         xSelect.innerHTML = VARIABLE_OPTIONS.map(([key, label]) => `<option value="${key}">${label}</option>`).join('');
-        xSelect.value = 'gdp_per_capita_current_usd';
+        xSelect.value = 'focus_company_count';
         xSelect.addEventListener('change', () => {
-          updateResearchScatter();
-          renderResearchTrend();
-        });
-
-        const yearInput = document.getElementById('research-year');
-        yearInput.addEventListener('input', () => {
-          document.getElementById('research-year-value').textContent = yearInput.value;
           updateResearchScatter();
         });
 
@@ -5246,11 +5260,6 @@
           state.researchGroup = button.dataset.group;
           document.querySelectorAll('#research-group button').forEach(btn => btn.classList.toggle('active', btn === button));
           updateResearchScatter();
-        });
-
-        document.getElementById('clear-country').addEventListener('click', () => {
-          state.selectedCountryIso = null;
-          renderResearchTrend();
         });
 
         xSelect.dataset.ready = '1';
@@ -5268,41 +5277,37 @@
     }
 
     function researchRows() {
-      const year = Number(document.getElementById('research-year').value);
       const metricKey = document.getElementById('research-x').value;
-      return (DATA.country_year_panel || [])
-        .filter(row => Number(row.year) === year)
-        .filter(row => row.is_overseas_scope !== false)
+      return structureMetricRows()
         .filter(row => {
           if (state.researchGroup === 'five') return Number(row.is_five_eyes) === 1;
           if (state.researchGroup === 'bri') return Number(row.is_bri) === 1;
           return true;
         })
-        .map(row => {
-          const country = state.countryByIso.get(row.iso3) || {};
-          return {
-            ...row,
-            metricValue: num(row[metricKey]),
-            continent: normalizeContinent(country.continent || row.continent || country.region_group || row.region_group)
-          };
-        })
+        .map(row => ({
+          ...row,
+          metricValue: structureMetricValue(row, metricKey)
+        }))
         .filter(row => row.metricValue != null && row.metricValue > 0)
         .filter(row => !!row.continent)
         .sort((a, b) => countryName(a).localeCompare(countryName(b), 'zh-CN'));
     }
 
     function updateResearchScatter() {
-      renderChart('research-scatter', 'country_year_panel selected metric by country', () => {
+      renderChart('research-scatter', 'Chinese diaspora and Huashang structure metrics', () => {
         const rows = researchRows();
         const metricKey = document.getElementById('research-x').value;
-        const year = document.getElementById('research-year').value;
         const continents = CONTINENT_ORDER.filter(continent => rows.some(row => row.continent === continent));
         const values = rows.map(row => row.metricValue).filter(value => value != null);
         const positive = values.filter(value => value > 0);
         const minValue = positive.length ? Math.min(...positive) : 0;
         const maxValue = positive.length ? Math.max(...positive) : 0;
         const useLog = positive.length === values.length && minValue > 0 && maxValue / minValue > 30;
-        document.getElementById('research-scatter-meta').textContent = `${year} 年 · ${fmt(rows.length)} 个地区 · 颜色=大洲`;
+        const minLog = Math.log1p(minValue);
+        const logRange = Math.log1p(maxValue) - minLog;
+        const bubbleSize = value => 9 + 19 * (logRange > 0 ? (Math.log1p(value) - minLog) / logRange : 0.5);
+        document.getElementById('research-scatter-meta').textContent = `总地区 ${fmt(rows.length)}`;
+        document.getElementById('research-scatter-subtitle').textContent = `${variableLabel(metricKey)} · 各地区数值比较`;
 
         return {
           grid: { left: 78, right: 34, top: 56, bottom: 52, containLabel: true },
@@ -5310,7 +5315,7 @@
             trigger: 'item',
             formatter: params => {
               const row = params.data.raw;
-              return `${countryName(row)}<br>${variableLabel(metricKey)}：${axisShort(row.metricValue)}<br>大洲：${continentLabel(row.continent)}<br>年份：${row.year}`;
+              return `${countryName(row)}<br>${variableLabel(metricKey)}：${structureMetricText(metricKey, row.metricValue)}<br>大洲：${continentLabel(row.continent)}`;
             }
           },
           legend: {
@@ -5349,124 +5354,15 @@
                 value: [countryName(row), row.metricValue],
                 raw: row,
                 iso3: row.iso3,
-                symbolSize: Math.max(8, Math.min(24, geoMetricBubbleSize(row.metricValue, values) * .82)),
+                symbolSize: bubbleSize(row.metricValue),
                 itemStyle: {
                   color: continentColor(continent),
-                  opacity: .78,
+                  opacity: .8,
                   borderColor: '#fff',
                   borderWidth: .8
                 }
               }))
           }))
-        };
-      }, chart => {
-        chart.off('click');
-        chart.on('click', params => {
-          if (!params.data || !params.data.iso3) return;
-          state.selectedCountryIso = params.data.iso3;
-          renderResearchTrend();
-        });
-      });
-    }
-
-    function renderResearchTrend() {
-      const trendEl = document.getElementById('research-trend');
-      const clearBtn = document.getElementById('clear-country');
-      const xKey = document.getElementById('research-x') ? document.getElementById('research-x').value : 'gdp_per_capita_current_usd';
-
-      if (!state.selectedCountryIso) {
-        if (charts['research-trend']) {
-          charts['research-trend'].dispose();
-          delete charts['research-trend'];
-        }
-        document.getElementById('trend-title').textContent = '地区趋势';
-        document.getElementById('trend-subtitle').textContent = '柱状图显示年度水平，折线显示相对基准年的变化';
-        clearBtn.hidden = true;
-        trendEl.innerHTML = '<div class="chart-empty">点击地区气泡查看 2010–2024 趋势</div>';
-        return;
-      }
-
-      const country = state.countryByIso.get(state.selectedCountryIso) || {};
-      const rows = (DATA.country_year_panel || [])
-        .filter(row => row.iso3 === state.selectedCountryIso)
-        .sort((a, b) => Number(a.year) - Number(b.year));
-      document.getElementById('trend-title').textContent = countryName(country) + '趋势';
-      document.getElementById('trend-subtitle').textContent = '柱状图显示年度水平，折线显示相对基准年的变化';
-      clearBtn.hidden = false;
-
-      renderChart('research-trend', 'country_year_panel selected x variable trend', () => {
-        const variableRows = rows
-          .map(row => ({ year: row.year, value: num(row[xKey]) }))
-          .filter(row => row.value != null);
-        const baseline = variableRows.find(row => row.value !== 0) || variableRows[0];
-        const baselineYear = baseline ? baseline.year : '';
-        const baselineValue = baseline ? baseline.value : null;
-        const indexed = rows.map(row => {
-          const value = num(row[xKey]);
-          if (value == null || baselineValue == null || baselineValue === 0) return null;
-          return value / baselineValue * 100;
-        });
-        return {
-          grid: { left: 64, right: 58, top: 60, bottom: 48, containLabel: true },
-          tooltip: {
-            trigger: 'axis',
-            formatter: params => {
-              const year = params[0] ? params[0].axisValue : '';
-              const lines = [`${countryName(country)} · ${year}`];
-              params.forEach(item => {
-                if (item.seriesName.includes('指数')) {
-                  lines.push(`${item.marker}${item.seriesName}：${item.value == null ? '未公开' : Number(item.value).toFixed(1)}`);
-                } else {
-                  lines.push(`${item.marker}${item.seriesName}：${item.value == null ? '未公开' : axisShort(item.value)}`);
-                }
-              });
-              return lines.join('<br>');
-            }
-          },
-          legend: {
-            top: 12,
-            left: 'center',
-            itemWidth: 14,
-            itemHeight: 10
-          },
-          xAxis: {
-            type: 'category',
-            data: rows.map(row => row.year)
-          },
-          yAxis: [
-            {
-              type: 'value',
-              name: variableLabel(xKey),
-              axisLabel: { formatter: axisShort },
-              splitLine: { lineStyle: { color: '#d7e3f5' } }
-            },
-            {
-              type: 'value',
-              name: baselineYear ? `指数(${baselineYear}=100)` : '指数',
-              axisLabel: { formatter: value => Number(value).toFixed(0) },
-              splitLine: { show: false }
-            }
-          ],
-          series: [
-            {
-              name: variableLabel(xKey),
-              type: 'bar',
-              barWidth: 18,
-              yAxisIndex: 0,
-              data: rows.map(row => num(row[xKey])),
-              itemStyle: { color: '#38bdf8', borderRadius: [6, 6, 0, 0] }
-            },
-            {
-              name: baselineYear ? `变化指数(${baselineYear}=100)` : '变化指数',
-              type: 'line',
-              smooth: true,
-              yAxisIndex: 1,
-              data: indexed,
-              symbolSize: 7,
-              itemStyle: { color: '#2563eb' },
-              lineStyle: { width: 3 }
-            }
-          ]
         };
       });
     }
@@ -5556,25 +5452,14 @@
       });
 
       try {
-        const [core, countryYearPanel, enterpriseRecords] = await Promise.all([
-          fetch('dashboard_core.json', { cache: 'no-store' }).then(response => {
-            if (!response.ok) throw new Error('dashboard_core.json HTTP ' + response.status);
-            return response.json();
-          }),
-          fetch('country_year_panel.json', { cache: 'no-store' }).then(response => {
-            if (!response.ok) throw new Error('country_year_panel.json HTTP ' + response.status);
-            return response.json();
-          }),
-          fetch('enterprise_records.json', { cache: 'no-store' }).then(response => {
-            if (!response.ok) throw new Error('enterprise_records.json HTTP ' + response.status);
-            return response.json();
-          })
-        ]);
-        const raw = { ...core, country_year_panel: countryYearPanel, enterprise_records: enterpriseRecords };
+        const raw = await fetch('huashang-data-95858035.json', { cache: 'no-store' }).then(response => {
+          if (!response.ok) throw new Error('huashang-data-95858035.json HTTP ' + response.status);
+          return response.json();
+        });
         prepareData(raw);
       } catch (error) {
         console.error(error);
-        showAppError('数据加载失败。请稍后刷新页面。');
+        showAppError('数据加载失败，请检查发布数据文件。');
         return;
       }
 
@@ -5594,7 +5479,7 @@
     }
 
     window.addEventListener('resize', resizeCharts);
-    document.addEventListener('DOMContentLoaded', bootstrap);
+    document.addEventListener('DOMContentLoaded', () => { if (window.__huashangAccessGranted) bootstrap(); });
   </script>
 </body>
 </html>
